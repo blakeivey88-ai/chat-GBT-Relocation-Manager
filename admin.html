@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>Relocation Manager Admin Console</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .admin-shell{max-width:1280px;margin:0 auto;padding:24px clamp(16px,4vw,32px) 40px}.admin-hero{background:linear-gradient(135deg,#071d3b,#123a66 55%,#a62435);color:#fff;border-radius:28px;padding:28px;box-shadow:0 18px 50px rgba(13,31,59,.16)}.admin-hero h1{margin:10px 0 8px;font-size:clamp(34px,5vw,56px);line-height:1}.admin-hero p{max-width:860px;color:rgba(255,255,255,.9)}.toolbar{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}.toolbar .btn{background:#eaf1fb;color:#173b74}.toolbar .btn.primaryish{background:#b22234;color:#fff}.admin-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;margin-top:18px}.panel{display:grid;gap:14px}.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.summary .mini{background:#fff;border:1px solid #dfe6ef;border-radius:18px;padding:14px}.summary .mini strong{display:block;color:#071d3b;font-size:22px}.summary .mini span{color:#66758a;font-size:13px;font-weight:800}.hint{background:#f5f7fb;border:1px solid #dfe6ef;border-radius:18px;padding:16px}.hint h3{margin-top:0}.muted-list{margin:0;padding-left:18px;color:#66758a;font-weight:700;display:grid;gap:8px}.actions{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.actions .btn{width:100%}.state-card{display:grid;gap:10px}.state-line{display:flex;justify-content:space-between;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid #e6edf5}.state-line:last-child{border-bottom:0}.state-line strong{color:#071d3b}.iframe-wrap{margin-top:18px;border-radius:24px;overflow:hidden;border:1px solid #dfe6ef;box-shadow:0 18px 50px rgba(13,31,59,.10);background:#fff}.iframe-wrap iframe{width:100%;height:82vh;border:0;background:#fff}.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{display:inline-flex;align-items:center;padding:7px 10px;border-radius:999px;background:#eef3fb;color:#244c85;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.06em}.chip.good{background:#e8f6ed;color:#16803c}.chip.warn{background:#fff1df;color:#9a5b00}@media(max-width:980px){.admin-grid,.summary,.actions{grid-template-columns:1fr}.iframe-wrap iframe{height:70vh}}
+  </style>
+</head>
+<body>
+  <main class="admin-shell">
+    <section class="admin-hero">
+      <span class="eyebrow">Protected admin area</span>
+      <h1>Admin controls and demo tools</h1>
+      <p>Use this protected page to review demo flows and internal controls. Normal users are redirected away at the server before the page loads.</p>
+      <div class="toolbar">
+        <button class="btn" data-open="home">Open home</button>
+        <button class="btn" data-open="loads">Open loads</button>
+        <button class="btn" data-open="requests">Open requests</button>
+        <button class="btn" data-open="post">Open post load</button>
+        <button class="btn" data-open="profile">Open profile</button>
+        <button class="btn" data-page="thank-you.html">Open next page</button>
+        <button class="btn" data-page="success.html">Open success alias</button>
+        <button class="btn primaryish" id="clearDemo">Clear demo state</button>
+      </div>
+      <div class="state-card card" style="margin-top:16px;background:rgba(255,255,255,.95)">
+        <div class="state-line"><strong>How to use it</strong><span class="muted">Switch a role, seed data, then watch the iframe change.</span></div>
+        <div class="chips"><span class="chip good">Customer view</span><span class="chip">Driver view</span><span class="chip warn">Fleet manager view</span><span class="chip">Fake load</span><span class="chip">Fake request</span></div>
+      </div>
+    </section>
+
+    <div class="admin-grid">
+      <section class="panel">
+        <div class="card">
+          <h2>Switch demo roles</h2>
+          <p class="muted">Change the same prototype between customer, driver, and fleet-manager modes.</p>
+          <div class="actions">
+            <button class="btn btn-primary" data-mode="customer">Customer view</button>
+            <button class="btn btn-primary" data-mode="fleet">Fleet manager view</button>
+            <button class="btn btn-primary" data-mode="driver">Driver view</button>
+            <button class="btn btn-soft" id="seedBoth">Seed both sides</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Seed demo data</h2>
+          <div class="actions">
+            <button class="btn btn-soft" id="seedRequest">Fake pickup request</button>
+            <button class="btn btn-soft" id="seedLoad">Fake posted load</button>
+            <button class="btn btn-soft" id="seedMatch">Fake matched pickup</button>
+            <button class="btn btn-soft" id="seedLane">Fake lane alert</button>
+          </div>
+        </div>
+
+        <div class="hint">
+          <h3>What this unlocks</h3>
+          <ul class="muted-list">
+            <li>Show Blake the customer side.</li>
+            <li>Show Blake the fleet-manager side.</li>
+            <li>Seed believable demo data without touching production.</li>
+            <li>Walk through the app before the real backend exists.</li>
+          </ul>
+        </div>
+      </section>
+
+      <aside class="panel">
+        <div class="card">
+          <h2>Current demo state</h2>
+          <p class="muted" id="stateLabel">Next page preview is open.</p>
+          <div class="summary" style="margin-top:12px">
+            <div class="mini"><strong id="reqCount">0</strong><span>requests</span></div>
+            <div class="mini"><strong id="loadCount">0</strong><span>loads</span></div>
+            <div class="mini"><strong id="pickupCount">0</strong><span>active pickups</span></div>
+          </div>
+          <p class="muted" style="margin-top:12px">Click <b>Open next page</b> to preview the post-checkout screen.</p>
+        </div>
+        <div class="card">
+          <h2>Account preview</h2>
+          <p class="muted"><strong id="nameLabel">Guest</strong></p>
+          <p class="muted" id="roleLabel">No role selected</p>
+          <p class="muted" id="typeLabel">Select a demo view to load a profile.</p>
+        </div>
+      </aside>
+    </div>
+
+    <div class="iframe-wrap">
+      <iframe id="demoFrame" title="Relocation Manager demo" src="thank-you.html"></iframe>
+    </div>
+  </main>
+
+  <script>
+    const keys = {
+      profile: 'rm_profile',
+      profileView: 'rm_profile_view',
+      recentLoads: 'rm_recent_loads',
+      recentRequests: 'rm_recent_requests',
+      plannedTrips: 'rm_planned_trips',
+      activePickups: 'rm_active_pickups',
+      laneAlerts: 'laneAlerts',
+    };
+
+    const frame = document.getElementById('demoFrame');
+    const stateLabel = document.getElementById('stateLabel');
+    const reqCount = document.getElementById('reqCount');
+    const loadCount = document.getElementById('loadCount');
+    const pickupCount = document.getElementById('pickupCount');
+    const nameLabel = document.getElementById('nameLabel');
+    const roleLabel = document.getElementById('roleLabel');
+    const typeLabel = document.getElementById('typeLabel');
+
+    function write(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    function read(key, fallback) {
+      try {
+        return JSON.parse(localStorage.getItem(key) || 'null') ?? fallback;
+      } catch {
+        return fallback;
+      }
+    }
+
+    function refreshCounts() {
+      reqCount.textContent = read(keys.recentRequests, []).length;
+      loadCount.textContent = read(keys.recentLoads, []).length;
+      pickupCount.textContent = read(keys.activePickups, []).length;
+    }
+
+    function reloadFrame(hash = 'home') {
+      const url = new URL('index.html', window.location.href);
+      url.hash = hash;
+      frame.src = url.toString();
+    }
+
+    function openPage(path) {
+      frame.src = new URL(path, window.location.href).toString();
+    }
+
+    function setState(profile, view, message) {
+      write(keys.profile, profile);
+      write(keys.profileView, view);
+      nameLabel.textContent = profile.name || 'Guest';
+      roleLabel.textContent = profile.role || 'No role selected';
+      typeLabel.textContent = profile.type || 'No account type';
+      stateLabel.textContent = message;
+      refreshCounts();
+      reloadFrame(view === 'shipper' ? 'requests' : view === 'broker' ? 'post' : 'profile');
+    }
+
+    function setCustomerView() {
+      setState({
+        name: 'Demo Customer',
+        company: 'Acme Warehouse',
+        email: 'customer@demo.local',
+        type: 'Customer needing pickup (request-only) - $9.99/mo',
+        truckCount: 0,
+        mc_dot: '',
+        role: 'Customer',
+        verification: 'Demo ready',
+        note: 'Customer demo mode: request a pickup and view shipper-facing screens.',
+        paymentStatus: 'paid_shipper',
+        paidAt: new Date().toISOString(),
+        planLabel: 'Shippers Plan',
+        loadAccess: 'request',
+        tags: ['demo', 'customer-view']
+      }, 'shipper', 'Customer demo loaded.');
+      write(keys.recentRequests, [{ title: 'Atlanta, GA → Charlotte, NC', detail: 'Pickup request · box truck with liftgate · no dock at delivery' }]);
+      write(keys.recentLoads, []);
+      write(keys.activePickups, []);
+      write(keys.plannedTrips, [{ title: 'Pickup request follow-up', origin: 'Atlanta, GA', destination: 'Charlotte, NC', date: 'Tomorrow 9:00 AM', equipment: 'Box truck with liftgate', notes: 'Customer-side demo' }]);
+      write(keys.laneAlerts, [{ origin: 'Atlanta, GA', destination: 'Charlotte, NC', equipment: 'Box truck with liftgate', rate: '$2.50' }]);
+      refreshCounts();
+    }
+
+    function setFleetView() {
+      setState({
+        name: 'Demo Fleet Manager',
+        company: 'Demo Fleet LLC',
+        email: 'fleet@demo.local',
+        type: 'Broker 4–7 trucks - $79.99/mo',
+        truckCount: 5,
+        mc_dot: 'MC-DEMO-5678',
+        role: 'Broker',
+        verification: 'Demo ready',
+        note: 'Fleet-manager demo mode: post loads and cover customer requests.',
+        paymentStatus: 'paid_fleet_growth',
+        paidAt: new Date().toISOString(),
+        planLabel: 'Fleet Growth',
+        loadAccess: 'claim_post',
+        tags: ['demo', 'fleet-view']
+      }, 'broker', 'Fleet manager demo loaded.');
+      write(keys.recentLoads, [{ title: 'Savannah, GA → Raleigh, NC', detail: 'Lowboy / RGN · CNC machine · 13,000 lb' }]);
+      write(keys.recentRequests, []);
+      write(keys.activePickups, [{ title: 'Savannah, GA → Raleigh, NC', origin: 'Savannah, GA', destination: 'Raleigh, NC', equipment: 'Lowboy / RGN', detail: 'Lowboy / RGN · CNC machine · Tomorrow 7am' }]);
+      write(keys.plannedTrips, [{ title: 'CNC machine move', origin: 'Savannah, GA', destination: 'Raleigh, NC', date: 'Tomorrow 7:00 AM', equipment: 'Lowboy / RGN', notes: 'Fleet-side demo' }]);
+      write(keys.laneAlerts, [{ origin: 'Savannah, GA', destination: 'Raleigh, NC', equipment: 'Lowboy / RGN', rate: '$3.25' }]);
+      refreshCounts();
+    }
+
+    function setDriverView() {
+      setState({
+        name: 'Demo Driver',
+        company: 'Demo Transport',
+        email: 'driver@demo.local',
+        type: 'Independent driver / self-insured - $29.99/mo',
+        truckCount: 1,
+        mc_dot: 'DOT-DEMO-1234',
+        role: 'Driver',
+        verification: 'Demo ready',
+        note: 'Driver demo mode: claim loads and review lanes.',
+        paymentStatus: 'paid_driver',
+        paidAt: new Date().toISOString(),
+        planLabel: 'Independent Driver',
+        loadAccess: 'claim',
+        tags: ['demo', 'driver-view']
+      }, 'driver', 'Driver demo loaded.');
+      write(keys.recentRequests, []);
+      write(keys.recentLoads, [{ title: 'Atlanta, GA → Nashville, TN', detail: '26 ft box · liftgate · quick-pay' }]);
+      write(keys.activePickups, []);
+      write(keys.plannedTrips, [{ title: 'Return lane', origin: 'Nashville, TN', destination: 'Atlanta, GA', date: 'Friday', equipment: '26 ft box truck', notes: 'Driver demo' }]);
+      write(keys.laneAlerts, [{ origin: 'Atlanta, GA', destination: 'Nashville, TN', equipment: '26 ft box truck', rate: '$2.50' }]);
+      refreshCounts();
+    }
+
+    function seedRequest() {
+      const current = read(keys.recentRequests, []);
+      current.unshift({ title: 'Atlanta, GA → Charlotte, NC', detail: 'Pickup request · 8 pallets · no dock at delivery' });
+      write(keys.recentRequests, current.slice(0, 8));
+      refreshCounts();
+      reloadFrame('requests');
+    }
+
+    function seedLoad() {
+      const current = read(keys.recentLoads, []);
+      current.unshift({ title: 'Savannah, GA → Raleigh, NC', detail: 'Lowboy / RGN · CNC machine · 13,000 lb' });
+      write(keys.recentLoads, current.slice(0, 8));
+      refreshCounts();
+      reloadFrame('loads');
+    }
+
+    function seedMatch() {
+      const request = { title: 'Atlanta, GA → Charlotte, NC', detail: 'Pickup request · box truck with liftgate · no dock at delivery' };
+      const load = { title: 'Savannah, GA → Raleigh, NC', detail: 'Lowboy / RGN · CNC machine · 13,000 lb' };
+      write(keys.profile, {
+        name: 'Demo Fleet Manager',
+        company: 'Demo Fleet LLC',
+        email: 'fleet@demo.local',
+        type: 'Broker 4–7 trucks - $79.99/mo',
+        truckCount: 5,
+        mc_dot: 'MC-DEMO-5678',
+        role: 'Broker',
+        verification: 'Demo ready',
+        note: 'Matched demo state: customer request plus fleet load.',
+        paymentStatus: 'paid_fleet_growth',
+        paidAt: new Date().toISOString(),
+        planLabel: 'Fleet Growth',
+        loadAccess: 'claim_post',
+        tags: ['demo', 'fleet-view', 'customer-view']
+      });
+      write(keys.profileView, 'broker');
+      write(keys.recentRequests, [request]);
+      write(keys.recentLoads, [load]);
+      write(keys.activePickups, [{ title: load.title, origin: 'Savannah, GA', destination: 'Raleigh, NC', equipment: 'Lowboy / RGN', detail: load.detail }]);
+      write(keys.plannedTrips, [
+        { title: 'Customer pickup request', origin: 'Atlanta, GA', destination: 'Charlotte, NC', date: 'Tomorrow 9:00 AM', equipment: 'Box truck with liftgate', notes: 'Customer side' },
+        { title: 'CNC machine move', origin: 'Savannah, GA', destination: 'Raleigh, NC', date: 'Tomorrow 7:00 AM', equipment: 'Lowboy / RGN', notes: 'Fleet side' }
+      ]);
+      write(keys.laneAlerts, [
+        { origin: 'Atlanta, GA', destination: 'Charlotte, NC', equipment: 'Box truck with liftgate', rate: '$2.50' },
+        { origin: 'Savannah, GA', destination: 'Raleigh, NC', equipment: 'Lowboy / RGN', rate: '$3.25' }
+      ]);
+      nameLabel.textContent = 'Demo Customer + Fleet';
+      roleLabel.textContent = 'Matched demo state';
+      typeLabel.textContent = 'Customer request plus fleet-side load';
+      stateLabel.textContent = 'Matched demo state seeded.';
+      refreshCounts();
+      reloadFrame('profile');
+    }
+
+    function seedLane() {
+      const current = read(keys.laneAlerts, []);
+      current.unshift({ origin: 'Atlanta, GA', destination: 'Nashville, TN', equipment: '26 ft box truck', rate: '$2.75' });
+      write(keys.laneAlerts, current.slice(0, 8));
+      refreshCounts();
+      reloadFrame('alerts');
+    }
+
+    function clearDemo() {
+      [keys.profile, keys.profileView, keys.recentLoads, keys.recentRequests, keys.plannedTrips, keys.activePickups, keys.laneAlerts].forEach((key) => localStorage.removeItem(key));
+      nameLabel.textContent = 'Guest';
+      roleLabel.textContent = 'No role selected';
+      typeLabel.textContent = 'Select a demo view to load a profile.';
+      stateLabel.textContent = 'Demo state cleared.';
+      refreshCounts();
+      reloadFrame('home');
+    }
+
+    document.querySelectorAll('[data-open]').forEach((btn) => btn.addEventListener('click', () => reloadFrame(btn.dataset.open)));
+    document.querySelectorAll('[data-page]').forEach((btn) => btn.addEventListener('click', () => openPage(btn.dataset.page)));
+    document.querySelectorAll('[data-mode]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        if (btn.dataset.mode === 'customer') setCustomerView();
+        if (btn.dataset.mode === 'fleet') setFleetView();
+        if (btn.dataset.mode === 'driver') setDriverView();
+      });
+    });
+
+    document.getElementById('seedRequest').addEventListener('click', seedRequest);
+    document.getElementById('seedLoad').addEventListener('click', seedLoad);
+    document.getElementById('seedMatch').addEventListener('click', seedMatch);
+    document.getElementById('seedLane').addEventListener('click', seedLane);
+    document.getElementById('seedBoth').addEventListener('click', seedMatch);
+    document.getElementById('clearDemo').addEventListener('click', clearDemo);
+
+    refreshCounts();
+  </script>
+</body>
+</html>

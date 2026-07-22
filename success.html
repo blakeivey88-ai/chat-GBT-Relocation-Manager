@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>Relocation Manager — redirecting</title>
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"a8ef3b41-cab3-432c-afbb-bbad59b2cafd"}'></script>
+</head>
+<body>
+  <p>Payment complete. Please sign in and verify your email to unlock member access. <a id="continueLink" href="/signin">Continue</a></p>
+  <script>
+    const target = '/signin';
+    document.getElementById('continueLink').href = target;
+    location.replace(target);
+  </script>
+</body>
+</html>

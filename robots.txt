@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /account/
+Disallow: /api/
+Disallow: /dashboard
+Disallow: /launch/
+Disallow: /success
+Disallow: /thank-you
+Disallow: /signin
+Disallow: /sign-in
+Disallow: /login
+Disallow: /forgot-password
+Disallow: /reset-password
+Sitemap: https://relocationmanagerusa.com/sitemap.xml

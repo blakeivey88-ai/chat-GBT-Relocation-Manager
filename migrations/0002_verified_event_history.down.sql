@@ -1,0 +1,17 @@
+PRAGMA foreign_keys = OFF;
+DROP TABLE IF EXISTS leaderboard_snapshots;
+DROP TABLE IF EXISTS administrative_actions;
+DROP TABLE IF EXISTS fraud_flags;
+DROP TABLE IF EXISTS verification_records;
+DROP TABLE IF EXISTS claims;
+DROP TABLE IF EXISTS dispute_evidence;
+DROP TABLE IF EXISTS disputes;
+DROP TABLE IF EXISTS review_answers;
+DROP TABLE IF EXISTS reviews;
+DROP TABLE IF EXISTS user_rewards;
+DROP TABLE IF EXISTS rewards;
+DROP TABLE IF EXISTS user_badges;
+DROP TABLE IF EXISTS badges;
+DROP TABLE IF EXISTS score_category_breakdowns;
+DROP TABLE IF EXISTS trust_score_history;
+PRAGMA foreign_keys = ON;

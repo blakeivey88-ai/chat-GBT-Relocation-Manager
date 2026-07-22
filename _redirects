@@ -1,0 +1,8 @@
+/sign-in /signin 301
+/login /signin 301
+/forgot-password /forgot-password.html 200
+/reset-password /reset-password.html 200
+/subscribe /pricing.html 200
+/pricing /pricing.html 200
+/account/billing /account/billing.html 200
+/launch/* /signin?redirect=/launch/:splat 302

@@ -1,0 +1,17 @@
+PRAGMA foreign_keys = OFF;
+DROP TABLE IF EXISTS audit_log;
+DROP TABLE IF EXISTS trust_disputes;
+DROP TABLE IF EXISTS trust_entries;
+DROP TABLE IF EXISTS partner_reports;
+DROP TABLE IF EXISTS trusted_partners;
+DROP TABLE IF EXISTS carrier_verifications;
+DROP TABLE IF EXISTS notifications;
+DROP TABLE IF EXISTS lane_alerts;
+DROP TABLE IF EXISTS load_requests;
+DROP TABLE IF EXISTS loads;
+DROP TABLE IF EXISTS equipment;
+DROP TABLE IF EXISTS companies;
+DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS sessions;
+DROP TABLE IF EXISTS accounts;
+PRAGMA foreign_keys = ON;

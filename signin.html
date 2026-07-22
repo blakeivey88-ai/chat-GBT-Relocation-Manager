@@ -1,0 +1,745 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#071d3b" />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta
+      name="description"
+      content="Sign in to Relocation Manager USA to access loads, relocation requests, messages, lane alerts, trusted partners, and account activity."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Sign in · Relocation Manager USA" />
+    <meta
+      property="og:description"
+      content="Secure access for drivers, carriers, brokers, and relocation customers."
+    />
+    <meta name="twitter:card" content="summary" />
+    <title>Sign in · Relocation Manager USA</title>
+    <link rel="canonical" href="https://relocationmanagerusa.com/signin" />
+    <link rel="stylesheet" href="/styles.css?v=20260721-6" />
+    <style>
+      :root {
+        color-scheme: light;
+      }
+      body {
+        margin: 0;
+        overflow-x: hidden;
+        background: #071d3b;
+        font-family: Inter, system-ui, sans-serif;
+        color: #172033;
+      }
+      .signin-shell {
+        min-height: 100svh;
+        display: grid;
+        place-items: center;
+        padding: clamp(28px, 5vw, 72px) clamp(16px, 4vw, 56px);
+        background:
+          linear-gradient(
+            90deg,
+            rgba(4, 20, 43, 0.78) 0%,
+            rgba(4, 28, 55, 0.56) 45%,
+            rgba(3, 17, 34, 0.34) 100%
+          ),
+          url("/assets/hero-background.jpg") center 52% / cover no-repeat;
+      }
+      .signin-wrap {
+        width: min(100%, 1180px);
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(380px, 520px);
+        align-items: center;
+        gap: clamp(30px, 6vw, 84px);
+      }
+      .signin-top {
+        display: grid;
+        justify-items: start;
+        gap: 14px;
+        color: #fff;
+        padding: 12px 4px;
+        max-width: 620px;
+        text-shadow: 0 2px 18px rgba(0, 0, 0, 0.3);
+      }
+      .signin-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: clamp(24px, 3vw, 34px);
+        font-weight: 950;
+        letter-spacing: -0.04em;
+        line-height: 1.05;
+      }
+      .signin-brand .mark {
+        display: grid;
+        place-items: center;
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.12);
+        font-size: 26px;
+        flex: none;
+        backdrop-filter: blur(4px);
+      }
+      .signin-brand b {
+        color: #89bbff;
+      }
+      .signin-kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.12);
+        color: #dcecff;
+        font-size: 12px;
+        font-weight: 950;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .signin-top h1 {
+        margin: 8px 0 0;
+        font-size: clamp(44px, 6vw, 76px);
+        line-height: 0.96;
+        letter-spacing: -0.055em;
+      }
+      .signin-top p {
+        margin: 0;
+        max-width: 42ch;
+        font-size: clamp(17px, 1.8vw, 20px);
+        line-height: 1.55;
+        color: rgba(255, 255, 255, 0.9);
+      }
+      .signin-home {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 850;
+        text-decoration: none;
+      }
+      .signin-home:hover {
+        text-decoration: underline;
+      }
+      .signin-card {
+        display: grid;
+        gap: 18px;
+        padding: clamp(24px, 3vw, 38px);
+        background: rgba(255, 255, 255, 0.97);
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        border-radius: 28px;
+        box-shadow: 0 28px 80px rgba(2, 15, 33, 0.32);
+        backdrop-filter: blur(12px);
+        animation: fadeUp 0.45s ease both;
+      }
+      .signin-card h2 {
+        margin: 0;
+        font-size: clamp(28px, 4vw, 38px);
+        letter-spacing: -0.04em;
+      }
+      .signin-card p {
+        margin: 0;
+        color: #66758a;
+        line-height: 1.5;
+      }
+      .signin-form {
+        display: grid;
+        gap: 14px;
+      }
+      .signin-form label {
+        display: grid;
+        gap: 7px;
+        color: #5d6d82;
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .field-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .signin-form input {
+        min-height: 48px;
+        padding: 12px 14px;
+        border-radius: 14px;
+        border: 1px solid #d8e2ee;
+        background: #fbfdff;
+        color: #172033;
+        font-size: 16px;
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+      .signin-form input:focus {
+        outline: 3px solid rgba(29, 78, 216, 0.18);
+        border-color: #7db1ff;
+        background: #fff;
+      }
+      .signin-form input[aria-invalid="true"] {
+        border-color: #d94b4b;
+        outline-color: rgba(217, 75, 75, 0.18);
+      }
+      .field-error {
+        min-height: 18px;
+        margin-top: 2px;
+        color: #b42318;
+        font-size: 12px;
+        line-height: 1.35;
+        font-weight: 700;
+        text-transform: none;
+        letter-spacing: 0;
+      }
+      .show-btn {
+        min-height: 48px;
+        padding: 0 14px;
+        border-radius: 14px;
+        border: 1px solid #d8e2ee;
+        background: #f6f9fc;
+        color: #173b74;
+        font-size: 14px;
+        font-weight: 900;
+        cursor: pointer;
+        flex: none;
+      }
+      .show-btn:focus {
+        outline: 3px solid rgba(29, 78, 216, 0.18);
+        border-color: #7db1ff;
+      }
+      .signin-actions {
+        display: grid;
+        gap: 10px;
+      }
+      .signin-actions .btn {
+        min-height: 48px;
+        border-radius: 14px;
+      }
+      .signin-actions .btn[disabled] {
+        opacity: 0.72;
+        cursor: not-allowed;
+      }
+      .signin-links {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .signin-links a,
+      .signin-meta a,
+      .signin-support a {
+        font-weight: 800;
+        color: #173b74;
+      }
+      .signin-meta,
+      .signin-support {
+        font-size: 14px;
+        line-height: 1.5;
+        color: #526176;
+      }
+      .signin-confidence {
+        margin-top: -2px;
+        font-size: 13px;
+        line-height: 1.45;
+        color: #5f6f84;
+      }
+      .inline-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .signin-form label.remember-wrap {
+        display: flex;
+        grid-template-columns: auto 1fr;
+        align-items: center;
+        gap: 8px;
+        color: #526176;
+        font-size: 14px;
+        font-weight: 650;
+        text-transform: none;
+        letter-spacing: 0;
+      }
+      .remember-wrap input {
+        min-height: auto;
+        width: 16px;
+        height: 16px;
+        margin: 0;
+        flex: none;
+      }
+      .signin-note {
+        padding: 13px 15px;
+        border-radius: 14px;
+        background: #f4f8fc;
+        border: 1px solid #dce6f0;
+        color: #526176;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+      .signin-status {
+        display: grid;
+        gap: 6px;
+        background: #eaf7ef;
+        border: 1px solid #b9dfc6;
+        color: #176835;
+        border-radius: 14px;
+        padding: 13px 15px;
+        font-weight: 750;
+        outline: none;
+      }
+      .signin-status[data-tone="error"] {
+        background: #fff1f1;
+        border-color: #f0bbbb;
+        color: #9d1c1c;
+      }
+      .signin-status[hidden] {
+        display: none;
+      }
+      .signin-footer {
+        font-size: 13px;
+        color: #6b7b90;
+        line-height: 1.5;
+      }
+      .spinner {
+        width: 14px;
+        height: 14px;
+        border-radius: 999px;
+        border: 2px solid currentColor;
+        border-right-color: transparent;
+        display: inline-block;
+        animation: spin 0.8s linear infinite;
+        vertical-align: -2px;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .spinner {
+          animation: none !important;
+        }
+        .signin-card {
+          animation: none !important;
+        }
+      }
+      @media (max-width: 860px) {
+        .signin-shell {
+          place-items: start center;
+          background-position: 60% center;
+        }
+        .signin-wrap {
+          width: min(100%, 600px);
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+        .signin-top {
+          padding: 0 4px;
+        }
+        .signin-top h1 {
+          font-size: clamp(40px, 10vw, 58px);
+        }
+      }
+      @media (max-width: 640px) {
+        .signin-shell {
+          padding: 18px 12px 28px;
+          background-position: 56% center;
+        }
+        .signin-wrap {
+          gap: 16px;
+        }
+        .signin-card {
+          border-radius: 22px;
+          padding: 22px 18px;
+        }
+        .signin-top h1 {
+          font-size: clamp(36px, 11vw, 48px);
+        }
+        .signin-top p {
+          font-size: 16px;
+        }
+        .inline-row,
+        .signin-links,
+        .signin-support {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .signin-actions .btn {
+          width: 100%;
+        }
+        .show-btn {
+          min-width: 72px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="signin-shell">
+      <div class="signin-wrap">
+        <header class="signin-top" aria-label="Sign in header">
+          <a class="signin-home" href="/">← Back to homepage</a>
+          <div class="signin-brand">
+            <span class="mark">🦅</span
+            ><span>Relocation <b>Manager USA</b></span>
+          </div>
+          <div class="signin-kicker">Secure member access</div>
+          <h1>Welcome back. Keep every mile moving.</h1>
+          <p>
+            Sign in to find loads, schedule pickups, manage your profile, and
+            keep your business moving from one trusted workspace.
+          </p>
+        </header>
+        <article class="signin-card">
+          <h2>Sign in</h2>
+          <form class="signin-form" id="signinForm" novalidate>
+            <label
+              >Email address
+              <input
+                name="email"
+                id="emailField"
+                type="email"
+                autocomplete="email"
+                autocapitalize="none"
+                spellcheck="false"
+                required
+                placeholder="you@company.com"
+                aria-describedby="emailError"
+              />
+            </label>
+            <div class="field-error" id="emailError" aria-live="polite"></div>
+            <label
+              >Password
+              <div class="field-row">
+                <input
+                  name="password"
+                  id="passwordField"
+                  type="password"
+                  autocomplete="current-password"
+                  required
+                  placeholder="Your password"
+                  aria-describedby="passwordError"
+                />
+                <button
+                  class="show-btn"
+                  id="togglePassword"
+                  type="button"
+                  aria-controls="passwordField"
+                  aria-pressed="false"
+                >
+                  Show
+                </button>
+              </div>
+            </label>
+            <div
+              class="field-error"
+              id="passwordError"
+              aria-live="polite"
+            ></div>
+            <div class="inline-row">
+              <label class="remember-wrap"
+                ><input type="checkbox" id="rememberMe" name="rememberMe" />
+                Remember me</label
+              >
+              <a href="/forgot-password">Forgot password?</a>
+            </div>
+            <div class="signin-actions">
+              <button class="btn btn-primary full" type="submit">
+                <span class="button-text">Sign In</span>
+              </button>
+              <a class="btn btn-soft full" href="/index.html#signup"
+                >Create Account</a
+              >
+            </div>
+          </form>
+
+          <div class="signin-links">
+            <a href="/legal.html#privacy">Privacy Policy</a
+            ><a href="/legal.html#terms">Terms of Service</a>
+          </div>
+          <div class="signin-support">
+            Having trouble?
+            <a
+              href="mailto:support@relocationmanagerusa.com?subject=Relocation%20Manager%20USA%20Support"
+              >Contact Support</a
+            >
+          </div>
+          <p class="signin-confidence">
+            Secure access. Your subscription will not be charged again when you
+            sign back in.
+          </p>
+
+          <div
+            class="signin-status"
+            id="signinStatus"
+            role="alert"
+            aria-live="assertive"
+            aria-atomic="true"
+            hidden
+          ></div>
+          <div class="signin-note">
+            If you’re already paid, we’ll take you straight to your profile or
+            the page you asked for.
+          </div>
+          <p class="signin-footer">
+            No passwords are stored in your browser. Billing or pricing only
+            appears if your account actually needs it.
+          </p>
+        </article>
+      </div>
+    </main>
+
+    <script>
+      const params = new URLSearchParams(location.search);
+      const redirectTarget = params.get("redirect") || "";
+      const form = document.getElementById("signinForm");
+      const statusBox = document.getElementById("signinStatus");
+      const submitButton = form?.querySelector('button[type="submit"]');
+      const buttonText = submitButton?.querySelector(".button-text");
+      const emailInput = form?.querySelector('[name="email"]');
+      const passwordInput = form?.querySelector('[name="password"]');
+      const togglePassword = document.getElementById("togglePassword");
+      const rememberMe = document.getElementById("rememberMe");
+      const emailError = document.getElementById("emailError");
+      const passwordError = document.getElementById("passwordError");
+      let csrfToken = "";
+      const rememberKey = "relocation_manager_signin_email";
+
+      function showStatus(message, tone = "info") {
+        if (!statusBox) return;
+        statusBox.hidden = false;
+        statusBox.dataset.tone = tone;
+        statusBox.textContent = message;
+      }
+
+      function clearStatus() {
+        if (!statusBox) return;
+        statusBox.hidden = true;
+        statusBox.dataset.tone = "";
+        statusBox.textContent = "";
+      }
+
+      function setFieldError(field, message) {
+        const box = field === "email" ? emailError : passwordError;
+        const input = field === "email" ? emailInput : passwordInput;
+        if (box) box.textContent = message || "";
+        if (input)
+          input.setAttribute("aria-invalid", message ? "true" : "false");
+      }
+
+      function clearFieldErrors() {
+        setFieldError("email", "");
+        setFieldError("password", "");
+      }
+
+      function setBusy(next) {
+        if (!submitButton) return;
+        submitButton.disabled = Boolean(next);
+        if (buttonText) {
+          buttonText.innerHTML = next
+            ? '<span class="spinner" aria-hidden="true"></span> Signing in…'
+            : "Sign In";
+        }
+        if (form) form.setAttribute("aria-busy", String(Boolean(next)));
+      }
+
+      function safeInternalUrl(value) {
+        if (!value) return "";
+        try {
+          const next = new URL(value, location.origin);
+          if (next.origin !== location.origin) return "";
+          if (/^\/api(\/|$)/i.test(next.pathname)) return "";
+          if (/^\/admin(\.html)?(\/|$)/i.test(next.pathname)) return "";
+          if (/^\/(signin|sign-in|login)(\.html)?$/i.test(next.pathname))
+            return "";
+          return `${next.pathname}${next.search}${next.hash}`;
+        } catch {
+          return "";
+        }
+      }
+
+      function goNext(data) {
+        const redirectPath = safeInternalUrl(data?.redirectPath || "");
+        const dashboardRoute = String(
+          data?.dashboardRoute || data?.memberAccess?.dashboardRoute || "",
+        ).trim();
+        const accessRoute = String(
+          data?.accessRoute || data?.memberAccess?.accessRoute || "",
+        ).trim();
+        if (dashboardRoute === "admin") {
+          location.replace("/admin.html");
+          return;
+        }
+        if (dashboardRoute === "verify" || accessRoute === "verify") {
+          location.replace("/index.html#verify");
+          return;
+        }
+        if (dashboardRoute === "profile-completion") {
+          location.replace("/index.html#signup");
+          return;
+        }
+        if (dashboardRoute === "renewal" || accessRoute === "billing") {
+          location.replace(
+            redirectPath || "/account/billing?redirect=%2Fprofile",
+          );
+          return;
+        }
+        if (dashboardRoute === "plan-selection" || accessRoute === "pricing") {
+          location.replace(
+            redirectPath ||
+              (redirectTarget
+                ? `/pricing?redirect=${encodeURIComponent(redirectTarget)}`
+                : "/pricing"),
+          );
+          return;
+        }
+        if (redirectPath) {
+          location.replace(redirectPath);
+          return;
+        }
+        const next = safeInternalUrl(redirectTarget);
+        if (next) {
+          location.replace(next);
+          return;
+        }
+        location.replace("/index.html#profile");
+      }
+
+      async function readCurrentAccount() {
+        try {
+          const response = await fetch("/api/account", {
+            credentials: "include",
+          });
+          const data = await response.json();
+          if (data?.csrfToken) csrfToken = String(data.csrfToken || "");
+          if (data?.memberAccess?.authenticated) {
+            showStatus(
+              "Welcome back to Relocation Manager USA. Opening your account…",
+            );
+            goNext(data);
+          }
+        } catch {
+          // Ignore and stay on the sign-in form.
+        }
+      }
+
+      async function loginAccount(email, secret) {
+        const response = await fetch("/api/account", {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            "x-csrf-token": csrfToken || "",
+          },
+          body: JSON.stringify({
+            action: "login",
+            email,
+            password: secret,
+            accessCode: secret,
+            rememberMe: Boolean(rememberMe?.checked),
+            redirect: redirectTarget,
+          }),
+        });
+        let data = {};
+        try {
+          data = await response.json();
+        } catch {}
+        if (data?.csrfToken) csrfToken = String(data.csrfToken || "");
+        if (!response.ok) throw data;
+        return data;
+      }
+
+      function loadRememberedEmail() {
+        const saved = localStorage.getItem(rememberKey) || "";
+        if (saved && emailInput && !emailInput.value) emailInput.value = saved;
+        if (rememberMe) rememberMe.checked = Boolean(saved);
+      }
+
+      function setPasswordVisibility(nextVisible) {
+        if (!passwordInput || !togglePassword) return;
+        passwordInput.type = nextVisible ? "text" : "password";
+        togglePassword.textContent = nextVisible ? "Hide" : "Show";
+        togglePassword.setAttribute(
+          "aria-pressed",
+          String(Boolean(nextVisible)),
+        );
+      }
+
+      loadRememberedEmail();
+      setPasswordVisibility(false);
+
+      togglePassword?.addEventListener("click", () => {
+        setPasswordVisibility(passwordInput?.type !== "text");
+        passwordInput?.focus();
+      });
+
+      form?.addEventListener("input", () => {
+        if (statusBox && !statusBox.hidden) clearStatus();
+        clearFieldErrors();
+      });
+
+      form?.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const email = String(emailInput?.value || "").trim();
+        const secret = String(passwordInput?.value || "").trim();
+        clearFieldErrors();
+
+        if (!email) {
+          setFieldError("email", "Email address is required.");
+        } else if (!/^([^\s@]+)@([^\s@]+)\.([^\s@]+)$/.test(email)) {
+          setFieldError("email", "Enter a valid email address.");
+        }
+        if (!secret) {
+          setFieldError("password", "Password is required.");
+        }
+        if (
+          !email ||
+          !secret ||
+          emailError?.textContent ||
+          passwordError?.textContent
+        ) {
+          showStatus("Please fix the highlighted fields.", "error");
+          (emailError?.textContent
+            ? emailInput
+            : passwordInput || emailInput
+          )?.focus();
+          return;
+        }
+
+        setBusy(true);
+        clearStatus();
+        try {
+          const data = await loginAccount(email, secret);
+          if (rememberMe?.checked) localStorage.setItem(rememberKey, email);
+          else localStorage.removeItem(rememberKey);
+          showStatus(
+            "Welcome back to Relocation Manager USA. Redirecting you now…",
+          );
+          if (passwordInput) passwordInput.value = "";
+          await new Promise((resolve) => setTimeout(resolve, 350));
+          goNext(data);
+        } catch (err) {
+          const message =
+            "We couldn't sign you in. Check your email and password, then try again.";
+          setFieldError("password", message);
+          showStatus(message, "error");
+          passwordInput?.focus();
+        } finally {
+          setBusy(false);
+        }
+      });
+
+      readCurrentAccount();
+    </script>
+  </body>
+</html>
