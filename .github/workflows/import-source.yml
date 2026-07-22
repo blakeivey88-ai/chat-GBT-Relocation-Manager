@@ -1,0 +1,29 @@
+name: Import website source
+
+on:
+  push:
+    paths:
+      - relocation-manager-source.zip
+
+permissions:
+  contents: write
+
+jobs:
+  import-source:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Extract website source
+        run: |
+          unzip -q relocation-manager-source.zip -d .
+          rm relocation-manager-source.zip
+
+      - name: Commit imported source
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Import complete Relocation Manager website source"
+          git push
