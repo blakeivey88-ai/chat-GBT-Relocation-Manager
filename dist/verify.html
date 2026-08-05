@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="canonical" href="https://relocationmanagerusa.com/verify.html" />
+    <title>Verify Your Account | Relocation Manager USA</title>
+    <link rel="stylesheet" href="/public-site.css?v=20260803-1" />
+    <script defer src="/analytics-loader.js"></script>
+  </head>
+  <body>
+    <header class="site-header"><div class="header-inner"><a class="brand" href="/"><span class="brand-mark">🦅</span><span>Relocation <strong>Manager USA</strong></span></a><nav class="site-nav" style="display:flex"><a class="nav-cta" href="/signin">Member sign in</a></nav></div></header>
+    <main>
+      <section class="page-hero" style="padding-bottom:150px"><div class="container"><div class="breadcrumbs"><a href="/">Home</a><span>›</span><span>Verify account</span></div><div class="kicker">Step 2 of 3</div><h1>Verify your account.</h1><p>Click the verification link we emailed you, or paste the token from that email below. After verification, continue to secure checkout for the selected plan.</p></div></section>
+      <section class="section" style="margin-top:-120px;padding-top:0"><div class="container form-shell">
+        <form class="card form-card" id="verifyForm">
+          <label>Email<input name="email" type="email" autocomplete="email" required /></label>
+          <label>Verification token<input name="token" autocomplete="one-time-code" required /></label>
+          <button class="btn btn-primary btn-block" id="verifyButton" type="submit">Verify account</button>
+          <div class="status" id="statusBox" role="status" aria-live="polite" hidden></div>
+          <div id="checkoutBox" hidden>
+            <a class="btn btn-gold btn-block" id="checkoutButton" href="#">Continue to secure checkout</a>
+            <p style="color:#607086;font-size:13px">Checkout is handled by Stripe. Your member workspace opens after the active subscription is confirmed.</p>
+          </div>
+          <p style="margin:0;color:#607086">Already verified? <a href="/signin" style="font-weight:900">Sign in to continue</a>.</p>
+        </form>
+      </div></section>
+    </main>
+    <script>
+      const checkout = {
+        shipper: "https://buy.stripe.com/fZu4gA5B06AH6UWepqaVa00",
+        driver: "https://buy.stripe.com/28EdRa9RgcZ53IKbdeaVa01",
+        "fleet-starter": "https://buy.stripe.com/3cI4gA8Nc6AH6UW6WYaVa02",
+        "fleet-growth": "https://buy.stripe.com/00w00kfbAcZ52EG5SUaVa04",
+        "fleet-pro": "https://buy.stripe.com/3cIcN69RgaQXbbcftuaVa03",
+        "dispatcher-broker": "https://buy.stripe.com/fZu28s1kK0cj5QSgxyaVa05"
+      };
+      const params = new URLSearchParams(location.search);
+      const form = document.getElementById("verifyForm");
+      const statusBox = document.getElementById("statusBox");
+      const verifyButton = document.getElementById("verifyButton");
+      const checkoutBox = document.getElementById("checkoutBox");
+      const checkoutButton = document.getElementById("checkoutButton");
+      const plan = checkout[params.get("plan")] ? params.get("plan") : "shipper";
+      let csrfToken = "";
+      form.elements.email.value = params.get("email") || "";
+      form.elements.token.value = params.get("token") || params.get("verify_token") || "";
+      checkoutButton.href = checkout[plan];
+
+      function bindCheckoutToVerifiedAccount(data) {
+        const userId = String(data?.profile?.userId || "").trim();
+        const email = String(data?.profile?.email || form.elements.email.value || "").trim();
+        if (!userId || !email) throw new Error("Verified account details are missing. Sign in and try checkout again.");
+        const destination = new URL(checkout[plan]);
+        destination.searchParams.set("client_reference_id", userId);
+        destination.searchParams.set("locked_prefilled_email", email);
+        checkoutButton.href = destination.toString();
+      }
+
+      function showStatus(message, tone = "") {
+        statusBox.hidden = false;
+        statusBox.className = `status ${tone}`.trim();
+        statusBox.textContent = message;
+      }
+
+      async function seedCsrf() {
+        const response = await fetch("/api/account", { credentials: "include", cache: "no-store" });
+        const data = await response.json().catch(() => null);
+        csrfToken = String(data?.csrfToken || "");
+      }
+
+      async function verifyAccount(body, allowRetry = true) {
+        if (!csrfToken) await seedCsrf();
+        const response = await fetch("/api/account", {
+          method: "POST",
+          credentials: "include",
+          headers: { "content-type": "application/json", "x-csrf-token": csrfToken },
+          body: JSON.stringify(body)
+        });
+        const data = await response.json().catch(() => null);
+        if (data?.csrfToken) csrfToken = String(data.csrfToken);
+        if (response.status === 403 && data?.csrfToken && allowRetry) return verifyAccount(body, false);
+        if (!response.ok) throw new Error(data?.error || "Verification failed.");
+        return data;
+      }
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (!form.reportValidity()) return;
+        verifyButton.disabled = true;
+        verifyButton.textContent = "Verifying…";
+        showStatus("Checking the verification token…");
+        try {
+          const data = await verifyAccount({
+            action: "verify-email",
+            email: String(form.elements.email.value || "").trim(),
+            token: String(form.elements.token.value || "").trim()
+          });
+          showStatus("Account verified. Continue to secure checkout.", "success");
+          if (window.rmTrack) window.rmTrack("verification_completed", { plan });
+          verifyButton.hidden = true;
+          checkoutBox.hidden = false;
+          bindCheckoutToVerifiedAccount(data);
+          if (data?.memberAccess?.entitled) {
+            checkoutButton.textContent = "Open member workspace";
+            checkoutButton.href = data.redirectPath || "/member.html#dashboard";
+          }
+        } catch (error) {
+          showStatus(error?.message || "Verification failed. Request a new link and try again.", "error");
+          verifyButton.disabled = false;
+          verifyButton.textContent = "Verify account";
+        }
+      });
+
+      checkoutButton.addEventListener("click", () => {
+        if (window.rmTrack) window.rmTrack("checkout_started", { plan, source: "verify" });
+      });
+
+      seedCsrf().catch(() => showStatus("Secure session could not start. Reload and try again.", "error"));
+    </script>
+  </body>
+</html>

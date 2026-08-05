@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" role="img" aria-label="Futuristic multi-level car carrier">
+  <defs><linearGradient id="cab" x1="0" x2="1"><stop stop-color="#183d78"/><stop offset="1" stop-color="#43a6ff"/></linearGradient><linearGradient id="deck"><stop stop-color="#151d31"/><stop offset="1" stop-color="#334d77"/></linearGradient></defs>
+  <rect width="900" height="520" rx="32" fill="#07101f"/><path d="M65 405h780" stroke="#273b5d" stroke-width="12"/>
+  <path d="M110 330h570V195H275l-72 55h-93z" fill="url(#deck)" stroke="#78bfff" stroke-width="5"/>
+  <path d="M95 330h165V225l-38-42h-72l-55 47z" fill="url(#cab)" stroke="#bfe5ff" stroke-width="5"/>
+  <path d="M155 237h80l-28-29h-32z" fill="#07101f" stroke="#7ee4ff" stroke-width="4"/>
+  <path d="M270 195h410l80 72H270z" fill="#1b2a44" stroke="#ff4c43" stroke-width="5"/>
+  <path d="M300 255h455" stroke="#7ee4ff" stroke-width="6"/><path d="M305 185h385" stroke="#7ee4ff" stroke-width="6"/>
+  <g fill="#d9f1ff" stroke="#ff4c43" stroke-width="4"><path d="M350 165h92l22 25h-132z"/><path d="M500 165h92l22 25h-132z"/><path d="M410 235h92l22 25H392z"/><path d="M560 235h92l22 25H542z"/></g>
+  <path d="M685 195l95 70v65H685z" fill="#233b61" stroke="#78bfff" stroke-width="5"/><path d="M735 330l55 0 38 58H705z" fill="#14223a" stroke="#ff4c43" stroke-width="5"/>
+  <g fill="#05070d" stroke="#7ee4ff" stroke-width="5"><circle cx="160" cy="382" r="38"/><circle cx="245" cy="382" r="38"/><circle cx="705" cy="382" r="38"/><circle cx="790" cy="382" r="38"/></g>
+  <g fill="#7ee4ff"><circle cx="160" cy="382" r="14"/><circle cx="245" cy="382" r="14"/><circle cx="705" cy="382" r="14"/><circle cx="790" cy="382" r="14"/></g>
+</svg>

@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="index,follow" />
+    <meta name="description" content="Free rate per mile calculator for owner-operators: fuel, deadhead, cost per mile, break-even, and your target rate. No signup, no card." />
+    <link rel="canonical" href="https://relocationmanagerusa.com/rate-calculator" />
+    <title>Free Truck Rate Per Mile Calculator | Break-Even Rate</title>
+    <link rel="stylesheet" href="/public-site.css?v=20260803-1" />
+    <script defer src="/analytics-loader.js"></script><script defer src="/public-site.js?v=20260723-1"></script>
+    <style>
+      .calc-grid { display: grid; gap: 22px; align-items: start; }
+      @media (min-width: 960px) { .calc-grid { grid-template-columns: minmax(0, 1fr) 360px; } .calc-results { position: sticky; top: 90px; } }
+      .calc-results { display: grid; gap: 0; padding: 24px; }
+      .calc-results h2 { margin: 0 0 6px; font-size: 20px; }
+      .calc-row { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px dashed #e3ebf4; }
+      .calc-row span { color: #607086; font-size: 14px; font-weight: 700; }
+      .calc-row strong { font-size: 16px; white-space: nowrap; }
+      .calc-row.total strong { font-size: 20px; color: #14335c; }
+      .calc-row.profit strong { color: #0c7a43; }
+      .calc-row.loss strong { color: #b3261e; }
+      .calc-note { margin: 12px 0 0; color: #607086; font-size: 13px; line-height: 1.5; }
+      .calc-actions { display: grid; gap: 8px; margin-top: 14px; }
+    </style>
+  </head>
+  <body>
+    <header class="site-header"><div class="header-inner"><a class="brand" href="/"><span class="brand-mark">🦅</span><span>Relocation <strong>Manager USA</strong></span></a><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="siteNav" data-nav-toggle>Menu</button><nav class="site-nav" id="siteNav" data-site-nav><a href="/">Home</a><a href="/pricing.html">Pricing</a><a href="/safety.html">Safety</a><a href="/support.html">Support</a><a class="nav-cta" href="/signin">Member sign in</a></nav></div></header>
+    <main>
+      <section class="page-hero"><div class="container"><div class="breadcrumbs"><a href="/">Home</a><span>›</span><span>Rate calculator</span></div><div class="kicker">Free tool · No signup needed</div><h1>Know your break-even before you quote.</h1><p>Enter your trip and your truck's real costs. Get your cost per mile, break-even rate, and a target rate with your profit built in — before you post or negotiate.</p></div></section>
+      <section class="section"><div class="container calc-grid">
+        <form class="card form-card" id="calcForm">
+          <div class="form-grid">
+            <label>Loaded miles<input name="loadedMiles" type="number" min="0" step="1" inputmode="numeric" placeholder="420" required /></label>
+            <label>Deadhead miles<input name="deadheadMiles" type="number" min="0" step="1" inputmode="numeric" placeholder="60" /></label>
+            <label>Truck MPG<input name="mpg" type="number" min="1" step="0.1" inputmode="decimal" placeholder="8.5" required /></label>
+            <label>Fuel price ($ / gallon)<input name="fuelPrice" type="number" min="0" step="0.01" inputmode="decimal" placeholder="3.85" required /><small class="muted">Enter what you actually pay. <a href="https://www.eia.gov/petroleum/gasdiesel/" target="_blank" rel="noopener">Check the current U.S. national diesel average (EIA)</a> — it's updated weekly and dated on their page.</small></label>
+            <label>Tolls for this trip ($)<input name="tolls" type="number" min="0" step="0.01" inputmode="decimal" placeholder="35" /></label>
+            <label>Other trip expenses ($)<input name="extras" type="number" min="0" step="0.01" inputmode="decimal" placeholder="50" /><small class="muted">Lumpers, parking, permits, extra labor.</small></label>
+            <label>Fixed operating cost ($ / mile)<input name="fixedPerMile" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0.75" /><small class="muted">Truck payment, insurance, maintenance, tires spread per mile. Skip if you only want fuel-based numbers.</small></label>
+            <label>Desired profit margin (%)<input name="margin" type="number" min="0" max="95" step="1" inputmode="numeric" placeholder="20" /></label>
+            <label>Offered rate ($) — optional<input name="offered" type="number" min="0" step="0.01" inputmode="decimal" placeholder="1250" /><small class="muted">Enter a rate you were offered to see the profit or loss on it.</small></label>
+          </div>
+          <button class="btn btn-primary btn-block" type="submit">Calculate my rate</button>
+          <p class="muted" style="margin:0;font-size:13px">Estimates based only on what you enter. Verify your own costs — this is a planning tool, not a rate guarantee or financial advice.</p>
+        </form>
+        <aside class="card calc-results" id="calcResults" aria-live="polite">
+          <h2>Your numbers</h2>
+          <div class="calc-row"><span>Total miles (loaded + deadhead)</span><strong id="outMiles">—</strong></div>
+          <div class="calc-row"><span>Fuel cost</span><strong id="outFuel">—</strong></div>
+          <div class="calc-row"><span>Tolls &amp; other expenses</span><strong id="outExtras">—</strong></div>
+          <div class="calc-row"><span>Fixed operating cost</span><strong id="outFixed">—</strong></div>
+          <div class="calc-row"><span>Operating cost per loaded mile</span><strong id="outCpm">—</strong></div>
+          <div class="calc-row total"><span>Break-even rate</span><strong id="outBreakEven">—</strong></div>
+          <div class="calc-row total"><span>Target rate (with your margin)</span><strong id="outTarget">—</strong></div>
+          <div class="calc-row" id="rowTargetProfit"><span>Profit at target rate</span><strong id="outTargetProfit">—</strong></div>
+          <div class="calc-row" id="rowOffered" hidden><span>Offered rate result</span><strong id="outOffered">—</strong></div>
+          <p class="calc-note">Use this rate when preparing a post or negotiation. Knowing your break-even is the difference between a paying load and hauling for free.</p>
+          <div class="calc-actions">
+            <a class="btn btn-primary" href="/signup.html?plan=driver">Create a free profile to put it to work</a>
+            <a class="btn btn-light" href="/pricing.html">See member plans</a>
+          </div>
+        </aside>
+      </div></section>
+      <section class="section"><div class="container content-narrow prose">
+        <article class="card"><h2>How the math works</h2><p>Fuel cost = total miles ÷ your MPG × your fuel price. Your break-even is fuel plus tolls, trip expenses, and your fixed cost per mile across every mile you'll drive — including deadhead, because the empty miles cost the same fuel. The target rate adds your chosen profit margin on top. If an offered rate is below break-even, you are paying to work.</p></article>
+
+        <article class="card"><h2>Common questions about rate per mile</h2>
+          <h3>What should I charge per mile?</h3>
+          <p>There is no single correct number — it depends on your truck, not the market. Your floor is your break-even: fuel, tolls, trip expenses, and your fixed cost per mile spread across every mile including deadhead. Your asking rate is that floor plus the margin you need. Two drivers hauling the same load can have break-evens that differ by $0.40 a mile, which is why an average rate from a load board tells you very little about whether <em>you</em> should take it.</p>
+
+          <h3>How do I calculate my cost per mile?</h3>
+          <p>Add your fixed costs for the month — truck payment, insurance, permits, and what you set aside for maintenance and tires — and divide by the miles you actually run in a month. That's your fixed cost per mile. Add fuel cost per mile (fuel price ÷ MPG) and you have your operating cost per mile. Most owner-operators underestimate this because they forget the maintenance reserve until something breaks.</p>
+
+          <h3>Should deadhead miles count?</h3>
+          <p>Yes. Empty miles burn the same fuel and put the same wear on the truck, but earn nothing. A 400-mile load with 100 miles of deadhead is a 500-mile job that pays for 400. Leaving deadhead out is the most common reason a load looks profitable on paper and isn't.</p>
+
+          <h3>What is a good profit margin for trucking?</h3>
+          <p>That's your decision, not an industry constant. The margin has to cover the things break-even doesn't: your own pay, downtime between loads, and money set aside for the repair you can't predict. This calculator defaults to 20% because it's a common starting point, but the number that matters is the one that keeps your truck running next year.</p>
+
+          <h3>Is this calculator really free?</h3>
+          <p>Yes — no signup, no card, no email. It runs entirely in your browser and we don't store the numbers you enter. Relocation Manager USA makes money from monthly subscriptions to the marketplace, and takes no commission on any load. The calculator is useful on its own and you're welcome to use it without ever creating an account.</p>
+        </article>
+      </div></section>
+    </main>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebApplication",
+          "name": "Truck Rate Per Mile Calculator",
+          "url": "https://relocationmanagerusa.com/rate-calculator",
+          "applicationCategory": "BusinessApplication",
+          "operatingSystem": "Any",
+          "description": "Free calculator for owner-operators and small fleets: fuel cost, cost per mile, break-even rate, and target rate with your profit margin. No signup required.",
+          "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+          "publisher": { "@type": "Organization", "name": "Relocation Manager USA", "url": "https://relocationmanagerusa.com" }
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "What should I charge per mile?",
+              "acceptedAnswer": { "@type": "Answer", "text": "There is no single correct number — it depends on your truck, not the market. Your floor is your break-even: fuel, tolls, trip expenses, and your fixed cost per mile spread across every mile including deadhead. Your asking rate is that floor plus the margin you need." }
+            },
+            {
+              "@type": "Question",
+              "name": "How do I calculate my cost per mile?",
+              "acceptedAnswer": { "@type": "Answer", "text": "Add your fixed monthly costs — truck payment, insurance, permits, and your maintenance and tire reserve — and divide by the miles you actually run in a month. Add fuel cost per mile (fuel price divided by MPG) to get your operating cost per mile." }
+            },
+            {
+              "@type": "Question",
+              "name": "Should deadhead miles count?",
+              "acceptedAnswer": { "@type": "Answer", "text": "Yes. Empty miles burn the same fuel and wear the truck the same, but earn nothing. A 400-mile load with 100 miles of deadhead is a 500-mile job that pays for 400." }
+            },
+            {
+              "@type": "Question",
+              "name": "What is a good profit margin for trucking?",
+              "acceptedAnswer": { "@type": "Answer", "text": "It is a business decision, not an industry constant. The margin must cover your own pay, downtime between loads, and unplanned repairs. Twenty percent is a common starting point." }
+            },
+            {
+              "@type": "Question",
+              "name": "Is this calculator really free?",
+              "acceptedAnswer": { "@type": "Answer", "text": "Yes — no signup, no card, no email. It runs in your browser and the numbers you enter are not stored. Relocation Manager USA earns from monthly subscriptions and takes no commission on loads." }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+    <footer class="site-footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><a class="brand" href="/" style="color:#fff"><span class="brand-mark">🦅</span><span>Relocation <strong>Manager USA</strong></span></a></div><nav class="footer-col"><strong>Marketplace</strong><a href="/pricing.html">Pricing</a><a href="/signup.html?plan=shipper">Post a Pickup</a><a href="/signup.html?plan=driver">Find Loads</a><a href="/carrier-profile.html">Carrier Profile</a></nav><nav class="footer-col"><strong>Trust</strong><a href="/safety.html">Safety</a><a href="/support.html">Support</a><a href="/knowledge/index.html">Knowledge</a></nav><nav class="footer-col"><strong>Legal</strong><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a><a href="/cancellation.html">Cancellation</a></nav></div><div class="footer-bottom"><span>© <span data-year>2026</span> Relocation Manager USA</span></div></div></footer>
+    <script>
+      const form = document.getElementById("calcForm");
+      // Prefill from links (e.g. the AI Dispatch Assistant hands off a load here).
+      const prefill = new URLSearchParams(location.search);
+      const prefillMap = { loaded: "loadedMiles", deadhead: "deadheadMiles", mpg: "mpg", fuel: "fuelPrice", tolls: "tolls", extras: "extras", fixed: "fixedPerMile", margin: "margin", offered: "offered" };
+      Object.entries(prefillMap).forEach(([param, field]) => {
+        const value = Number(prefill.get(param));
+        if (Number.isFinite(value) && value > 0 && form.elements[field]) form.elements[field].value = value;
+      });
+      const money = (value) => "$" + value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const num = (name) => {
+        const value = Number(form.elements[name].value);
+        return Number.isFinite(value) && value > 0 ? value : 0;
+      };
+      const set = (id, text) => { document.getElementById(id).textContent = text; };
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        if (!form.reportValidity()) return;
+        const loaded = num("loadedMiles");
+        const deadhead = num("deadheadMiles");
+        const totalMiles = loaded + deadhead;
+        const mpg = num("mpg");
+        if (!loaded || !mpg) return;
+        const fuel = (totalMiles / mpg) * num("fuelPrice");
+        const extras = num("tolls") + num("extras");
+        const fixed = num("fixedPerMile") * totalMiles;
+        const cost = fuel + extras + fixed;
+        const margin = Math.min(num("margin"), 95) / 100;
+        const target = cost * (1 + margin);
+        set("outMiles", `${totalMiles.toLocaleString()} mi`);
+        set("outFuel", money(fuel));
+        set("outExtras", money(extras));
+        set("outFixed", money(fixed));
+        set("outCpm", money(cost / loaded) + " /mi");
+        set("outBreakEven", money(cost) + ` (${money(cost / loaded)}/mi)`);
+        set("outTarget", money(target) + ` (${money(target / loaded)}/mi)`);
+        set("outTargetProfit", money(target - cost));
+        const offered = num("offered");
+        const offeredRow = document.getElementById("rowOffered");
+        if (offered > 0) {
+          offeredRow.hidden = false;
+          const diff = offered - cost;
+          offeredRow.className = "calc-row " + (diff >= 0 ? "profit" : "loss");
+          set("outOffered", diff >= 0 ? `+${money(diff)} profit` : `${money(diff)} LOSS`);
+        } else {
+          offeredRow.hidden = true;
+        }
+        if (window.rmTrack) window.rmTrack("calculator_used", { miles: totalMiles });
+      });
+    </script>
+  </body>
+</html>

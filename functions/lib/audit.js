@@ -81,6 +81,37 @@ export async function recordAuditEvent(env, input = {}) {
   return event;
 }
 
+export async function recordAuthAuditEvent(env, input = {}) {
+  const outcome = ['accepted', 'completed', 'rejected'].includes(input.outcome)
+    ? input.outcome
+    : 'rejected';
+  const sessionStores = input.sessionStores && typeof input.sessionStores === 'object'
+    ? {
+        d1: Boolean(input.sessionStores.d1),
+        kv: Boolean(input.sessionStores.kv),
+      }
+    : undefined;
+  const meta = {
+    source: 'api/account',
+    outcome,
+    reasonCode: cleanText(input.reasonCode || '', 80),
+    requestId: cleanText(input.requestId || '', 80),
+    failedCount: Math.max(0, Math.min(Number(input.failedCount) || 0, 100)),
+    ...(sessionStores ? { sessionStores } : {}),
+  };
+
+  return recordAuditEvent(env, {
+    actionType: cleanText(input.actionType || '', 80),
+    actorUserId: cleanText(input.userId || '', 80),
+    actorRole: cleanText(input.role || '', 40),
+    targetType: 'account',
+    targetId: cleanText(input.userId || '', 80),
+    reason: meta.reasonCode,
+    after: {},
+    meta,
+  });
+}
+
 export async function listAuditEvents(env, { limit = DEFAULT_LIMIT } = {}) {
   const max = Math.max(1, Math.min(Number(limit) || DEFAULT_LIMIT, 250));
   if (hasD1(env)) {

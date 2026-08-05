@@ -1,0 +1,12 @@
+{
+  "name": "relocation-manager",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node --check app.js && node --check functions/api/dispatch.js && node --test tests/*.test.mjs"
+  },
+  "dependencies": {
+    "@openai/agents": "0.13.5",
+    "zod": "4.4.3"
+  }
+}

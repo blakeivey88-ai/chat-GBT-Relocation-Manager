@@ -1,4 +1,0 @@
-/sign-in /signin 301
-/login /signin 301
-/subscribe /pricing 302
-/launch/* /signin?redirect=/launch/:splat 302

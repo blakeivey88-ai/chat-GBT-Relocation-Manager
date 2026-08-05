@@ -7,7 +7,11 @@ const CSRF_COOKIE_NAME = "rm_csrf";
 const CSRF_TTL_SECONDS = 60 * 60 * 24 * 30;
 const VERIFICATION_TTL_SECONDS = 60 * 60 * 24 * 3;
 const RESET_TTL_SECONDS = 60 * 30;
+// Cloudflare Workers Web Crypto currently rejects PBKDF2 counts above 100,000.
+// Keep this at the runtime ceiling so production registration and resets work.
+const PASSWORD_PBKDF2_ITERATIONS = 100000;
 const LEGACY_ACCOUNT_PREFIX = "account:";
+const ADMIN_EMAIL_ALLOWLIST = new Set(["blakeivey88@gmail.com"]);
 
 function hasD1(env) {
   return Boolean(env?.RELOCATION_MANAGER_DB?.prepare);
@@ -282,9 +286,9 @@ export function authRedirectPath(account, { redirectTarget = "" } = {}) {
 
   const dashboard = dashboardRoute(normalized);
   if (dashboard === "admin") return "/admin.html";
-  if (dashboard === "verify") return "/index.html#verify";
+  if (dashboard === "verify") return "/verify.html";
   const safeRedirect = safeInternalRedirectTarget(redirectTarget);
-  if (dashboard === "profile-completion") return "/index.html#signup";
+  if (dashboard === "profile-completion") return "/signup.html?mode=complete";
   if (dashboard === "billing")
     return safeRedirect
       ? `/account/billing?redirect=${encodeURIComponent(safeRedirect)}`
@@ -306,7 +310,7 @@ export function authRedirectPath(account, { redirectTarget = "" } = {}) {
     return safeRedirect;
   }
 
-  return "/index.html#profile";
+  return "/member.html#profile";
 }
 
 export function dashboardRoute(account) {
@@ -314,8 +318,8 @@ export function dashboardRoute(account) {
   if (!normalized.userId) return "signin";
   if (isSuspendedAccount(normalized)) return "signin";
   if (!emailVerified(normalized)) return "verify";
-  if (!isProfileComplete(normalized)) return "profile-completion";
   if (isAdminAccount(normalized)) return "admin";
+  if (!isProfileComplete(normalized)) return "profile-completion";
   const role = normalizeRole(normalized.role || roleFromType(normalized.type));
   if (role === "Moving Company") return "moving";
   if (role === "Customer / Shipper") return "customer";
@@ -585,6 +589,25 @@ export function carrierBookingPriceCents(account) {
     account?.stripePriceAmountCents,
     account?.stripePriceUnitAmount,
   ];
+  const paymentStatus = String(account?.paymentStatus || "")
+    .trim()
+    .toLowerCase();
+  const checkoutPlan = String(account?.checkoutPlan || "")
+    .trim()
+    .toLowerCase();
+  const loadAccess = String(account?.loadAccess || "")
+    .trim()
+    .toLowerCase();
+  const subscriptionAccess = String(account?.subscriptionAccess || "")
+    .trim()
+    .toLowerCase();
+  const authoritativeShipperOnly =
+    paymentStatus === "paid_shipper" ||
+    checkoutPlan === "shipper" ||
+    ["request", "request_post", "post_only"].includes(loadAccess) ||
+    ["request", "request_post", "post_only"].includes(subscriptionAccess) ||
+    directValues.some((value) => moneyToCents(value) === 999);
+  if (authoritativeShipperOnly) return 999;
   for (const value of directValues) {
     const cents = moneyToCents(value);
     if (cents >= 100) return cents;
@@ -641,6 +664,16 @@ export function carrierRoleLabel(account) {
 
 export function carrierRolePermitted(account) {
   const text = String(account?.role || account?.type || "").toLowerCase();
+  const role = normalizeRole(
+    account?.role || roleFromType(account?.type || ""),
+  );
+  if (
+    role === "Customer / Shipper" ||
+    role === "Moving Company" ||
+    role === "Service Provider"
+  ) {
+    return false;
+  }
   const paymentText = String(
     account?.paymentStatus || account?.subscriptionStatus || "",
   ).toLowerCase();
@@ -764,18 +797,6 @@ export function carrierLoadBookingDecision(account) {
     };
   }
 
-  if (isAdminAccount(account)) {
-    return {
-      allowed: true,
-      route: "",
-      reason: "",
-      message: "",
-      roleAllowed: true,
-      verified: true,
-      priceCents,
-    };
-  }
-
   if (accountStatus === "restricted") {
     return {
       allowed: false,
@@ -785,6 +806,32 @@ export function carrierLoadBookingDecision(account) {
         "This account is restricted. Contact support or an admin to restore access.",
       roleAllowed,
       verified: verification.verified,
+      priceCents,
+    };
+  }
+
+  if (priceCents === 999) {
+    return {
+      allowed: false,
+      route: "pricing",
+      reason: "Shipper plan is post-only.",
+      message:
+        "The $9.99 Shipper plan is post-only. To find or request loads, switch to a $29.99-or-higher carrier plan and complete carrier verification.",
+      roleAllowed,
+      verified: verification.verified,
+      priceCents,
+      subscriptionStatus: subscriptionStatus(account),
+    };
+  }
+
+  if (isAdminAccount(account)) {
+    return {
+      allowed: true,
+      route: "",
+      reason: "",
+      message: "",
+      roleAllowed: true,
+      verified: true,
       priceCents,
     };
   }
@@ -851,12 +898,17 @@ export function carrierLoadBookingDecision(account) {
   }
 
   if (!verification.allowed) {
+    const missingLabels = (verification.missing || []).map((item) => {
+      if (item === "authority/DOT-MC") return "authority/DOT-MC verification";
+      if (item === "insurance") return "insurance proof";
+      if (item === "identity") return "identity verification";
+      return item;
+    });
     return {
       allowed: false,
       route: verification.route || "carrier-verification",
       reason: verification.reason,
-      message:
-        "Load booking is available only to verified carrier accounts with an active $29.99-or-higher subscription. Please upgrade or complete your carrier verification.",
+      message: `To open the Load Board, complete: ${missingLabels.join(", ")}.`,
       roleAllowed: true,
       verified: false,
       priceCents,
@@ -890,6 +942,7 @@ export function carrierLoadBookingPayload(account) {
     subscriptionStatus:
       decision.subscriptionStatus || subscriptionStatus(account),
     minimumPriceCents: CARRIER_BOOKING_MINIMUM_CENTS,
+    missing: Array.isArray(decision.missing) ? decision.missing : [],
   };
 }
 
@@ -936,7 +989,7 @@ export function truckCountFromType(type = "") {
   const text = String(type || "").toLowerCase();
   if (/1[-–]3/.test(text)) return 3;
   if (/4[-–]7/.test(text)) return 7;
-  if (/7[-–]12/.test(text)) return 12;
+  if (/[78][-–]12/.test(text)) return 12;
   return 0;
 }
 
@@ -956,6 +1009,8 @@ export function paymentTags(paymentInfo) {
   if (/fleet starter/.test(label)) tags.push("fleet-starter");
   if (/fleet growth/.test(label)) tags.push("fleet-growth");
   if (/fleet pro/.test(label)) tags.push("fleet-pro");
+  if (/dispatcher.*broker|broker.*dispatcher/.test(label) || /dispatcher/.test(type))
+    tags.push("dispatcher-broker");
 
   return dedupeTags(tags);
 }
@@ -1002,7 +1057,7 @@ export async function pbkdf2Hash(password, salt) {
     {
       name: "PBKDF2",
       salt: new TextEncoder().encode(String(salt || "")),
-      iterations: 210000,
+      iterations: PASSWORD_PBKDF2_ITERATIONS,
       hash: "SHA-256",
     },
     keyMaterial,
@@ -1036,7 +1091,7 @@ export function generateToken(size = 24) {
   return base64UrlEncode(bytes);
 }
 
-export function tokenHash(token) {
+export async function tokenHash(token) {
   return sha256Hex(String(token || ""));
 }
 
@@ -1077,6 +1132,11 @@ const ACCOUNT_DB_COLUMNS = [
   "role",
   "phone",
   "mc_dot",
+  "insurance_provider",
+  "insurance_policy_last4",
+  "insurance_expiration",
+  "insurance_document_url",
+  "insurance_status",
   "city",
   "state",
   "equipment_type",
@@ -1128,6 +1188,7 @@ const ACCOUNT_DB_COLUMNS = [
   "equipment_types",
   "avatar_url",
   "logo_url",
+  "bulletin_color",
   "checkout_plan",
   "profile_view",
   "access_code",
@@ -1162,6 +1223,11 @@ function rowToAccount(row) {
       role: row.role,
       phone: row.phone,
       mc_dot: row.mc_dot,
+      insuranceProvider: row.insurance_provider,
+      insurancePolicyLast4: row.insurance_policy_last4,
+      insuranceExpiration: row.insurance_expiration,
+      insuranceDocumentUrl: row.insurance_document_url,
+      insuranceStatus: row.insurance_status,
       city: row.city,
       state: row.state,
       equipmentType: row.equipment_type,
@@ -1218,6 +1284,7 @@ function rowToAccount(row) {
       equipmentTypes: safeJsonParse(row.equipment_types) || [],
       avatarUrl: row.avatar_url,
       logoUrl: row.logo_url,
+      bulletinColor: row.bulletin_color,
       checkoutPlan: row.checkout_plan,
       profileView: row.profile_view,
       accessCode: row.access_code,
@@ -1242,6 +1309,11 @@ function accountToDbRow(account) {
     role: next.role,
     phone: next.phone,
     mc_dot: next.mc_dot,
+    insurance_provider: next.insuranceProvider,
+    insurance_policy_last4: next.insurancePolicyLast4,
+    insurance_expiration: next.insuranceExpiration,
+    insurance_document_url: next.insuranceDocumentUrl,
+    insurance_status: next.insuranceStatus,
     city: next.city,
     state: next.state,
     equipment_type: next.equipmentType,
@@ -1298,6 +1370,7 @@ function accountToDbRow(account) {
     equipment_types: safeDbJson(next.equipmentTypes, []),
     avatar_url: next.avatarUrl,
     logo_url: next.logoUrl,
+    bulletin_color: next.bulletinColor,
     checkout_plan: next.checkoutPlan || "",
     profile_view: next.profileView,
     access_code: next.accessCode,
@@ -1314,12 +1387,13 @@ function accountDbParams(account) {
 }
 
 export async function readSessionRecord(env, session) {
+  const normalizedSession = cleanString(session, 160);
   if (hasD1(env)) {
     try {
       const result = await env.RELOCATION_MANAGER_DB.prepare(
         "SELECT * FROM sessions WHERE session_id = ? LIMIT 1",
       )
-        .bind(cleanString(session, 160))
+        .bind(normalizedSession)
         .first();
       if (result) {
         return {
@@ -1332,12 +1406,27 @@ export async function readSessionRecord(env, session) {
         };
       }
     } catch {
-      // Fall back to KV below.
+      // A D1 outage must not make a mirrored KV session authoritative.
     }
   }
 
   const raw = await env.RELOCATION_MANAGER_LEADS.get(sessionKey(session));
-  return raw ? safeJsonParse(raw) : null;
+  const legacy = raw ? safeJsonParse(raw) : null;
+  if (!legacy?.userId || !hasD1(env)) return legacy;
+
+  try {
+    const d1Account = await env.RELOCATION_MANAGER_DB.prepare(
+      "SELECT user_id FROM accounts WHERE user_id = ? LIMIT 1",
+    )
+      .bind(cleanString(legacy.userId, 80))
+      .first();
+    // D1 is authoritative for every account that exists there. A stale KV
+    // session mirror can never restore a D1 session that was revoked.
+    return d1Account?.user_id ? null : legacy;
+  } catch {
+    // Fail closed while D1 authority cannot be determined.
+    return null;
+  }
 }
 
 export async function createSession(env, userId, extra = {}, options = {}) {
@@ -1360,6 +1449,8 @@ export async function createSession(env, userId, extra = {}, options = {}) {
     rememberMe: Boolean(options.rememberMe || extra.rememberMe),
     ...extra,
   };
+  let d1Saved = false;
+  let d1Error = null;
   if (hasD1(env)) {
     try {
       await env.RELOCATION_MANAGER_DB.prepare(
@@ -1381,17 +1472,32 @@ export async function createSession(env, userId, extra = {}, options = {}) {
           expiresAt,
         )
         .run();
-    } catch {
-      // Fall back to KV below.
+      d1Saved = true;
+    } catch (error) {
+      d1Error = error;
     }
   }
-  await env.RELOCATION_MANAGER_LEADS.put(
-    sessionKey(session),
-    JSON.stringify(record),
-    {
-      expirationTtl: ttlSeconds,
-    },
-  );
+
+  let kvSaved = false;
+  let kvError = null;
+  try {
+    await env.RELOCATION_MANAGER_LEADS.put(
+      sessionKey(session),
+      JSON.stringify(record),
+      {
+        expirationTtl: ttlSeconds,
+      },
+    );
+    kvSaved = true;
+  } catch (error) {
+    kvError = error;
+  }
+
+  // D1 is the primary session store. The legacy KV mirror is useful during
+  // migration, but it must not lock a member out when D1 saved successfully.
+  if (!d1Saved && !kvSaved) {
+    throw d1Error || kvError || new Error("Session could not be saved.");
+  }
   return session;
 }
 
@@ -1454,6 +1560,8 @@ export async function readAccountByEmail(env, email) {
 
 export async function upsertAccount(env, account) {
   const next = ensureAccountShape(account, account);
+  let d1Saved = false;
+  let d1Error = null;
   if (hasD1(env) && next.email) {
     try {
       const columns = ACCOUNT_DB_COLUMNS.join(", ");
@@ -1466,19 +1574,34 @@ export async function upsertAccount(env, account) {
       )
         .bind(...accountDbParams(next))
         .run();
-    } catch {
-      // Fall back to KV below.
+      d1Saved = true;
+    } catch (error) {
+      d1Error = error;
     }
   }
-  await env.RELOCATION_MANAGER_LEADS.put(
-    userIdKey(next.userId),
-    JSON.stringify(next),
-  );
-  if (next.email) {
+
+  let kvSaved = false;
+  let kvError = null;
+  try {
     await env.RELOCATION_MANAGER_LEADS.put(
-      emailIndexKey(next.email),
-      next.userId,
+      userIdKey(next.userId),
+      JSON.stringify(next),
     );
+    if (next.email) {
+      await env.RELOCATION_MANAGER_LEADS.put(
+        emailIndexKey(next.email),
+        next.userId,
+      );
+    }
+    kvSaved = true;
+  } catch (error) {
+    kvError = error;
+  }
+
+  // D1 is authoritative. The legacy KV copy is a migration mirror and must
+  // not turn a successful primary save into a customer-facing failure.
+  if (!d1Saved && !kvSaved) {
+    throw d1Error || kvError || new Error("Account could not be saved.");
   }
   if (next.stripeCustomerId) {
     await linkStripeCustomer(env, next.stripeCustomerId, next.userId);
@@ -1589,7 +1712,9 @@ export async function resolveUserIdFromStripe(env, session) {
 }
 
 export async function createVerificationRecord(env, userId, token) {
-  const hash = tokenHash(token);
+  const hash = await tokenHash(token);
+  let d1Saved = false;
+  let d1Error = null;
   if (hasD1(env)) {
     try {
       const now = new Date().toISOString();
@@ -1606,18 +1731,31 @@ export async function createVerificationRecord(env, userId, token) {
       )
         .bind(hash, userId, now, expiresAt)
         .run();
-    } catch {
-      // Fall back to KV below.
+      d1Saved = true;
+    } catch (error) {
+      d1Error = error;
     }
   }
-  await env.RELOCATION_MANAGER_LEADS.put(verificationTokenKey(hash), userId, {
-    expirationTtl: VERIFICATION_TTL_SECONDS,
-  });
+
+  let kvSaved = false;
+  let kvError = null;
+  try {
+    await env.RELOCATION_MANAGER_LEADS.put(verificationTokenKey(hash), userId, {
+      expirationTtl: VERIFICATION_TTL_SECONDS,
+    });
+    kvSaved = true;
+  } catch (error) {
+    kvError = error;
+  }
+
+  if (!d1Saved && !kvSaved) {
+    throw d1Error || kvError || new Error("Verification token could not be saved.");
+  }
   return hash;
 }
 
 export async function consumeVerificationRecord(env, token) {
-  const hash = tokenHash(token);
+  const hash = await tokenHash(token);
   if (hasD1(env)) {
     try {
       const record = await env.RELOCATION_MANAGER_DB.prepare(
@@ -1647,7 +1785,7 @@ export async function consumeVerificationRecord(env, token) {
 }
 
 export async function createResetRecord(env, userId, token) {
-  const hash = tokenHash(token);
+  const hash = await tokenHash(token);
   if (hasD1(env)) {
     try {
       const now = new Date().toISOString();
@@ -1675,31 +1813,157 @@ export async function createResetRecord(env, userId, token) {
 }
 
 export async function consumeResetRecord(env, token) {
-  const hash = tokenHash(token);
+  const userId = await readResetRecord(env, token);
+  if (userId) await deleteResetRecord(env, token);
+  return userId;
+}
+
+export async function readResetRecord(env, token) {
+  const hash = await tokenHash(token);
   if (hasD1(env)) {
     try {
       const record = await env.RELOCATION_MANAGER_DB.prepare(
-        "SELECT user_id FROM password_reset_tokens WHERE reset_token_hash = ? LIMIT 1",
+        "SELECT user_id, expires_at FROM password_reset_tokens WHERE reset_token_hash = ? LIMIT 1",
       )
         .bind(hash)
         .first();
       if (record?.user_id) {
+        const expiresAt = Date.parse(record.expires_at || "");
+        if (!expiresAt || expiresAt > Date.now()) return record.user_id;
         await env.RELOCATION_MANAGER_DB.prepare(
           "DELETE FROM password_reset_tokens WHERE reset_token_hash = ?",
-        )
-          .bind(hash)
-          .run();
-        return record.user_id;
+        ).bind(hash).run();
       }
     } catch {
       // Fall back to KV below.
     }
   }
-  const userId = await env.RELOCATION_MANAGER_LEADS.get(resetTokenKey(hash));
-  if (userId) {
-    await env.RELOCATION_MANAGER_LEADS.delete(resetTokenKey(hash));
+  return (await env.RELOCATION_MANAGER_LEADS.get(resetTokenKey(hash))) || "";
+}
+
+export async function deleteResetRecord(env, token) {
+  const hash = await tokenHash(token);
+  if (hasD1(env)) {
+    // D1 is authoritative when it contains the reset token. Never report a
+    // successful reset after its invalidation failed, even if the KV mirror
+    // can still be deleted. A successful no-op preserves KV-only fallback.
+    await env.RELOCATION_MANAGER_DB.prepare(
+      "DELETE FROM password_reset_tokens WHERE reset_token_hash = ?",
+    ).bind(hash).run();
   }
-  return userId || "";
+  await env.RELOCATION_MANAGER_LEADS.delete(resetTokenKey(hash));
+}
+
+export async function updateAccountPassword(env, account, { salt, hash, changedAt }) {
+  const next = ensureAccountShape({
+    ...account,
+    passwordSalt: salt,
+    passwordHash: hash,
+    passwordChangedAt: changedAt,
+    updatedAt: changedAt,
+  }, account);
+
+  let d1Updated = false;
+  let d1TimestampVerified = false;
+  if (hasD1(env)) {
+    const d1Account = await env.RELOCATION_MANAGER_DB.prepare(
+      "SELECT user_id FROM accounts WHERE user_id = ? LIMIT 1",
+    ).bind(next.userId).first();
+    if (d1Account?.user_id) {
+      const timestampColumnReady = await d1AccountHasPasswordChangedAt(env);
+      const result = timestampColumnReady
+        ? await env.RELOCATION_MANAGER_DB.prepare(
+            `UPDATE accounts
+             SET password_salt = ?, password_hash = ?,
+                 password_changed_at = ?, updated_at = ?
+             WHERE user_id = ?`,
+          )
+            .bind(
+              next.passwordSalt,
+              next.passwordHash,
+              next.passwordChangedAt,
+              next.updatedAt,
+              next.userId,
+            )
+            .run()
+        : await env.RELOCATION_MANAGER_DB.prepare(
+            `UPDATE accounts
+             SET password_salt = ?, password_hash = ?, updated_at = ?
+             WHERE user_id = ?`,
+          )
+            .bind(
+              next.passwordSalt,
+              next.passwordHash,
+              next.updatedAt,
+              next.userId,
+            )
+            .run();
+      if (Number(result?.meta?.changes || 0) < 1) {
+        throw new Error("Password account record was not updated.");
+      }
+      d1Updated = true;
+      if (timestampColumnReady) {
+        const verified = await env.RELOCATION_MANAGER_DB.prepare(
+          `SELECT password_changed_at
+           FROM accounts
+           WHERE user_id = ? LIMIT 1`,
+        )
+          .bind(next.userId)
+          .first();
+        d1TimestampVerified =
+          String(verified?.password_changed_at || "") ===
+          next.passwordChangedAt;
+        if (!d1TimestampVerified) {
+          throw new Error("Password change timestamp was not verified.");
+        }
+      }
+    }
+  }
+
+  let kvUpdated = false;
+  let kvError = null;
+  try {
+    await env.RELOCATION_MANAGER_LEADS.put(
+      userIdKey(next.userId),
+      JSON.stringify(next),
+    );
+    kvUpdated = true;
+    if (next.email) {
+      await env.RELOCATION_MANAGER_LEADS.put(emailIndexKey(next.email), next.userId);
+    }
+  } catch (error) {
+    kvError = error;
+  }
+
+  // D1 is the primary account store when the account exists there. A failed
+  // legacy KV mirror must not turn a successful password change into a 500.
+  if (!d1Updated && !kvUpdated) {
+    throw kvError || new Error("Password account record was not updated.");
+  }
+  Object.defineProperty(next, "passwordStorage", {
+    value: {
+      d1: d1Updated,
+      d1TimestampVerified,
+      kv: kvUpdated,
+    },
+    enumerable: false,
+  });
+  return next;
+}
+
+async function d1AccountHasPasswordChangedAt(env) {
+  try {
+    const result = await env.RELOCATION_MANAGER_DB.prepare(
+      "PRAGMA table_info(accounts)",
+    ).all();
+    return Boolean(
+      result?.results?.some(
+        (column) => String(column?.name || "") === "password_changed_at",
+      ),
+    );
+  } catch {
+    return false;
+  }
 }
 
 export async function removeSession(env, session) {
@@ -1718,9 +1982,24 @@ export async function removeSession(env, session) {
   await env.RELOCATION_MANAGER_LEADS.delete(sessionKey(session));
 }
 
-export async function removeSessionsForUser(env, userId) {
+export async function removeSessionsForUser(
+  env,
+  userId,
+  {
+    requireAllStores = false,
+    requireD1 = requireAllStores,
+    requireKv = requireAllStores,
+  } = {},
+) {
   const normalizedUserId = cleanString(userId, 80);
-  if (!normalizedUserId) return;
+  if (!normalizedUserId) {
+    if (requireAllStores) throw new Error("A user is required for session revocation.");
+    return { d1: hasD1(env) ? false : null, kv: false };
+  }
+  // `null` means the D1 store was not configured for this request. Never
+  // record an absent store as successfully revoked.
+  let d1Revoked = hasD1(env) ? false : null;
+  let d1Error = null;
   if (hasD1(env)) {
     try {
       await env.RELOCATION_MANAGER_DB.prepare(
@@ -1728,10 +2007,13 @@ export async function removeSessionsForUser(env, userId) {
       )
         .bind(normalizedUserId)
         .run();
-    } catch {
-      // Fall back to KV below.
+      d1Revoked = true;
+    } catch (error) {
+      d1Error = error;
     }
   }
+  let kvRevoked = false;
+  let kvError = null;
   try {
     let cursor;
     do {
@@ -1752,9 +2034,17 @@ export async function removeSessionsForUser(env, userId) {
         }
       }
     } while (cursor);
-  } catch {
-    // Best-effort KV cleanup only.
+    kvRevoked = true;
+  } catch (error) {
+    kvError = error;
   }
+  if (
+    (requireD1 && d1Revoked !== true) ||
+    (requireKv && !kvRevoked)
+  ) {
+    throw d1Error || kvError || new Error("All session stores must be revoked.");
+  }
+  return { d1: d1Revoked, kv: kvRevoked };
 }
 
 export async function readCurrentAccount(request, env) {
@@ -1783,9 +2073,11 @@ export async function readCurrentAccount(request, env) {
     record.createdAt || record.created_at || "",
   );
   if (
-    passwordChangedAt &&
-    sessionCreatedAt &&
-    sessionCreatedAt < passwordChangedAt
+    Number.isFinite(passwordChangedAt) &&
+    (
+      !Number.isFinite(sessionCreatedAt) ||
+      sessionCreatedAt < passwordChangedAt
+    )
   ) {
     await removeSession(env, session);
     return { session: null, account: null };
@@ -1881,6 +2173,10 @@ export function publicProfile(account) {
     type: account.type || "Independent driver / self-insured - $29.99/mo",
     phone: account.phone || "",
     mc_dot: account.mc_dot || "",
+    insuranceProvider: account.insuranceProvider || "",
+    insurancePolicyLast4: account.insurancePolicyLast4 || "",
+    insuranceExpiration: account.insuranceExpiration || "",
+    insuranceStatus: account.insuranceStatus || "Not submitted",
     role: normalizeRole(account.role || roleFromType(account.type)),
     city: account.city || "",
     state: account.state || "",
@@ -1890,6 +2186,7 @@ export function publicProfile(account) {
       : [],
     avatarUrl: account.avatarUrl || "",
     logoUrl: account.logoUrl || "",
+    bulletinColor: normalizeBulletinColor(account.bulletinColor),
     preferredLanguage: account.preferredLanguage || "en",
     additionalLanguages: additionalLanguages,
     preferredTranslationLanguage,
@@ -2004,6 +2301,8 @@ export function isEntitled(account) {
 
 export function isAdminAccount(account) {
   if (!account) return false;
+  const email = normalizeEmail(account.email || "");
+  if (ADMIN_EMAIL_ALLOWLIST.has(email)) return true;
   const role = normalizeRole(account.role || roleFromType(account.type || ""));
   const typeText = String(account.type || "").toLowerCase();
   const tags = Array.isArray(account.tags) ? account.tags : [];
@@ -2065,6 +2364,26 @@ export function ensureAccountShape(input, fallback = {}) {
     ),
     phone: cleanString(current.phone || fallback.phone || "", 40),
     mc_dot: cleanString(current.mc_dot || fallback.mc_dot || "", 80),
+    insuranceProvider: cleanString(
+      current.insuranceProvider || fallback.insuranceProvider || "",
+      120,
+    ),
+    insurancePolicyLast4: cleanString(
+      current.insurancePolicyLast4 || fallback.insurancePolicyLast4 || "",
+      4,
+    ).replace(/\D/g, ""),
+    insuranceExpiration: cleanString(
+      current.insuranceExpiration || fallback.insuranceExpiration || "",
+      10,
+    ),
+    insuranceDocumentUrl: cleanString(
+      current.insuranceDocumentUrl || fallback.insuranceDocumentUrl || "",
+      360,
+    ),
+    insuranceStatus: cleanString(
+      current.insuranceStatus || fallback.insuranceStatus || "Not submitted",
+      40,
+    ),
     role: normalizeRole(
       current.role ||
         fallback.role ||
@@ -2113,6 +2432,40 @@ export function ensureAccountShape(input, fallback = {}) {
       current.verification || fallback.verification || "Not verified",
       80,
     ),
+    carrierVerifiedAt: cleanString(
+      current.carrierVerifiedAt || fallback.carrierVerifiedAt || "",
+      80,
+    ),
+    verifiedCarrierAt: cleanString(
+      current.verifiedCarrierAt || fallback.verifiedCarrierAt || "",
+      80,
+    ),
+    carrierVerificationCompletedAt: cleanString(
+      current.carrierVerificationCompletedAt ||
+        fallback.carrierVerificationCompletedAt ||
+        "",
+      80,
+    ),
+    carrierVerificationStatus: cleanString(
+      current.carrierVerificationStatus ||
+        fallback.carrierVerificationStatus ||
+        "",
+      80,
+    ),
+    carrierVerification: cleanString(
+      current.carrierVerification || fallback.carrierVerification || "",
+      80,
+    ),
+    carrierApprovalStatus: cleanString(
+      current.carrierApprovalStatus || fallback.carrierApprovalStatus || "",
+      80,
+    ),
+    carrierVerificationResult: cleanString(
+      current.carrierVerificationResult ||
+        fallback.carrierVerificationResult ||
+        "",
+      80,
+    ),
     note: cleanString(current.note || fallback.note || "", 280),
     passwordHash: cleanString(
       current.passwordHash || fallback.passwordHash || "",
@@ -2120,6 +2473,10 @@ export function ensureAccountShape(input, fallback = {}) {
     ),
     passwordSalt: cleanString(
       current.passwordSalt || fallback.passwordSalt || "",
+      80,
+    ),
+    passwordChangedAt: cleanString(
+      current.passwordChangedAt || fallback.passwordChangedAt || "",
       80,
     ),
     emailVerifiedAt: cleanString(
@@ -2156,6 +2513,21 @@ export function ensureAccountShape(input, fallback = {}) {
       current.subscriptionAccess || fallback.subscriptionAccess || loadAccess,
     paidAt: cleanString(current.paidAt || fallback.paidAt || "", 80),
     planLabel: cleanString(current.planLabel || fallback.planLabel || "", 80),
+    subscriptionPriceCents:
+      current.subscriptionPriceCents ?? fallback.subscriptionPriceCents ?? null,
+    billingAmountCents:
+      current.billingAmountCents ?? fallback.billingAmountCents ?? null,
+    planAmountCents:
+      current.planAmountCents ?? fallback.planAmountCents ?? null,
+    priceCents: current.priceCents ?? fallback.priceCents ?? null,
+    stripePriceAmountCents:
+      current.stripePriceAmountCents ??
+      fallback.stripePriceAmountCents ??
+      null,
+    stripePriceUnitAmount:
+      current.stripePriceUnitAmount ??
+      fallback.stripePriceUnitAmount ??
+      null,
     stripeCustomerId: cleanString(
       current.stripeCustomerId || fallback.stripeCustomerId || "",
       120,
@@ -2301,6 +2673,9 @@ export function ensureAccountShape(input, fallback = {}) {
         : [],
     avatarUrl: cleanString(current.avatarUrl || fallback.avatarUrl || "", 280),
     logoUrl: cleanString(current.logoUrl || fallback.logoUrl || "", 280),
+    bulletinColor: normalizeBulletinColor(
+      current.bulletinColor || fallback.bulletinColor,
+    ),
     notifications: Array.isArray(current.notifications)
       ? current.notifications.slice(0, 30)
       : Array.isArray(fallback.notifications)
@@ -2334,14 +2709,87 @@ export function ensureAccountShape(input, fallback = {}) {
 
 async function hydrateAccountFromD1(env, account) {
   if (!hasD1(env) || !account?.userId) return account;
-  const next = ensureAccountShape(account, account);
+  let next = ensureAccountShape(account, account);
+
+  try {
+    const mirrorRaw = await env.RELOCATION_MANAGER_LEADS?.get(
+      userIdKey(next.userId),
+    );
+    const mirror = mirrorRaw ? safeJsonParse(mirrorRaw) : null;
+    if (mirror) {
+      next = ensureAccountShape(
+        {
+          ...next,
+          subscriptionPriceCents: mirror.subscriptionPriceCents,
+          billingAmountCents: mirror.billingAmountCents,
+          planAmountCents: mirror.planAmountCents,
+          priceCents: mirror.priceCents,
+          stripePriceAmountCents: mirror.stripePriceAmountCents,
+          stripePriceUnitAmount: mirror.stripePriceUnitAmount,
+          carrierVerifiedAt: mirror.carrierVerifiedAt,
+          verifiedCarrierAt: mirror.verifiedCarrierAt,
+          carrierVerificationCompletedAt:
+            mirror.carrierVerificationCompletedAt,
+          carrierVerificationStatus: mirror.carrierVerificationStatus,
+          carrierVerification: mirror.carrierVerification,
+          carrierApprovalStatus: mirror.carrierApprovalStatus,
+          carrierVerificationResult: mirror.carrierVerificationResult,
+        },
+        next,
+      );
+    }
+  } catch {
+    // D1 account data remains usable when the legacy mirror is unavailable.
+  }
+
+  if (!carrierVerificationDecision(next).verified) {
+    const verification = await readCarrierVerificationEvidence(
+      env,
+      next.userId,
+    );
+    if (verification) {
+      next = ensureAccountShape({ ...next, ...verification }, next);
+    }
+  }
+
   if (
-    Array.isArray(next.verifiedTransactions) &&
-    next.verifiedTransactions.length
-  )
-    return next;
-  const verifiedTransactions = await readVerifiedTransactions(env, next.userId);
-  return ensureAccountShape({ ...next, verifiedTransactions }, next);
+    !Array.isArray(next.verifiedTransactions) ||
+    !next.verifiedTransactions.length
+  ) {
+    const verifiedTransactions = await readVerifiedTransactions(
+      env,
+      next.userId,
+    );
+    next = ensureAccountShape({ ...next, verifiedTransactions }, next);
+  }
+  return next;
+}
+
+async function readCarrierVerificationEvidence(env, userId) {
+  if (!hasD1(env)) return null;
+  const normalizedUserId = cleanString(userId, 80);
+  if (!normalizedUserId) return null;
+  try {
+    const row = await env.RELOCATION_MANAGER_DB.prepare(
+      `SELECT status, updated_at, created_at
+       FROM carrier_verifications
+       WHERE user_id = ?
+       ORDER BY updated_at DESC, created_at DESC
+       LIMIT 1`,
+    )
+      .bind(normalizedUserId)
+      .first();
+    if (!row || !verificationLooksComplete(row.status)) return null;
+    return {
+      carrierVerifiedAt: cleanString(
+        row.updated_at || row.created_at || "",
+        80,
+      ),
+      carrierVerificationStatus: cleanString(row.status || "", 80),
+    };
+  } catch {
+    return null;
+  }
 }
 
 async function readVerifiedTransactions(env, userId) {
@@ -2713,6 +3161,15 @@ export function normalizeProfileView(view) {
   )
     return view === "shipper" ? "customer" : view;
   return "driver";
+}
+
+export function normalizeBulletinColor(value) {
+  const color = String(value || "").trim().toLowerCase();
+  return ["#1d4ed8", "#0f766e", "#7c3aed", "#b42318", "#9a6700", "#334155"].includes(
+    color,
+  )
+    ? color
+    : "#1d4ed8";
 }
 
 export function normalizeCommunicationPrivacy(input = {}) {

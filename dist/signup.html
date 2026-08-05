@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="description" content="Create your Relocation Manager USA account and continue to verification and secure checkout." />
+    <link rel="canonical" href="https://relocationmanagerusa.com/signup.html" />
+    <title>Create Your Account | Relocation Manager USA</title>
+    <link rel="stylesheet" href="/public-site.css?v=20260803-1" />
+    <script defer src="/analytics-loader.js"></script>
+    <script defer src="/public-site.js?v=20260723-1"></script>
+    <style>
+      .signup-steps { display: grid; gap: 10px; margin: 0 0 22px; padding: 0; list-style: none; counter-reset: step; }
+      .signup-steps li { display: flex; gap: 12px; align-items: flex-start; background: #f4f7fb; border: 1px solid #dde6f1; border-radius: 12px; padding: 12px 14px; counter-increment: step; }
+      .signup-steps li::before { content: counter(step); flex: 0 0 auto; width: 26px; height: 26px; border-radius: 50%; background: #14335c; color: #fff; font-weight: 800; font-size: 14px; display: grid; place-items: center; }
+      .signup-steps strong { display: block; color: #14335c; }
+      .signup-steps span { color: #42546b; font-size: 15px; }
+      @media (min-width: 720px) { .signup-steps { grid-template-columns: 1fr 1fr 1fr; } }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="/"><span class="brand-mark">🦅</span><span>Relocation <strong>Manager USA</strong></span></a>
+        <button
+          class="nav-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="siteNav"
+          data-nav-toggle
+        >
+          Menu
+        </button>
+        <nav class="site-nav" id="siteNav" aria-label="Main navigation" data-site-nav><a href="/pricing.html">Change plan</a><a class="nav-cta" href="/signin">Already have an account?</a></nav>
+      </div>
+    </header>
+    <main>
+      <section class="page-hero" style="padding-bottom: 150px">
+        <div class="container">
+          <div class="breadcrumbs"><a href="/">Home</a><span>›</span><a href="/pricing.html">Pricing</a><span>›</span><span>Create account</span></div>
+          <div class="kicker">Step 1 of 3</div>
+          <h1>Create your profile once.</h1>
+          <p>Next comes account verification, then secure checkout. Returning members should sign in instead of creating a second account.</p>
+        </div>
+      </section>
+      <section class="section" style="margin-top:-120px;padding-top:0">
+        <div class="container form-shell">
+          <ol class="signup-steps" aria-label="How signup works">
+            <li><div><strong>Create your profile</strong><span>Enter your account and operating details. No payment yet.</span></div></li>
+            <li><div><strong>Verify your email</strong><span>We send a link to confirm you own the address. Click it to unlock checkout.</span></div></li>
+            <li><div><strong>Pay securely</strong><span>Checkout runs through Stripe. Your card is charged only at this final step, and you can cancel any time from your profile.</span></div></li>
+          </ol>
+          <form class="card form-card" id="signupForm" novalidate>
+            <div class="plan-summary">
+              <div><span>Your selected plan</span><strong id="planName">Shipper</strong></div>
+              <div><strong id="planPrice">$9.99 / month</strong><span id="planPermission">Post pickups; no load claiming</span></div>
+            </div>
+            <input type="hidden" name="plan" id="planInput" value="shipper" />
+            <div class="form-grid">
+              <label>Full name<input name="name" autocomplete="name" required placeholder="Your name" /></label>
+              <label id="companyLabel"><span id="companyLabelText">Company name</span><input name="company" autocomplete="organization" required placeholder="Your company" /></label>
+              <label>Email<input name="email" type="email" autocomplete="email" required placeholder="you@company.com" /></label>
+              <label id="passwordLabel">Password<input name="password" type="password" autocomplete="new-password" minlength="12" required placeholder="At least 12 characters" /></label>
+              <label>Preferred language
+                <select name="preferredLanguage"><option value="en">English</option><option value="es">Español</option><option value="fr">Français</option><option value="ht">Kreyòl</option><option value="ru">Русский</option><option value="ar">العربية</option></select>
+              </label>
+              <label id="mcDotLabel">USDOT or MC number <span style="font-weight:600">(if applicable)</span><input name="mc_dot" autocomplete="off" placeholder="USDOT 123456 or MC 123456" /></label>
+              <label id="truckCountLabel">Truck count<input name="truck_count" type="number" min="0" step="1" inputmode="numeric" placeholder="0" /></label>
+            </div>
+            <label class="check"><input type="checkbox" required /><span>I understand Relocation Manager is a marketplace and I will verify freight, identity, insurance, equipment, payment, and user behavior before booking.</span></label>
+            <label class="check"><input type="checkbox" required /><span>I agree to the <a href="/terms.html" target="_blank" rel="noopener">Terms of Use</a> and acknowledge the <a href="/privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.</span></label>
+            <button class="btn btn-primary btn-block" id="submitButton" type="submit">Create profile &amp; verify</button>
+            <div class="status" id="statusBox" role="status" aria-live="polite" hidden></div>
+            <p style="margin:0;color:#607086">Already have an account? <a href="/signin" style="font-weight:900">Sign in here</a>. You will not be asked to create another company profile.</p>
+          </form>
+        </div>
+      </section>
+    </main>
+    <script>
+      const plans = {
+        shipper: {
+          name: "Shipper",
+          price: "$9.99 / month",
+          permission: "Post pickups; no load claiming",
+          type: "Customer / shipper (post loads, no claiming) - $9.99/mo",
+          truckCount: 0,
+          fields: { company: { label: "Company name (optional)", required: false, placeholder: "Your company (leave blank if moving personally)" }, mcDot: false, truckCount: false }
+        },
+        driver: {
+          name: "Independent Driver",
+          price: "$29.99 / month",
+          permission: "Post loads and find loads",
+          type: "Independent driver / self-insured - $29.99/mo",
+          truckCount: 1,
+          fields: { company: { label: "Company or operating name", required: true, placeholder: "Your business name, or your own name" }, mcDot: true, truckCount: false }
+        },
+        "fleet-starter": {
+          name: "Carrier & Broker 1–3 Trucks",
+          price: "$59.99 / month",
+          permission: "Post loads and find loads",
+          type: "Broker 1–3 trucks - $59.99/mo",
+          truckCount: 3,
+          fields: { company: { label: "Company name", required: true, placeholder: "Your company" }, mcDot: true, truckCount: true }
+        },
+        "fleet-growth": {
+          name: "Carrier & Broker 4–7 Trucks",
+          price: "$79.99 / month",
+          permission: "Post loads and find loads",
+          type: "Broker 4–7 trucks - $79.99/mo",
+          truckCount: 7,
+          fields: { company: { label: "Company name", required: true, placeholder: "Your company" }, mcDot: true, truckCount: true }
+        },
+        "fleet-pro": {
+          name: "Carrier & Broker 8–12 Trucks",
+          price: "$149.99 / month",
+          permission: "Post loads and find loads",
+          type: "Broker 8–12 trucks - $149.99/mo",
+          truckCount: 12,
+          fields: { company: { label: "Company name", required: true, placeholder: "Your company" }, mcDot: true, truckCount: true }
+        },
+        "dispatcher-broker": {
+          name: "Dispatcher & Broker",
+          price: "$189.99 / month",
+          permission: "Find, request, and post loads",
+          type: "Dispatcher / broker - $189.99/mo",
+          truckCount: 0,
+          fields: { company: { label: "Company name", required: true, placeholder: "Your company" }, mcDot: true, truckCount: true }
+        }
+      };
+      const params = new URLSearchParams(location.search);
+      const requestedPlan = params.get("plan") || "shipper";
+      const planKey = plans[requestedPlan] ? requestedPlan : "shipper";
+      const plan = plans[planKey];
+      const form = document.getElementById("signupForm");
+      const statusBox = document.getElementById("statusBox");
+      const submitButton = document.getElementById("submitButton");
+      let csrfToken = "";
+      let completionMode = false;
+
+      document.getElementById("planInput").value = planKey;
+      document.getElementById("planName").textContent = plan.name;
+      document.getElementById("planPrice").textContent = plan.price;
+      document.getElementById("planPermission").textContent = plan.permission;
+      form.elements.truck_count.value = String(plan.truckCount);
+
+      // Show only the fields this role needs.
+      const fields = plan.fields;
+      document.getElementById("companyLabelText").textContent = fields.company.label;
+      form.elements.company.required = fields.company.required;
+      form.elements.company.placeholder = fields.company.placeholder;
+      const mcDotLabel = document.getElementById("mcDotLabel");
+      const truckCountLabel = document.getElementById("truckCountLabel");
+      mcDotLabel.hidden = !fields.mcDot;
+      mcDotLabel.style.display = fields.mcDot ? "" : "none";
+      truckCountLabel.hidden = !fields.truckCount;
+      truckCountLabel.style.display = fields.truckCount ? "" : "none";
+
+      let signupStartTracked = false;
+      form.addEventListener("focusin", () => {
+        if (signupStartTracked) return;
+        signupStartTracked = true;
+        if (window.rmTrack) window.rmTrack("signup_started", { plan: planKey });
+      });
+
+      function showStatus(message, tone = "") {
+        statusBox.hidden = false;
+        statusBox.className = `status ${tone}`.trim();
+        statusBox.textContent = message;
+      }
+
+      async function seedCsrf() {
+        const response = await fetch("/api/account", { credentials: "include", cache: "no-store" });
+        const data = await response.json().catch(() => null);
+        csrfToken = String(data?.csrfToken || "");
+        if (data?.session?.authenticated && data?.profile && data?.memberAccess?.profileComplete === false) {
+          completionMode = true;
+          const profile = data.profile;
+          form.elements.name.value = profile.name || "";
+          form.elements.company.value = profile.company || "";
+          form.elements.email.value = profile.email || "";
+          form.elements.email.readOnly = true;
+          form.elements.mc_dot.value = profile.mc_dot || "";
+          form.elements.truck_count.value = String(profile.truckCount || plan.truckCount || 0);
+          document.getElementById("passwordLabel").hidden = true;
+          form.elements.password.required = false;
+          submitButton.textContent = "Save company profile & continue";
+          document.querySelector(".kicker").textContent = "Finish your profile";
+          document.querySelector(".page-hero h1").textContent = "Add your company details.";
+        }
+        return csrfToken;
+      }
+
+      async function register(body, allowRetry = true) {
+        if (!csrfToken) await seedCsrf();
+        const response = await fetch("/api/account", {
+          method: "POST",
+          credentials: "include",
+          headers: { "content-type": "application/json", "x-csrf-token": csrfToken },
+          body: JSON.stringify(body)
+        });
+        const data = await response.json().catch(() => null);
+        if (data?.csrfToken) csrfToken = String(data.csrfToken);
+        if (response.status === 403 && data?.csrfToken && allowRetry) return register(body, false);
+        if (!response.ok) {
+          const error = new Error(data?.error || "Account creation failed.");
+          error.data = data;
+          throw error;
+        }
+        return data;
+      }
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (!form.reportValidity()) return;
+        const password = String(form.elements.password.value || "");
+        if (!completionMode && password.length < 12) {
+          showStatus("Use at least 12 characters for your password.", "error");
+          return;
+        }
+        submitButton.disabled = true;
+        submitButton.textContent = "Creating your profile…";
+        showStatus("Saving your profile securely…");
+        const email = String(form.elements.email.value || "").trim();
+        const profile = {
+          name: String(form.elements.name.value || "").trim(),
+          company: String(form.elements.company.value || "").trim(),
+          email,
+          type: plan.type,
+          truckCount: Number(form.elements.truck_count.value || 0) || 0,
+          mc_dot: String(form.elements.mc_dot.value || "").trim(),
+          preferredLanguage: String(form.elements.preferredLanguage.value || "en"),
+          checkoutPlan: planKey,
+          profileView: planKey === "shipper" ? "customer" : planKey === "driver" ? "driver" : "broker"
+        };
+        try {
+          const data = await register(completionMode ? {
+            action: "complete-profile",
+            profile,
+            checkoutPlan: planKey,
+            profileView: profile.profileView
+          } : {
+            action: "register",
+            profile,
+            password,
+            checkoutPlan: planKey,
+            profileView: profile.profileView
+          });
+          showStatus(data?.verificationEmailSent ? "Profile created. We emailed you a verification link — opening the verification page…" : "Profile created. Opening verification…", "success");
+          if (window.rmTrack) window.rmTrack("signup_completed", { plan: planKey });
+          if (data?.dashboardRoute === "verify" || data?.accessRoute === "verify" || data?.verificationToken) {
+            const next = new URL("/verify.html", location.origin);
+            next.searchParams.set("email", email);
+            next.searchParams.set("plan", planKey);
+            if (data?.verificationToken) next.searchParams.set("token", data.verificationToken);
+            location.assign(`${next.pathname}${next.search}`);
+          } else {
+            location.assign(`/pricing.html?plan=${encodeURIComponent(planKey)}`);
+          }
+        } catch (error) {
+          if (error?.data?.existingAccount) {
+            location.assign(error.data.signInPath || `/signin?email=${encodeURIComponent(email)}`);
+            return;
+          }
+          showStatus(error?.message || "Could not create your account. Please try again.", "error");
+          submitButton.disabled = false;
+          submitButton.textContent = "Create profile & verify";
+        }
+      });
+
+      seedCsrf().catch(() => showStatus("Secure session could not start. Reload the page and try again.", "error"));
+    </script>
+  </body>
+</html>

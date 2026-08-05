@@ -1,0 +1,11 @@
+/sign-in /signin 301
+/login /signin 301
+/signup.html /signup 301
+/pricing.html /pricing 301
+/checkout-success.html /checkout-success 301
+/support.html /support 301
+/subscribe /pricing 302
+/launch/* /signin?redirect=/launch/:splat 302
+/workspace /member.html 200
+/rate-calculator.html /rate-calculator 301
+/carrier-profile.html /carrier-profile 301

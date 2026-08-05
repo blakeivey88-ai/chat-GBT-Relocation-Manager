@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>Activating your membership | Relocation Manager USA</title>
+    <link rel="stylesheet" href="/public-site.css?v=20260803-1" />
+  </head>
+  <body>
+    <main>
+      <section class="page-hero" style="padding-bottom:150px">
+        <div class="container">
+          <div class="kicker">Payment received</div>
+          <h1>Opening your member workspace.</h1>
+          <p>Stripe is confirming your subscription. Keep this page open for a moment.</p>
+        </div>
+      </section>
+      <section class="section" style="margin-top:-120px;padding-top:0">
+        <div class="container form-shell">
+          <article class="card form-card" aria-live="polite">
+            <h2 id="activationTitle">Activating your membership…</h2>
+            <p id="activationStatus">We’re waiting for Stripe’s secure confirmation. You will not be charged again.</p>
+            <div class="status" id="activationNotice">Checking subscription status…</div>
+            <a class="btn btn-primary btn-block" id="continueButton" href="/member.html#workbench" hidden>Open member workspace</a>
+          </article>
+        </div>
+      </section>
+    </main>
+    <script>
+      const title = document.getElementById("activationTitle");
+      const status = document.getElementById("activationStatus");
+      const notice = document.getElementById("activationNotice");
+      const button = document.getElementById("continueButton");
+      let attempts = 0;
+
+      async function checkActivation() {
+        attempts += 1;
+        const response = await fetch("/api/account", { credentials: "include", cache: "no-store" });
+        const data = await response.json().catch(() => null);
+        if (data?.memberAccess?.entitled) {
+          title.textContent = "Your membership is active.";
+          status.textContent = "Payment is confirmed. Taking you into the member workspace now.";
+          notice.textContent = "Subscription confirmed.";
+          button.hidden = false;
+          button.href = data.redirectPath || "/member.html#workbench";
+          setTimeout(() => location.replace(button.href), 700);
+          return;
+        }
+        if (attempts < 30) {
+          notice.textContent = `Confirmation in progress… (${attempts}/30)`;
+          setTimeout(checkActivation, 1500);
+          return;
+        }
+        title.textContent = "Payment received—confirmation is taking longer than usual.";
+        status.textContent = "Do not pay again. Open your workspace or sign in; Stripe’s webhook will finish activation automatically.";
+        notice.textContent = "If access is not active after a few minutes, contact support with your Stripe receipt.";
+        button.hidden = false;
+      }
+      checkActivation().catch(() => {
+        title.textContent = "Payment received.";
+        status.textContent = "Do not pay again. Sign in to check your membership status.";
+        notice.textContent = "We could not refresh the account automatically.";
+        button.hidden = false;
+      });
+    </script>
+  </body>
+</html>

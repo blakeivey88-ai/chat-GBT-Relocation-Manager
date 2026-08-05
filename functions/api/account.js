@@ -2,7 +2,8 @@ import {
   cleanNumber,
   cleanString,
   authRedirectPath,
-  consumeResetRecord,
+  deleteResetRecord,
+  readResetRecord,
   consumeVerificationRecord,
   createPasswordResetToken,
   createSession,
@@ -19,6 +20,7 @@ import {
   memberAccessPayload,
   normalizeEmail,
   normalizeProfileView,
+  normalizeBulletinColor,
   normalizeCommunicationPrivacy,
   normalizeBoolean,
   normalizeLanguageList,
@@ -37,17 +39,22 @@ import {
   clearSessionCookie,
   truckCountFromType,
   upsertAccount,
+  updateAccountPassword,
   verifyPassword,
   subscriptionAccessDecision,
   isProfileComplete,
+  tokenHash,
 } from './_auth.js';
 
-import { recordAuditEvent } from '../lib/audit.js';
+import { recordAuditEvent, recordAuthAuditEvent } from '../lib/audit.js';
+import { readLoadHistory, summarizeLoadHistory } from '../lib/load-history.js';
+import { makePasswordResetUrl, sendPasswordResetEmail } from '../lib/email.js';
 
 export async function onRequestGet(context) {
   try {
     const { request, env } = context;
     const csrf = issueCsrfToken(request);
+    await rememberIssuedCsrfToken(env, csrf.token);
     const session = getSessionToken(request);
     if (!session) {
       return json({ ok: true, session: null, profile: null, memberAccess: { authenticated: false, emailVerified: false, subscriptionStatus: 'unpaid', entitled: false }, csrfToken: csrf.token }, 200, csrf.headers);
@@ -78,6 +85,8 @@ export async function onRequestGet(context) {
 
     if (isEntitled(account)) {
       Object.assign(payload, safeAccountResponse(account));
+      payload.loadHistory = await readLoadHistory(env, account.userId, 150);
+      payload.reputationActivity = summarizeLoadHistory(payload.loadHistory);
     }
 
     return json(payload);
@@ -123,9 +132,8 @@ async function handleMutation(context) {
 
     if (action === 'register') {
       const profile = normalizeProfile(body.profile || body);
-      if (!validateCsrfToken(request, body)) {
-        const csrf = issueCsrfToken(request);
-        return json({ ok: false, error: 'Session expired. Refresh the page and try again.', csrfToken: csrf.token }, 403, csrf.headers);
+      if (!(await validatePublicMutationCsrf(env, request, body))) {
+        return csrfExpiredResponse(env, request);
       }
       if (!profile.email || !profile.name) {
         return json({ ok: false, error: 'Name and email are required.' }, 400);
@@ -141,7 +149,12 @@ async function handleMutation(context) {
 
       const existing = await readAccountByEmail(env, profile.email);
       if (existing && existing.passwordHash) {
-        return json({ ok: false, error: 'Account already exists. Sign in instead.' }, 409);
+        return json({
+          ok: false,
+          error: 'Account already exists. Sign in instead.',
+          existingAccount: true,
+          signInPath: `/signin?email=${encodeURIComponent(profile.email)}`,
+        }, 409);
       }
 
       const userId = existing?.userId || `usr_${crypto.randomUUID().replace(/-/g, '').slice(0, 24)}`;
@@ -223,9 +236,9 @@ async function handleMutation(context) {
     }
 
     if (action === 'login') {
-      if (!validateCsrfToken(request, body)) {
-        const csrf = issueCsrfToken(request);
-        return json({ ok: false, error: 'Session expired. Refresh the page and try again.', csrfToken: csrf.token }, 403, csrf.headers);
+      const validCsrf = await validatePublicMutationCsrf(env, request, body);
+      if (!validCsrf) {
+        return csrfExpiredResponse(env, request);
       }
       const email = normalizeEmail(body.email);
       const secret = String(body.password || body.accessCode || body.access_code || '').trim();
@@ -239,17 +252,16 @@ async function handleMutation(context) {
       }
 
       const ip = clientIp(request);
+      const authRequestId = crypto.randomUUID();
       const throttle = await readLoginThrottle(env, email, ip);
       if (throttle.lockedUntil && throttle.lockedUntil > Date.now()) {
         await slowDownLogin(throttle.failedCount);
-        await recordAuditEvent(env, {
+        await recordAuthAuditEvent(env, {
           actionType: 'account.login_locked',
-          actorUserId: '',
-          actorRole: '',
-          targetType: 'account',
-          targetId: email,
-          reason: 'Login locked due to repeated failures.',
-          meta: { source: 'api/account', email, ip },
+          outcome: 'rejected',
+          reasonCode: 'throttled',
+          requestId: authRequestId,
+          failedCount: throttle.failedCount,
         });
         return json({ ok: false, error: 'We are having trouble signing you in right now. Please try again.' }, 429);
       }
@@ -262,14 +274,14 @@ async function handleMutation(context) {
         const lockedUntil = failures >= 5 ? Date.now() + (5 * 60 * 1000) : Number(throttle.lockedUntil || 0);
         await writeLoginThrottle(env, email, ip, { failedCount: failures, lockedUntil, lastAttemptAt: Date.now() });
         await slowDownLogin(failures);
-        await recordAuditEvent(env, {
+        await recordAuthAuditEvent(env, {
           actionType: 'account.login_failed',
-          actorUserId: account?.userId || '',
-          actorRole: account?.role || '',
-          targetType: 'account',
-          targetId: account?.userId || email,
-          reason: 'Invalid login credentials.',
-          meta: { source: 'api/account', email, ip, failures, lockedUntil: lockedUntil || 0 },
+          userId: account?.userId || '',
+          role: account?.role || '',
+          outcome: 'rejected',
+          reasonCode: 'invalid_credentials',
+          requestId: authRequestId,
+          failedCount: failures,
         });
         if (lockedUntil && lockedUntil > Date.now()) {
           return json({ ok: false, error: 'We are having trouble signing you in right now. Please try again.' }, 429);
@@ -402,34 +414,64 @@ async function handleMutation(context) {
     }
 
     if (action === 'request-reset') {
-      if (!validateCsrfToken(request, body)) {
-        const csrf = issueCsrfToken(request);
-        return json({ ok: false, error: 'Session expired. Refresh the page and try again.', csrfToken: csrf.token }, 403, csrf.headers);
+      if (!(await validatePublicMutationCsrf(env, request, body))) {
+        return csrfExpiredResponse(env, request);
       }
       const email = normalizeEmail(body.email);
       if (!email) {
         return json({ ok: false, error: 'Email is required.' }, 400);
       }
+
+      if (!env?.EMAIL?.send && !String(env?.RESEND_API_KEY || '').trim()) {
+        return json({ ok: false, error: 'Password reset email is temporarily unavailable. Please contact support.' }, 503);
+      }
+
+      const resetThrottle = await readResetThrottle(env, email, clientIp(request));
+      if (resetThrottle.retryAfter > Date.now()) {
+        return json({ ok: true, accepted: true, message: 'If that account exists, a reset email has been sent.' });
+      }
+      await writeResetThrottle(env, email, clientIp(request));
+
       const account = await readAccountByEmail(env, email);
       if (!account) {
-        return json({ ok: true, sent: false });
+        return json({ ok: true, accepted: true, message: 'If that account exists, a reset email has been sent.' });
       }
       const token = await createPasswordResetToken(env, account.userId);
-      const updated = ensureAccountShape({
-        ...account,
-        updatedAt: new Date().toISOString(),
-      }, account);
-      await upsertAccount(env, updated);
-      await recordAuditEvent(env, {
-        actionType: 'account.password_reset_requested',
-        actorUserId: updated.userId,
-        actorRole: updated.role,
-        targetType: 'account',
-        targetId: updated.userId,
-        after: { resetRequestedAt: new Date().toISOString() },
-        meta: { source: 'api/account' },
-      });
-      return json({ ok: true, sent: true, resetUrl: `/?reset_token=${encodeURIComponent(token)}&email=${encodeURIComponent(email)}#reset` });
+      const resetUrl = makePasswordResetUrl({ token, email, origin: new URL(request.url).origin });
+      const deliveryRequestId = crypto.randomUUID();
+
+      try {
+        await sendPasswordResetEmail(env, {
+          to: email,
+          resetUrl,
+          name: account.name || '',
+          requestId: deliveryRequestId,
+        });
+      } catch (error) {
+        console.error(JSON.stringify({
+          event: 'password_reset_email_failed',
+          requestId: deliveryRequestId,
+          userId: account.userId,
+          reasonCode: 'provider_error',
+        }));
+        return json({ ok: false, error: 'We could not send the reset email right now. Please try again later.' }, 503);
+      }
+
+      try {
+        await recordAuthAuditEvent(env, {
+          actionType: 'account.password_reset_requested',
+          userId: account.userId,
+          role: account.role,
+          outcome: 'accepted',
+          reasonCode: 'email_delivery_accepted',
+          requestId: deliveryRequestId,
+        });
+      } catch (error) {
+        // The reset token exists and the provider already accepted the email.
+        // Bookkeeping must not turn that successful delivery into a false 500.
+        console.error('Password reset request audit write failed.');
+      }
+      return json({ ok: true, accepted: true, message: 'If that account exists, a reset email has been sent.' });
     }
 
     if (action === 'billing-portal') {
@@ -480,47 +522,111 @@ async function handleMutation(context) {
     }
 
     if (action === 'reset-password') {
-      if (!validateCsrfToken(request, body)) {
-        const csrf = issueCsrfToken(request);
-        return json({ ok: false, error: 'Session expired. Refresh the page and try again.', csrfToken: csrf.token }, 403, csrf.headers);
+      if (!(await validatePublicMutationCsrf(env, request, body))) {
+        return csrfExpiredResponse(env, request);
       }
+      const resetRequestId = crypto.randomUUID();
       const token = String(body.token || body.resetToken || '').trim();
       const password = String(body.password || '').trim();
       if (!token || !password) {
+        await recordAuthAuditSafely(env, {
+          actionType: 'account.password_reset_rejected',
+          outcome: 'rejected',
+          reasonCode: 'missing_fields',
+          requestId: resetRequestId,
+        });
         return json({ ok: false, error: 'Reset token and new password are required.' }, 400);
       }
-      const userId = await consumeResetRecord(env, token);
+      if (password.length < 12) {
+        await recordAuthAuditSafely(env, {
+          actionType: 'account.password_reset_rejected',
+          outcome: 'rejected',
+          reasonCode: 'weak_password',
+          requestId: resetRequestId,
+        });
+        return json({ ok: false, error: 'Use at least 12 characters for your new password.' }, 400);
+      }
+      const userId = await readResetRecord(env, token);
       if (!userId) {
+        await recordAuthAuditSafely(env, {
+          actionType: 'account.password_reset_rejected',
+          outcome: 'rejected',
+          reasonCode: 'invalid_or_expired_token',
+          requestId: resetRequestId,
+        });
         return json({ ok: false, error: 'That reset link expired or is invalid.' }, 400);
       }
       const account = await readAccountByUserId(env, userId);
       if (!account) {
+        await recordAuthAuditSafely(env, {
+          actionType: 'account.password_reset_rejected',
+          userId,
+          outcome: 'rejected',
+          reasonCode: 'account_not_found',
+          requestId: resetRequestId,
+        });
         return json({ ok: false, error: 'Account not found.' }, 404);
       }
       const { salt, hash } = await hashPassword(password);
-      const updated = ensureAccountShape({
-        ...account,
-        passwordSalt: salt,
-        passwordHash: hash,
-        passwordChangedAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      }, account);
-      const saved = await upsertAccount(env, updated);
-      await removeSessionsForUser(env, saved.userId);
-      const response = { ok: true, profile: publicProfile(saved), memberAccess: memberAccessPayload(saved), dashboardRoute: 'signin', accessRoute: 'signin', notice: 'Password updated. Please sign in again.' };
+      const changedAt = new Date().toISOString();
+      const saved = await updateAccountPassword(env, account, { salt, hash, changedAt });
+      let revoked;
+      try {
+        revoked = await removeSessionsForUser(env, saved.userId, {
+          requireAllStores: true,
+        });
+      } catch (error) {
+        await recordAuthAuditSafely(env, {
+          actionType: 'account.password_reset_rejected',
+          userId: saved.userId,
+          role: saved.role,
+          outcome: 'rejected',
+          reasonCode: 'session_revocation_failed',
+          requestId: resetRequestId,
+        });
+        throw error;
+      }
+      await deleteResetRecord(env, token);
+      const session = await createSession(
+        env,
+        saved.userId,
+        { email: saved.email, passwordResetAt: changedAt },
+      );
+      const csrf = issueCsrfToken(request);
+      await rememberIssuedCsrfToken(env, csrf.token);
+      const response = {
+        ok: true,
+        profile: publicProfile(saved),
+        memberAccess: memberAccessPayload(saved),
+        dashboardRoute: dashboardRoute(saved),
+        accessRoute: accessRoute(saved),
+        redirectPath: authRedirectPath(saved),
+        csrfToken: csrf.token,
+        notice: 'Password updated. You are signed in.',
+      };
       if (isEntitled(saved)) {
         Object.assign(response, safeAccountResponse(saved));
       }
-      await recordAuditEvent(env, {
-        actionType: 'account.password_reset_completed',
-        actorUserId: saved.userId,
-        actorRole: saved.role,
-        targetType: 'account',
-        targetId: saved.userId,
-        after: { profile: publicProfile(saved), memberAccess: memberAccessPayload(saved) },
-        meta: { source: 'api/account' },
-      });
-      return json(response, 200, clearSessionCookie(request));
+      try {
+        await recordAuthAuditEvent(env, {
+          actionType: 'account.password_reset_completed',
+          userId: saved.userId,
+          role: saved.role,
+          outcome: 'completed',
+          reasonCode: 'password_changed',
+          sessionStores: revoked,
+        });
+      } catch (error) {
+        // Password persistence and token invalidation already succeeded. Audit
+        // storage is important, but it must not falsely report that the user's
+        // new password failed to save.
+        console.error('Password reset audit write failed.');
+      }
+      return json(
+        response,
+        200,
+        mergeHeaderObjects(sessionCookie(request, session), csrf.headers),
+      );
     }
 
     const current = await readCurrentAccount(request, env);
@@ -534,7 +640,9 @@ async function handleMutation(context) {
       return json({ ok: false, error: 'Complete your email verification and monthly subscription to access member account features.', accessRoute: accessRoute(account) }, 403);
     }
 
-    if (containsForbiddenBillingMutation(body)) {
+    if (containsForbiddenBillingMutation(body, {
+      ignoreProfileType: isProfileCompletion,
+    })) {
       return json({ ok: false, error: 'Subscription and billing fields can only be updated by the server.' }, 403);
     }
 
@@ -544,7 +652,18 @@ async function handleMutation(context) {
       return json({ ok: false, error: 'Add your name, account type, and company to complete your profile.' }, 400);
     }
     const saved = await upsertAccount(env, next);
-    const response = { ok: true, profile: publicProfile(saved), memberAccess: memberAccessPayload(saved), accessRoute: accessRoute(saved) };
+    const response = {
+      ok: true,
+      profile: publicProfile(saved),
+      memberAccess: memberAccessPayload(saved),
+      profileView: saved.profileView || 'driver',
+      dashboardRoute: dashboardRoute(saved),
+      accessRoute: accessRoute(saved),
+      redirectPath: authRedirectPath(saved),
+      notice: isProfileCompletion
+        ? 'Company profile saved. You are still signed in.'
+        : 'Account updated.',
+    };
     if (isEntitled(saved)) Object.assign(response, safeAccountResponse(saved));
     await recordAuditEvent(env, {
       actionType: 'account.update',
@@ -557,25 +676,56 @@ async function handleMutation(context) {
       meta: { source: 'api/account' },
     });
     return json(response);
-  } catch {
+  } catch (error) {
+    console.error('Account mutation failed.', error);
     return json({ ok: false, error: 'Account save failed.' }, 500);
   }
 }
 
 function mergeProfileCompletionPatch(current, body) {
   const profile = normalizeProfile(body.profile || body);
+  const editable = pickEditableProfile(profile);
+  editable.type = current.type || editable.type;
   return ensureAccountShape({
     ...current,
-    ...pickEditableProfile(profile),
+    ...editable,
     updatedAt: new Date().toISOString(),
   }, current);
 }
 
 function mergeAccountPatch(current, body) {
   const profile = normalizeProfile(body.profile || body);
+  const editable = pickEditableProfile(profile);
+  for (const [key, value] of Object.entries(editable)) {
+    if (value === '' && current[key]) editable[key] = current[key];
+    if (Array.isArray(value) && value.length === 0 && Array.isArray(current[key])) {
+      editable[key] = current[key];
+    }
+  }
+  const insuranceChanged = Boolean(
+    profile.insuranceProvider ||
+      profile.insurancePolicyLast4 ||
+      profile.insuranceExpiration ||
+      profile.insuranceDocumentUrl,
+  );
   return ensureAccountShape({
     ...current,
-    ...pickEditableProfile(profile),
+    ...editable,
+    logoUrl: profile.logoUrl || current.logoUrl || '',
+    bulletinColor: normalizeBulletinColor(
+      profile.bulletinColor || current.bulletinColor,
+    ),
+    insuranceProvider:
+      profile.insuranceProvider || current.insuranceProvider || '',
+    insurancePolicyLast4:
+      profile.insurancePolicyLast4 || current.insurancePolicyLast4 || '',
+    insuranceExpiration:
+      profile.insuranceExpiration || current.insuranceExpiration || '',
+    insuranceDocumentUrl:
+      profile.insuranceDocumentUrl || current.insuranceDocumentUrl || '',
+    insuranceStatus: insuranceChanged
+      ? 'Pending review'
+      : current.insuranceStatus || 'Not submitted',
     profileView: normalizeProfileView(body.profileView || current.profileView || 'driver'),
     communicationPrivacy: normalizeCommunicationPrivacy(body.communicationPrivacy || body.privacy || current.communicationPrivacy || {}),
     recentLoads: Array.isArray(body.recentLoads) ? body.recentLoads.slice(0, 12) : current.recentLoads || [],
@@ -601,6 +751,10 @@ function pickEditableProfile(profile) {
     company: cleanString(profile.company, 160),
     type: cleanString(profile.type, 120),
     mc_dot: cleanString(profile.mc_dot, 80),
+    insuranceProvider: cleanString(profile.insuranceProvider, 120),
+    insurancePolicyLast4: cleanString(profile.insurancePolicyLast4, 4).replace(/\D/g, ''),
+    insuranceExpiration: cleanString(profile.insuranceExpiration, 10),
+    insuranceDocumentUrl: normalizeHttpDocumentUrl(profile.insuranceDocumentUrl),
     preferredLanguage: cleanString(profile.preferredLanguage || profile.language, 8) || 'en',
     additionalLanguages: normalizeLanguageList(profile.additionalLanguages || profile.additional_languages || []),
     preferredTranslationLanguage: cleanString(profile.preferredTranslationLanguage || profile.translationLanguage || profile.translation_language || profile.languagePreference || profile.language_preference || profile.preferredLanguage || profile.language, 8) || cleanString(profile.preferredLanguage || profile.language, 8) || 'en',
@@ -617,6 +771,8 @@ function pickEditableProfile(profile) {
     state: cleanString(profile.state, 40),
     equipmentType: cleanString(profile.equipmentType, 120),
     equipmentTypes: Array.isArray(profile.equipmentTypes) ? profile.equipmentTypes.slice(0, 12).map((item) => cleanString(item, 80)) : [],
+    logoUrl: normalizeHttpImageUrl(profile.logoUrl),
+    bulletinColor: normalizeBulletinColor(profile.bulletinColor),
   };
 }
 
@@ -628,6 +784,10 @@ function normalizeProfile(input) {
     type: cleanString(input.type, 120),
     truckCount: cleanNumber(input.truckCount ?? input.truck_count) || truckCountFromType(input.type),
     mc_dot: cleanString(input.mc_dot, 80),
+    insuranceProvider: cleanString(input.insuranceProvider, 120),
+    insurancePolicyLast4: cleanString(input.insurancePolicyLast4, 4).replace(/\D/g, ''),
+    insuranceExpiration: cleanString(input.insuranceExpiration, 10),
+    insuranceDocumentUrl: normalizeHttpDocumentUrl(input.insuranceDocumentUrl),
     preferredLanguage: cleanString(input.preferredLanguage || input.language, 8) || 'en',
     additionalLanguages: normalizeLanguageList(input.additionalLanguages || input.additional_languages || []),
     preferredTranslationLanguage: cleanString(input.preferredTranslationLanguage || input.translationLanguage || input.translation_language || input.languagePreference || input.language_preference || input.preferredLanguage || input.language, 8) || cleanString(input.preferredLanguage || input.language, 8) || 'en',
@@ -637,7 +797,31 @@ function normalizeProfile(input) {
     showLanguagesSpoken: normalizeBoolean(input.showLanguagesSpoken ?? input.show_languages_spoken ?? input.languageVisibility ?? input.language_visibility, false),
     role: cleanString(input.role, 80),
     note: cleanString(input.note, 280),
+    logoUrl: normalizeHttpImageUrl(input.logoUrl || input.logo_url),
+    bulletinColor: normalizeBulletinColor(input.bulletinColor || input.bulletin_color),
   };
+}
+
+function normalizeHttpImageUrl(value) {
+  const raw = cleanString(value, 280);
+  if (!raw) return '';
+  try {
+    const parsed = new URL(raw);
+    return ['https:', 'http:'].includes(parsed.protocol) ? parsed.toString() : '';
+  } catch {
+    return '';
+  }
+}
+
+function normalizeHttpDocumentUrl(value) {
+  const raw = cleanString(value, 360);
+  if (!raw) return '';
+  try {
+    const parsed = new URL(raw);
+    return parsed.protocol === 'https:' ? parsed.toString() : '';
+  } catch {
+    return '';
+  }
 }
 
 function normalizeBidMap(input) {
@@ -658,7 +842,10 @@ function normalizeBidMap(input) {
   return output;
 }
 
-function containsForbiddenBillingMutation(body = {}) {
+function containsForbiddenBillingMutation(
+  body = {},
+  { ignoreProfileType = false } = {},
+) {
   const forbidden = new Set([
     'subscription_status',
     'subscriptionStatus',
@@ -709,10 +896,10 @@ function containsForbiddenBillingMutation(body = {}) {
     'password_salt',
   ]);
 
-  const keys = [
-    ...Object.keys(body || {}),
-    ...Object.keys(body?.profile || {}),
-  ];
+  const profileKeys = Object.keys(body?.profile || {}).filter(
+    (key) => !(ignoreProfileType && key === 'type'),
+  );
+  const keys = [...Object.keys(body || {}), ...profileKeys];
   return keys.some((key) => forbidden.has(key));
 }
 
@@ -795,8 +982,75 @@ function sameOriginRequest(request) {
   }
 }
 
+async function rememberIssuedCsrfToken(env, token) {
+  if (!env?.RELOCATION_MANAGER_LEADS?.put || !token) return;
+  try {
+    const hash = await tokenHash(token);
+    await env.RELOCATION_MANAGER_LEADS.put(
+      `csrf:issued:${hash}`,
+      '1',
+      { expirationTtl: 30 * 60 },
+    );
+  } catch {
+    // The normal double-submit cookie remains the primary validation path.
+  }
+}
+
+async function validateIssuedCsrfToken(env, request) {
+  if (!env?.RELOCATION_MANAGER_LEADS?.get) return false;
+  const origin = String(request.headers.get('origin') || '').trim();
+  const contentType = String(request.headers.get('content-type') || '').toLowerCase();
+  const token = String(request.headers.get('x-csrf-token') || request.headers.get('x-xsrf-token') || '').trim();
+  if (!origin || !sameOriginRequest(request) || !contentType.includes('application/json') || token.length < 24) {
+    return false;
+  }
+  try {
+    const hash = await tokenHash(token);
+    return Boolean(await env.RELOCATION_MANAGER_LEADS.get(`csrf:issued:${hash}`));
+  } catch {
+    return false;
+  }
+}
+
+async function validatePublicMutationCsrf(env, request, body) {
+  return (
+    validateCsrfToken(request, body) ||
+    (await validateIssuedCsrfToken(env, request))
+  );
+}
+
+async function csrfExpiredResponse(env, request) {
+  const csrf = issueCsrfToken(request);
+  await rememberIssuedCsrfToken(env, csrf.token);
+  return json(
+    {
+      ok: false,
+      error: 'Session expired. Refresh the page and try again.',
+      csrfToken: csrf.token,
+    },
+    403,
+    csrf.headers,
+  );
+}
+
+async function recordAuthAuditSafely(env, event) {
+  try {
+    await recordAuthAuditEvent(env, event);
+  } catch {
+    console.error('Authentication audit write failed.');
+  }
+}
+
 function isValidEmailAddress(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || '').trim());
+}
+
+function safeJsonParse(value) {
+  try {
+    return JSON.parse(String(value || ''));
+  } catch {
+    return null;
+  }
 }
 
 function loginThrottleKey(email, ip) {
@@ -824,6 +1078,26 @@ async function writeLoginThrottle(env, email, ip, state) {
 async function clearLoginThrottle(env, email, ip) {
   if (!env?.RELOCATION_MANAGER_LEADS?.delete) return;
   await env.RELOCATION_MANAGER_LEADS.delete(loginThrottleKey(email, ip));
+}
+
+function resetThrottleKey(email, ip) {
+  return `auth:reset:${String(email || '').trim().toLowerCase()}:${String(ip || 'unknown').trim().toLowerCase()}`;
+}
+
+async function readResetThrottle(env, email, ip) {
+  if (!env?.RELOCATION_MANAGER_LEADS?.get) return { retryAfter: 0 };
+  const raw = await env.RELOCATION_MANAGER_LEADS.get(resetThrottleKey(email, ip));
+  const parsed = raw ? safeJsonParse(raw) : null;
+  return { retryAfter: Number(parsed?.retryAfter || 0) };
+}
+
+async function writeResetThrottle(env, email, ip) {
+  if (!env?.RELOCATION_MANAGER_LEADS?.put) return;
+  await env.RELOCATION_MANAGER_LEADS.put(
+    resetThrottleKey(email, ip),
+    JSON.stringify({ retryAfter: Date.now() + 60 * 1000 }),
+    { expirationTtl: 5 * 60 },
+  );
 }
 
 async function slowDownLogin(failures = 0) {

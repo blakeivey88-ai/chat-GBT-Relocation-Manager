@@ -119,6 +119,7 @@ function sanitizeTelemetry(body = {}) {
       id: cleanString(agent.id, 64),
       name: cleanString(agent.name, 80),
       emoji: cleanString(agent.emoji, 12),
+      avatarUrl: cleanString(agent.avatarUrl || agent.avatar || agent.imageUrl, 280),
       role: cleanString(agent.role, 120),
       model: cleanString(agent.model, 100),
       status: cleanString(agent.status, 30),

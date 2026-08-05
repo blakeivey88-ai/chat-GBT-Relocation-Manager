@@ -33,12 +33,17 @@ export async function onRequestPost(context) {
       if (!post.body) return json({ ok: false, error: 'Message is required.' }, 400);
       const saved = {
         id: crypto.randomUUID(),
+        authorUserId: access.account.userId,
         authorName: post.authorName || access.account.name || 'Community',
         authorRole: post.authorRole || access.account.role || 'Member',
         authorEmail: access.account.email,
+        authorLogoUrl: normalizeLogoUrl(access.account.logoUrl || access.account.avatarUrl),
+        accentColor: normalizeAccentColor(post.accentColor || access.account.bulletinColor),
         language: post.language || 'en',
         subject: post.subject || 'Board update',
         body: post.body,
+        likedBy: [],
+        replies: [],
         translations: {},
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
@@ -61,9 +66,52 @@ export async function onRequestPost(context) {
       return json({ ok: true, post: posts[idx], posts: posts.slice(0, 40) });
     }
 
+    if (action === 'reply') {
+      const id = String(body.id || body.postId || '').trim();
+      const replyBody = cleanString(body.body || body.reply?.body, 800);
+      if (!id || !replyBody) return json({ ok: false, error: 'Post id and reply are required.' }, 400);
+      const idx = posts.findIndex((item) => item.id === id);
+      if (idx === -1) return json({ ok: false, error: 'Post not found.' }, 404);
+      const reply = {
+        id: crypto.randomUUID(),
+        authorUserId: access.account.userId,
+        authorName: access.account.name || 'Community member',
+        authorRole: access.account.role || 'Member',
+        authorLogoUrl: normalizeLogoUrl(access.account.logoUrl || access.account.avatarUrl),
+        accentColor: normalizeAccentColor(body.accentColor || access.account.bulletinColor),
+        body: replyBody,
+        language: cleanString(body.language, 10).toLowerCase() || 'en',
+        createdAt: new Date().toISOString(),
+      };
+      posts[idx].replies = [...(Array.isArray(posts[idx].replies) ? posts[idx].replies : []), reply].slice(-50);
+      posts[idx].updatedAt = new Date().toISOString();
+      await writeBoard(env, { posts: posts.slice(0, 40) });
+      return json({ ok: true, reply, post: posts[idx], posts: posts.slice(0, 40) });
+    }
+
+    if (action === 'react') {
+      const id = String(body.id || body.postId || '').trim();
+      if (!id) return json({ ok: false, error: 'Post id is required.' }, 400);
+      const idx = posts.findIndex((item) => item.id === id);
+      if (idx === -1) return json({ ok: false, error: 'Post not found.' }, 404);
+      const likedBy = new Set(Array.isArray(posts[idx].likedBy) ? posts[idx].likedBy : []);
+      if (likedBy.has(access.account.userId)) likedBy.delete(access.account.userId);
+      else likedBy.add(access.account.userId);
+      posts[idx].likedBy = [...likedBy].slice(-500);
+      posts[idx].updatedAt = new Date().toISOString();
+      await writeBoard(env, { posts: posts.slice(0, 40) });
+      return json({ ok: true, post: posts[idx], posts: posts.slice(0, 40) });
+    }
+
     if (action === 'delete') {
       const id = String(body.id || '').trim();
       if (!id) return json({ ok: false, error: 'Post id is required.' }, 400);
+      const target = posts.find((item) => item.id === id);
+      const isOwner = target?.authorUserId && target.authorUserId === access.account.userId;
+      const isAdmin = /admin/i.test(String(access.account.role || ''));
+      if (!target || (!isOwner && !isAdmin)) {
+        return json({ ok: false, error: 'Only the post owner or an administrator can delete this post.' }, 403);
+      }
       const nextPosts = posts.filter((item) => item.id !== id);
       await writeBoard(env, { posts: nextPosts.slice(0, 40) });
       return json({ ok: true, posts: nextPosts.slice(0, 40) });
@@ -119,7 +167,26 @@ function normalizePost(input) {
     language: cleanString(input.language, 10).toLowerCase() || 'en',
     subject: cleanString(input.subject, 120),
     body: cleanString(input.body, 1500),
+    accentColor: normalizeAccentColor(input.accentColor),
   };
+}
+
+export function normalizeAccentColor(value) {
+  const color = String(value || '').trim().toLowerCase();
+  return ['#1d4ed8', '#0f766e', '#7c3aed', '#b42318', '#9a6700', '#334155'].includes(color)
+    ? color
+    : '#1d4ed8';
+}
+
+export function normalizeLogoUrl(value) {
+  const raw = cleanString(value, 280);
+  if (!raw) return '';
+  try {
+    const parsed = new URL(raw);
+    return ['https:', 'http:'].includes(parsed.protocol) ? parsed.toString() : '';
+  } catch {
+    return '';
+  }
 }
 
 function json(payload, status = 200) {
