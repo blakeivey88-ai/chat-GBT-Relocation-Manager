@@ -11,6 +11,7 @@
 - Candidate `functions/api/loads.js` is newer than the earlier review packet and includes failure logging and subsequent hardening changes.
 - The packet's D1 migration history and focused load-board regression tests are now included in this staging branch.
 - `npm run check` passes: syntax checks plus **18/18** load authorization, photo, bid, acceptance, concurrency, and repair tests.
+- Local Wrangler Pages smoke test served the homepage and assets with 200 responses, redirected unauthenticated member routes to sign-in, and returned 401 for unauthenticated `/api/loads`.
 
 ## Not yet verified
 
