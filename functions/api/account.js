@@ -733,11 +733,15 @@ function mergeAccountPatch(current, body) {
     requestBids: normalizeBidMap(body.requestBids) || current.requestBids || {},
     messages: Array.isArray(body.messages) ? body.messages.slice(0, 24) : current.messages || [],
     plannedTrips: Array.isArray(body.plannedTrips) ? body.plannedTrips.slice(0, 12) : current.plannedTrips || [],
-    activePickups: Array.isArray(body.activePickups) ? body.activePickups.slice(0, 20) : current.activePickups || [],
+    // Pickup lifecycle state is written only by server-side load workflows.
+    // Member profile saves must never create or advance pickup evidence.
+    activePickups: current.activePickups || [],
     laneAlerts: Array.isArray(body.laneAlerts) ? body.laneAlerts.slice(0, 12) : current.laneAlerts || [],
     notifications: Array.isArray(body.notifications) ? body.notifications.slice(0, 30) : current.notifications || [],
     customerRatings: Array.isArray(body.customerRatings) ? body.customerRatings.slice(0, 20) : current.customerRatings || [],
-    verifiedTransactions: Array.isArray(body.verifiedTransactions) ? body.verifiedTransactions.slice(0, 60) : current.verifiedTransactions || [],
+    // Transaction evidence is written only by server-side completion/verification
+    // flows. Never accept it from a member profile save.
+    verifiedTransactions: current.verifiedTransactions || [],
     trustDisputes: Array.isArray(body.trustDisputes) ? body.trustDisputes.slice(0, 24) : current.trustDisputes || [],
     trustAudit: Array.isArray(body.trustAudit) ? body.trustAudit.slice(0, 120) : current.trustAudit || [],
     checkoutPlan: cleanString(body.checkoutPlan || current.checkoutPlan, 80) || current.checkoutPlan || null,
