@@ -7,12 +7,12 @@ Work from `staging/production-baseline-20260806`. Do not use `main` for implemen
 ## Current evidence
 
 - Public production parity verified for the homepage surface and approved eagle/semi assets.
-- `npm run check` passes syntax checks and 18/18 focused load-board tests.
+- `npm run check` passes syntax checks and 20/20 focused load-board and migration-layout tests.
 - Local Wrangler Pages smoke test passes public routes and unauthenticated protections.
 
 ## Claude Code assignment
 
-Inspect the staged Functions and test coverage. Propose the next bounded implementation task for authenticated role-based browser tests. Do not deploy, push, modify Cloudflare resources, or change social integrations.
+Inspect the staged Functions and test coverage. The next bounded task is to implement the carrier-posting rule only after Blake confirms whether explicit `claim` access may publish loads. Do not deploy, push, modify Cloudflare resources, or change social integrations.
 
 ## Codex assignment
 

@@ -2,7 +2,7 @@
 
 **Date:** 2026-08-06  
 **Branch:** `staging/production-baseline-20260806`  
-**Commit:** `1522e11`
+**Current candidate commit:** `66dd5a4`
 
 ## Verified
 
@@ -14,8 +14,10 @@
 - Local Wrangler Pages smoke test served the homepage and assets with 200 responses, redirected unauthenticated member routes to sign-in, and returned 401 for unauthenticated `/api/loads`.
 - Fresh local D1 migration run applies only the nine forward migrations; rollback scripts are stored under `migrations/down/` and are excluded from Wrangler's forward-migration directory.
 - A synthetic signup and email-verification flow completed successfully against fresh local D1. No production account or credential was used.
-- Carrier authority gating was corrected so DOT/MC is conditional for non-commercial-authority carriers; identity and insurance remain required. The focused suite is now **19/19**.
+- Carrier authority gating was corrected so DOT/MC is conditional for non-commercial-authority carriers; identity and insurance remain required. The focused suite is now **20/20** including the migration-layout guard.
 - A migration-layout regression guard now prevents rollback scripts from being placed in Wrangler's forward migration directory.
+- Local authenticated QA completed signup, email verification, a paid-account fixture, workbench access, find-loads, the post form, save-draft, and preview. The synthetic account was local-only.
+- Open product decision: an account with explicit `claim` access can find and bid but is rejected when final-posting a load; do not change this gate until Blake confirms whether carriers may publish or only bid.
 
 ## Not yet verified
 
@@ -29,4 +31,4 @@
 
 ## Release hold
 
-Do not push or deploy this branch. The next work item is to add the missing test/migration evidence or explicitly record why the production candidate relies on external Cloudflare state, then run a no-deploy local verification.
+Do not push or deploy this branch. The next work item is to resolve the carrier `claim` versus `claim_post` product rule, add the approved regression test, then run a no-deploy local verification.
