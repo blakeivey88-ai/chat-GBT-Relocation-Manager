@@ -506,14 +506,25 @@ function accountCanPostLoads(account) {
       account?.subscriptionAccess ||
       loadAccessFromType(account?.type, account?.paymentStatus),
   ).toLowerCase();
-  // NOTE: "claim" is the schema default for load_access / subscription_access
-  // and is also the fallback in loadAccessFromType(). It must NOT grant
-  // posting, or every entitled account can post and the plan gate never fires.
+  const paymentStatus = String(account?.paymentStatus || "").toLowerCase();
+  const roleText = String(
+    `${account?.role || ""} ${account?.type || ""} ${account?.companyType || ""}`,
+  ).toLowerCase();
+  const paidCarrier =
+    paymentStatus === "paid_driver" ||
+    paymentStatus.startsWith("paid_fleet_") ||
+    /driver|owner[- ]?operator|carrier|broker|fleet|motor carrier/.test(
+      roleText,
+    );
+  // "claim" remains the safe default for unknown accounts. A paid carrier
+  // with explicit claim access is the approved exception: carriers may post
+  // as well as bid, while the $9.99 shipper request_post gate stays intact.
   return (
     access === "request" ||
     access === "request_post" ||
     access === "post_only" ||
-    access === "claim_post"
+    access === "claim_post" ||
+    (access === "claim" && paidCarrier)
   );
 }
 

@@ -17,9 +17,8 @@
 - Carrier authority gating was corrected so DOT/MC is conditional for non-commercial-authority carriers; identity and insurance remain required. The focused suite is now **20/20** including the migration-layout guard.
 - A migration-layout regression guard now prevents rollback scripts from being placed in Wrangler's forward migration directory.
 - Local authenticated QA completed signup, email verification, a paid-account fixture, workbench access, find-loads, the post form, save-draft, and preview. The synthetic account was local-only.
-- Open product decision: an account with explicit `claim` access can find and bid but is rejected when final-posting a load; do not change this gate until Blake confirms whether carriers may publish or only bid.
-- A regression test now preserves that explicit-`claim` behavior until the product decision is approved.
-- Positive coverage confirms `claim_post` can publish a load, giving the approved product decision a tested implementation path.
+- Blake approved paid carriers with explicit `claim` access to publish as well as bid. The `$9.99` shipper post-only restriction remains unchanged.
+- Positive and negative coverage confirms paid carrier `claim` publishing, `claim_post` publishing, and shipper restrictions.
 - `npm test` is now a compatibility alias for the canonical `npm run check`; both commands pass all 22 tests.
 
 ## Not yet verified
@@ -34,4 +33,4 @@
 
 ## Release hold
 
-Do not push or deploy this branch. Regression coverage is complete; the next work item is to resolve the carrier `claim` versus `claim_post` product rule, then run the approved plan-mapping change through no-deploy local verification.
+Do not push or deploy this branch yet. The approved plan-mapping change is staged locally; Blake must approve the resulting exact commit before production deployment.

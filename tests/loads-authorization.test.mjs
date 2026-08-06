@@ -239,7 +239,7 @@ test("allows an active verified carrier to request pickup", async () => {
   );
 });
 
-test("explicit claim access may bid but cannot publish a load", async () => {
+test("paid carrier claim access may bid and publish a load", async () => {
   const account = activeVerifiedCarrier({
     userId: "usr_carrier_claim_only_test",
     email: "carrier-claim-only@example.invalid",
@@ -282,9 +282,9 @@ test("explicit claim access may bid but cannot publish a load", async () => {
     env,
   });
   const body = await response.json();
-  assert.equal(response.status, 403, JSON.stringify(body));
-  assert.equal(body.ok, false);
-  assert.equal(body.error, "Your plan does not include load posting.");
+  assert.equal(response.status, 201, JSON.stringify(body));
+  assert.equal(body.ok, true);
+  assert.equal(body.load.postedByUserId, account.userId);
 });
 
 test("claim_post access can publish a load", async () => {
