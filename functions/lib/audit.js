@@ -26,6 +26,37 @@ function makeEventId() {
   return `audit_${crypto.randomUUID().replace(/-/g, '')}`;
 }
 
+function normalizeEnvironmentLabel(value) {
+  const text = cleanText(value, 40).toLowerCase().replace(/[^a-z0-9._-]/g, '');
+  if (!text) return '';
+  if (text === 'prod' || text === 'live') return 'production';
+  return text;
+}
+
+// Never asserts "production" without evidence. Prefer a sanitized explicit
+// environment binding; otherwise trust Cloudflare branch metadata (a branch is
+// only "production" when it matches the configured production branch); fall
+// back to "unknown" so local/preview/staging events are never mislabeled.
+function resolveAuditEnvironment(env) {
+  const explicit = normalizeEnvironmentLabel(env?.AUDIT_ENVIRONMENT || env?.ENVIRONMENT);
+  if (explicit) return explicit;
+  const branch = cleanText(env?.CF_PAGES_BRANCH || '', 80);
+  if (branch) {
+    const productionBranch = cleanText(env?.CF_PAGES_PRODUCTION_BRANCH || '', 80);
+    return productionBranch && branch === productionBranch ? 'production' : 'preview';
+  }
+  return 'unknown';
+}
+
+function authEventProvenance(userId, env) {
+  const synthetic = cleanText(userId || '', 80).startsWith('smoke_');
+  return {
+    environment: resolveAuditEnvironment(env),
+    origin: synthetic ? 'release-smoke' : 'customer',
+    dataClass: synthetic ? 'synthetic' : 'operational',
+  };
+}
+
 export async function recordAuditEvent(env, input = {}) {
   const now = cleanText(input.createdAt || new Date().toISOString(), 80);
   const event = {
@@ -93,6 +124,7 @@ export async function recordAuthAuditEvent(env, input = {}) {
     : undefined;
   const meta = {
     source: 'api/account',
+    provenance: authEventProvenance(input.userId, env),
     outcome,
     reasonCode: cleanText(input.reasonCode || '', 80),
     requestId: cleanText(input.requestId || '', 80),
