@@ -130,6 +130,52 @@ function scoreLoad(load, input) {
   };
 }
 
+// Plain-language fallback for dispatch planning. This helper only describes
+// data already supplied to it; it never saves, sends, publishes, or books.
+export function buildDeterministicSummary(input = {}, matches = [], laneAlertDraft = null, isCarrier = true) {
+  if (!isCarrier) {
+    return "Here is your pickup planning checklist: describe the freight, dimensions, weight, loading help, site conditions, appointment window, and payment terms in your post. Use the Post a Load tab when ready. Nothing is posted without your approval.";
+  }
+
+  const origin = clean(input.origin || "your origin", 120);
+  const destination = clean(input.destination || "Anywhere", 120);
+  const equipment = clean(input.equipment || "Any", 120);
+  const safeMatches = Array.isArray(matches) ? matches.slice(0, 5) : [];
+  const lines = [];
+
+  if (!safeMatches.length) {
+    lines.push(
+      `No open loads currently match ${origin} → ${destination} with ${equipment} equipment. That is the honest state of the board right now — no invented matches.`,
+    );
+  } else {
+    lines.push(`Found ${safeMatches.length} real open load${safeMatches.length === 1 ? "" : "s"} worth a look (best first):`);
+    safeMatches.forEach((match, index) => {
+      const from = clean(match?.from || "Origin not listed", 120);
+      const to = clean(match?.to || "Destination not listed", 120);
+      const eq = clean(match?.eq || "Equipment not listed", 120);
+      const rate = boundedNumber(match?.rate, 0, 1000000);
+      const ratePerMile = boundedNumber(match?.ratePerMile, 0, 1000);
+      lines.push(
+        `${index + 1}. ${from} → ${to} · $${rate}${ratePerMile ? ` ($${ratePerMile}/mi)` : ""} · ${eq}`,
+      );
+    });
+  }
+
+  if (laneAlertDraft && typeof laneAlertDraft === "object") {
+    const preferredLanes = clean(laneAlertDraft.preferredLanes, 241);
+    const alertEquipment = clean(laneAlertDraft.equipment || "Any", 120);
+    const alertRate = boundedNumber(laneAlertDraft.rate, 0, 25);
+    if (preferredLanes) {
+      lines.push(
+        `Suggested Lane Alert (not saved until you approve it): ${preferredLanes}, ${alertEquipment}${alertRate ? `, min $${alertRate}/mi` : ""}.`,
+      );
+    }
+  }
+
+  lines.push("All figures come from your entered numbers and the posted load details. Verify every load, company, and payment independently before booking.");
+  return lines.join("\n\n").slice(0, 4000);
+}
+
 function locationMatch(requested = "", actual = "") {
   const requestParts = locationParts(requested);
   const actualParts = locationParts(actual);
