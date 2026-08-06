@@ -1,0 +1,2 @@
+-- SQLite does not safely remove these account columns in place.
+-- Keep the data and stop reading the columns if this feature is rolled back.

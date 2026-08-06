@@ -1,0 +1,15 @@
+PRAGMA foreign_keys = ON;
+
+CREATE TABLE IF NOT EXISTS bulletin_boards (
+  board_key TEXT PRIMARY KEY,
+  payload_json TEXT NOT NULL DEFAULT '{}',
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS communication_hubs (
+  hub_key TEXT PRIMARY KEY,
+  payload_json TEXT NOT NULL DEFAULT '{}',
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

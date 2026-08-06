@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "check": "node --check dist/app.js && node --check functions/api/dispatch.js && node --check functions/api/loads.js && node --check functions/api/_auth.js"
+    "check": "node --check dist/app.js && node --check functions/api/dispatch.js && node --check functions/api/loads.js && node --check functions/api/_auth.js && node --test tests/*.test.mjs"
   },
   "dependencies": {
     "@openai/agents": "0.13.5",
