@@ -743,7 +743,11 @@ function mergeAccountPatch(current, body) {
     // flows. Never accept it from a member profile save.
     verifiedTransactions: current.verifiedTransactions || [],
     trustDisputes: Array.isArray(body.trustDisputes) ? body.trustDisputes.slice(0, 24) : current.trustDisputes || [],
-    trustAudit: Array.isArray(body.trustAudit) ? body.trustAudit.slice(0, 120) : current.trustAudit || [],
+    // Trust score-adjustment history is server-authoritative: syncTrustAudit
+    // turns these entries into `trust.score_adjustment` audit-log records, so a
+    // member profile save must never create or alter them. trustDisputes stays
+    // member-writable above — it backs the live dispute form (member.html/app.js).
+    trustAudit: current.trustAudit || [],
     checkoutPlan: cleanString(body.checkoutPlan || current.checkoutPlan, 80) || current.checkoutPlan || null,
     updatedAt: new Date().toISOString(),
   }, current);

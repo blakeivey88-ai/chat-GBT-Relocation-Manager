@@ -130,3 +130,60 @@ test("ordinary allowed profile fields still update, leaving server evidence inta
   assert.equal(stored.verifiedTransactions[0].id, "txn-server-1");
   assert.equal(stored.activePickups[0].id, "pickup-server-1");
 });
+
+// --- E1c: trustAudit is server-controlled; trustDisputes stays member-writable ---
+
+const SERVER_TRUST_AUDIT = [
+  { id: "audit-server-1", before: 60, after: 62, delta: 2, reason: "verified load completed" },
+];
+
+test("a member profile save cannot forge trustAudit score-adjustment entries", async () => {
+  const account = entitledAccount({ trustAudit: SERVER_TRUST_AUDIT.map((e) => ({ ...e })) });
+  const { response, payload, stored } = await saveProfile(account, {
+    action: "save",
+    name: "Updated Name",
+    trustAudit: [
+      { id: "FAKE-AUDIT", before: 10, after: 100, delta: 90, reason: "self-promotion", fraudSignals: [] },
+    ],
+  });
+
+  assert.equal(response.status, 200, JSON.stringify(payload));
+  // Server-written trust history preserved; the forged score jump never persists,
+  // so syncTrustAudit can never emit a trust.score_adjustment from member input.
+  assert.equal(stored.trustAudit.length, 1);
+  assert.equal(stored.trustAudit[0].id, "audit-server-1");
+  assert.ok(!JSON.stringify(stored).includes("FAKE-AUDIT"));
+  assert.ok(!JSON.stringify(stored).includes("self-promotion"));
+  assert.ok(!JSON.stringify(stored.trustAudit).includes("100"));
+  assert.equal(stored.name, "Updated Name"); // legitimate edit still applies
+});
+
+test("a member profile save cannot inject trustAudit when the account had none", async () => {
+  const { stored } = await saveProfile(entitledAccount({ trustAudit: [] }), {
+    action: "save",
+    trustAudit: [{ id: "FAKE-AUDIT", before: 0, after: 999, delta: 999 }],
+  });
+  assert.deepEqual(stored.trustAudit, []);
+});
+
+test("locking trustAudit does not disable the live dispute form: trustDisputes and customerRatings still persist from a member save", async () => {
+  const { response, payload, stored } = await saveProfile(
+    entitledAccount({ trustDisputes: [], customerRatings: [] }),
+    {
+      action: "save",
+      trustDisputes: [
+        { id: "member-dispute-1", reviewId: "rev-9", loadId: "load-9", reason: "review was inaccurate", status: "open" },
+      ],
+      customerRatings: [{ id: "rating-1", score: 5 }],
+    },
+  );
+
+  assert.equal(response.status, 200, JSON.stringify(payload));
+  // Member-filed dispute round-trips (dispute form / scheduleAccountSync path intact).
+  assert.equal(stored.trustDisputes.length, 1);
+  assert.equal(stored.trustDisputes[0].id, "member-dispute-1");
+  assert.equal(stored.trustDisputes[0].reason, "review was inaccurate");
+  // customerRatings left unchanged by this unit and still writable.
+  assert.equal(stored.customerRatings.length, 1);
+  assert.equal(stored.customerRatings[0].id, "rating-1");
+});
