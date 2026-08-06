@@ -10,7 +10,7 @@
 - Candidate includes Cloudflare Pages output, Functions, `wrangler.toml`, and package lockfile.
 - Candidate `functions/api/loads.js` is newer than the earlier review packet and includes failure logging and subsequent hardening changes.
 - The packet's D1 migration history and focused load-board regression tests are now included in this staging branch.
-- `npm run check` passes: syntax checks plus **21/21** tests—20 load authorization/photo/bid/acceptance/concurrency tests and one migration-layout guard.
+- `npm run check` passes: syntax checks plus **22/22** tests—21 load authorization/photo/bid/acceptance/concurrency tests and one migration-layout guard.
 - Local Wrangler Pages smoke test served the homepage and assets with 200 responses, redirected unauthenticated member routes to sign-in, and returned 401 for unauthenticated `/api/loads`.
 - Fresh local D1 migration run applies only the nine forward migrations; rollback scripts are stored under `migrations/down/` and are excluded from Wrangler's forward-migration directory.
 - A synthetic signup and email-verification flow completed successfully against fresh local D1. No production account or credential was used.
@@ -19,6 +19,7 @@
 - Local authenticated QA completed signup, email verification, a paid-account fixture, workbench access, find-loads, the post form, save-draft, and preview. The synthetic account was local-only.
 - Open product decision: an account with explicit `claim` access can find and bid but is rejected when final-posting a load; do not change this gate until Blake confirms whether carriers may publish or only bid.
 - A regression test now preserves that explicit-`claim` behavior until the product decision is approved.
+- Positive coverage confirms `claim_post` can publish a load, giving the approved product decision a tested implementation path.
 
 ## Not yet verified
 

@@ -287,6 +287,54 @@ test("explicit claim access may bid but cannot publish a load", async () => {
   assert.equal(body.error, "Your plan does not include load posting.");
 });
 
+test("claim_post access can publish a load", async () => {
+  const account = activeVerifiedCarrier({
+    userId: "usr_carrier_claim_post_test",
+    email: "carrier-claim-post@example.invalid",
+    loadAccess: "claim_post",
+    subscriptionAccess: "claim_post",
+  });
+  const kv = new MemoryKv();
+  const env = { RELOCATION_MANAGER_LEADS: kv };
+  await kv.put(userIdKey(account.userId), JSON.stringify(account));
+  await kv.put(LOAD_STORE_KEY, JSON.stringify([]));
+  const session = await createSession(env, account.userId);
+  const csrf = "carrier-claim-post-csrf";
+  const response = await onRequestPost({
+    request: new Request("https://relocationmanagerusa.com/api/loads", {
+      method: "POST",
+      headers: {
+        origin: "https://relocationmanagerusa.com",
+        cookie: `rm_session=${session}; rm_csrf=${csrf}`,
+        "content-type": "application/json",
+        "x-csrf-token": csrf,
+      },
+      body: JSON.stringify({
+        action: "post",
+        from: "Atlanta, GA",
+        to: "Nashville, TN",
+        pickupDate: "2099-08-15",
+        pickupTime: "09:00",
+        equipment: "26 ft box truck",
+        weight: "2,000 lbs",
+        commodity: "Palletized freight",
+        dimensions: "8 ft x 4 ft x 5 ft",
+        loadingHelp: "Driver assist requested",
+        siteConditions: "Ground level, dock available",
+        contactName: "Site Contact",
+        contactPhone: "555-555-0100",
+        rate: 750,
+        miles: 175,
+      }),
+    }),
+    env,
+  });
+  const body = await response.json();
+  assert.equal(response.status, 201, JSON.stringify(body));
+  assert.equal(body.ok, true);
+  assert.equal(body.load.postedByUserId, account.userId);
+});
+
 test("denies an expired carrier claim without mutating the load", async () => {
   const { response, body, storedLoads } = await claimRequest(
     activeVerifiedCarrier({
