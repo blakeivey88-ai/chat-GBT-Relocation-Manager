@@ -5974,6 +5974,9 @@ html body .post-section-head span {
   color: var(--blue-lift);
   text-transform: uppercase;
 }
+html body .expanded-pricing .plan > strong {
+  color: var(--blue-lift);
+}
 html body .metric strong,
 html body .price,
 html body .rate,
