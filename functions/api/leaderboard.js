@@ -10,6 +10,7 @@ import {
   roleFromType,
   requireEntitledAccount,
 } from './_auth.js';
+import { readLoadHistory } from '../lib/load-history.js';
 
 export async function onRequestGet(context) {
   try {
@@ -22,7 +23,7 @@ export async function onRequestGet(context) {
     const account = ensureAccountShape(access.account);
 
     const peers = await loadPublicProfiles(env);
-    const profile = profileRecord(account);
+    const profile = await profileRecord(env, account, { owner: true });
     const profiles = peers.filter((peer) => peer.userId !== profile.userId);
 
     return json({
@@ -37,42 +38,54 @@ export async function onRequestGet(context) {
 }
 
 async function loadPublicProfiles(env) {
-  return (await listLeaderboardAccounts(env)).map((account) => profileRecord(ensureAccountShape(account)));
+  return Promise.all(
+    (await listLeaderboardAccounts(env)).map((account) =>
+      profileRecord(env, ensureAccountShape(account), { owner: false }),
+    ),
+  );
 }
 
-function profileRecord(account) {
-  const profile = publicProfile(account);
-  const recentLoads = Array.isArray(account.recentLoads) ? account.recentLoads : [];
-  const plannedTrips = Array.isArray(account.plannedTrips) ? account.plannedTrips : [];
-  const laneAlerts = Array.isArray(account.laneAlerts) ? account.laneAlerts : [];
-  const ratings = Array.isArray(account.customerRatings) ? account.customerRatings : [];
-  const verifiedLoads = cleanNumber(account.verifiedLoadsCompleted || account.completedLoads || recentLoads.length || plannedTrips.length || laneAlerts.length || ratings.length);
-  const reviewCount = ratings.length;
-  const reviewAverage = reviewCount ? round(avg(ratings.map((entry) => cleanNumber(entry.score || entry.publicScore || 0))), 1) : 0;
-  const verifiedMiles = cleanNumber(account.verifiedMiles || account.totalVerifiedMiles || account.milesVerified || account.milesCompleted || verifiedLoads * 275);
-  const onTimePickupPct = metric(account.onTimePickupPct, verifiedLoads ? 88 + Math.min(8, verifiedLoads / 12) : 72);
-  const onTimeDeliveryPct = metric(account.onTimeDeliveryPct, verifiedLoads ? 87 + Math.min(9, verifiedLoads / 10) : 70);
-  const cancellationPct = metric(account.cancellationPct || account.cancellationRatePct, verifiedLoads ? Math.max(1, 12 - Math.min(8, verifiedLoads / 3)) : 10);
-  const claimFreePct = metric(account.claimFreePct || account.damageFreePct || account.freightDamagePct, 96);
-  const repeatCustomerPct = metric(account.repeatCustomerPct || account.repeatCustomersPct || account.rehirePct, Math.min(100, 40 + reviewAverage * 0.6 + verifiedLoads * 0.3));
-  const currentSuccessfulLoadStreak = cleanNumber(account.currentSuccessfulLoadStreak || account.completionStreak || account.loadCompletionStreak || Math.max(1, Math.min(verifiedLoads, 60)));
-  const bestSuccessfulLoadStreak = cleanNumber(account.bestSuccessfulLoadStreak || account.bestCompletionStreak || Math.max(currentSuccessfulLoadStreak, Math.round(currentSuccessfulLoadStreak * 1.4)));
-  const recentVerifiedLoads = recentWindowCount([...recentLoads, ...plannedTrips, ...laneAlerts]);
-  const recentReviews = recentWindowCount(ratings);
+async function profileRecord(env, account, { owner = false } = {}) {
+  const profile = owner ? publicProfile(account) : peerIdentityProfile(account);
+  // Every peer-facing derivation must use the same safe projection. Starting
+  // with a whitelist and then consulting the original account for location,
+  // equipment, or badges would let notes, trips, alerts, or tags leak back
+  // into public fields indirectly.
+  const rankingAccount = owner ? account : peerRankingAccount(profile, account);
+  // Public performance is derived exclusively from server-recorded, verified load
+  // history. Profile snapshots (recentLoads, trips, alerts, ratings, and custom
+  // metrics) are member-editable and must never become public trust evidence.
+  const history = await readLoadHistory(env, account.userId, 250);
+  const completed = history.filter(
+    (entry) => entry?.verified && String(entry.eventType).toLowerCase() === 'completed',
+  );
+  const verifiedLoads = completed.length;
+  const verifiedMiles = 0;
+  const reviewCount = 0;
+  const reviewAverage = 0;
+  const onTimePickupPct = 0;
+  const onTimeDeliveryPct = 0;
+  const cancellationPct = 0;
+  const claimFreePct = 0;
+  const repeatCustomerPct = 0;
+  const currentSuccessfulLoadStreak = 0;
+  const bestSuccessfulLoadStreak = 0;
+  const recentVerifiedLoads = recentWindowCount(completed);
+  const recentReviews = 0;
   const performance90Days = {
-    verifiedLoads: recentVerifiedLoads || Math.max(0, Math.round(verifiedLoads * 0.35)),
-    reviewCount: recentReviews || Math.max(0, Math.round(reviewCount * 0.4)),
+    verifiedLoads: recentVerifiedLoads,
+    reviewCount: recentReviews,
     reviewAverage: reviewAverage,
-    onTimePickupPct: metric(account.onTimePickupPct90Days || account.recentOnTimePickupPct || account.onTimePickupPct, onTimePickupPct),
-    onTimeDeliveryPct: metric(account.onTimeDeliveryPct90Days || account.recentOnTimeDeliveryPct || account.onTimeDeliveryPct, onTimeDeliveryPct),
-    claimFreePct: metric(account.claimFreePct90Days || account.recentClaimFreePct || account.claimFreePct, claimFreePct),
-    repeatCustomerPct: metric(account.repeatCustomerPct90Days || account.recentRepeatCustomerPct || account.repeatCustomerPct, repeatCustomerPct),
+    onTimePickupPct,
+    onTimeDeliveryPct,
+    claimFreePct,
+    repeatCustomerPct,
   };
-  const memberSince = cleanString(account.createdAt || account.emailVerifiedAt || account.updatedAt || new Date().toISOString(), 80);
-  const location = deriveLocation(account);
-  const equipmentTypes = deriveEquipmentTypes(account);
-  const roleLabel = rankingRoleLabel(account);
-  const score = leaderboardScore({
+  const memberSince = cleanString(rankingAccount.createdAt || rankingAccount.emailVerifiedAt || new Date().toISOString(), 80);
+  const location = deriveLocation(rankingAccount);
+  const equipmentTypes = deriveEquipmentTypes(rankingAccount);
+  const roleLabel = rankingRoleLabel(rankingAccount);
+  const score = verifiedLoads ? leaderboardScore({
     verifiedLoads,
     verifiedMiles,
     onTimePickupPct,
@@ -84,10 +97,10 @@ function profileRecord(account) {
     reviewAverage,
     reviewCount,
     activeDays: activeDaysSince(memberSince),
-  });
-  const insuranceVerification = verificationLabel(account.insuranceVerification || account.insuranceStatus || account.insuranceUpload || account.insuranceVerified, 'Verified');
-  const authorityVerification = verificationLabel(account.authorityVerification || account.authorityStatus || account.dotMcStatus || account.dotMcLookup, 'Verified');
-  const badgesEarned = deriveBadges(account, { verifiedLoads, score, insuranceVerification, authorityVerification });
+  }) : 0;
+  const insuranceVerification = serverVerificationLabel(rankingAccount);
+  const authorityVerification = serverVerificationLabel(rankingAccount);
+  const badgesEarned = deriveBadges(rankingAccount, { verifiedLoads, score, insuranceVerification, authorityVerification });
 
   return {
     ...profile,
@@ -117,6 +130,43 @@ function profileRecord(account) {
     badgesEarned,
     reviewCount,
     reviewAverage,
+  };
+}
+
+function peerIdentityProfile(account) {
+  const publicOwnerProfile = publicProfile(account);
+  return {
+    userId: cleanString(publicOwnerProfile.userId || "", 80),
+    name: cleanString(publicOwnerProfile.name || "Member", 120),
+    company: cleanString(publicOwnerProfile.company || "", 120),
+    username: cleanString(publicOwnerProfile.username || "", 80),
+    role: cleanString(publicOwnerProfile.role || "", 80),
+    mc_dot: cleanString(publicOwnerProfile.mc_dot || "", 80),
+    city: cleanString(publicOwnerProfile.city || "", 80),
+    state: cleanString(publicOwnerProfile.state || "", 40),
+    equipmentType: cleanString(publicOwnerProfile.equipmentType || "", 120),
+    equipmentTypes: Array.isArray(publicOwnerProfile.equipmentTypes)
+      ? publicOwnerProfile.equipmentTypes.slice(0, 12).map((item) => cleanString(item, 120))
+      : [],
+    avatarUrl: cleanString(publicOwnerProfile.avatarUrl || "", 280),
+    logoUrl: cleanString(publicOwnerProfile.logoUrl || "", 280),
+    bulletinColor: cleanString(publicOwnerProfile.bulletinColor || "", 40),
+    showLanguagesSpoken: Boolean(publicOwnerProfile.showLanguagesSpoken),
+    languagesSpoken: publicOwnerProfile.showLanguagesSpoken
+      ? (publicOwnerProfile.languagesSpoken || []).slice(0, 12).map((item) => cleanString(item, 40))
+      : [],
+    languagesSpokenLabel: publicOwnerProfile.showLanguagesSpoken
+      ? cleanString(publicOwnerProfile.languagesSpokenLabel || "", 160)
+      : "",
+  };
+}
+
+function peerRankingAccount(profile, account) {
+  return {
+    ...profile,
+    createdAt: cleanString(account?.createdAt || "", 80),
+    emailVerifiedAt: cleanString(account?.emailVerifiedAt || "", 80),
+    carrierVerifiedAt: cleanString(account?.carrierVerifiedAt || "", 80),
   };
 }
 
@@ -247,6 +297,14 @@ function verificationLabel(value, fallback) {
   if (!text) return fallback;
   if (/verify|verified|approved|complete|done/i.test(text)) return 'Verified';
   return cleanString(text, 40);
+}
+
+function serverVerificationLabel(account) {
+  // carrierVerifiedAt is assigned by the verification workflow, not profile
+  // editing. Do not treat self-entered DOT/insurance text as verification.
+  return Number.isFinite(Date.parse(String(account?.carrierVerifiedAt || '')))
+    ? 'Verified'
+    : 'Not verified';
 }
 
 function metric(value, fallback) {
