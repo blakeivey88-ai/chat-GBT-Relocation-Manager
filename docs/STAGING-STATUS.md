@@ -20,6 +20,7 @@
 - Open product decision: an account with explicit `claim` access can find and bid but is rejected when final-posting a load; do not change this gate until Blake confirms whether carriers may publish or only bid.
 - A regression test now preserves that explicit-`claim` behavior until the product decision is approved.
 - Positive coverage confirms `claim_post` can publish a load, giving the approved product decision a tested implementation path.
+- `npm test` is now a compatibility alias for the canonical `npm run check`; both commands pass all 22 tests.
 
 ## Not yet verified
 
