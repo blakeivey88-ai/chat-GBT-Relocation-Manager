@@ -690,6 +690,22 @@ function verificationLooksComplete(value) {
   return /verified|approved|complete|completed|done|passed|active/i.test(text);
 }
 
+function carrierAuthorityRequired(account = {}) {
+  if (account.authorityRequired === false || account.requiresAuthority === false) {
+    return false;
+  }
+  if (account.authorityRequired === true || account.requiresAuthority === true) {
+    return true;
+  }
+  const text = String(
+    account.role || account.type || account.companyType || "",
+  ).toLowerCase();
+  const declaredAuthority = String(
+    account.mc_dot || account.mcDot || account.dotNumber || account.mcNumber || "",
+  ).trim();
+  return Boolean(declaredAuthority) || /broker|fleet|motor carrier|commercial authority|carrier company/.test(text);
+}
+
 export function carrierVerificationDecision(account) {
   const completedAt = [
     account?.carrierVerifiedAt,
@@ -718,7 +734,7 @@ export function carrierVerificationDecision(account) {
     };
   }
 
-  const authority = [
+  const authority = !carrierAuthorityRequired(account) || [
     account?.authorityVerification,
     account?.authorityStatus,
     account?.dotMcStatus,

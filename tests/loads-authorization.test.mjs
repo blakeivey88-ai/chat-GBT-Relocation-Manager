@@ -4,10 +4,24 @@ import assert from "node:assert/strict";
 import { onRequestGet, onRequestPost } from "../functions/api/loads.js";
 import {
   carrierLoadBookingDecision,
+  carrierVerificationDecision,
   createSession,
   upsertAccount,
   userIdKey,
 } from "../functions/api/_auth.js";
+
+test("does not require DOT/MC when a carrier has no commercial authority", () => {
+  const decision = carrierVerificationDecision({
+    role: "Independent Driver",
+    type: "Independent driver / self-insured",
+    authorityRequired: false,
+    insuranceStatus: "Verified",
+    idCheckStatus: "Verified",
+  });
+  assert.equal(decision.allowed, true);
+  assert.equal(decision.verified, true);
+  assert.deepEqual(decision.missing, undefined);
+});
 import { SqliteD1 } from "./helpers/sqlite-d1.mjs";
 
 const LOAD_STORE_KEY = "marketplace:loads:v1";
