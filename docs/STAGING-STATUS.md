@@ -12,11 +12,15 @@
 - The packet's D1 migration history and focused load-board regression tests are now included in this staging branch.
 - `npm run check` passes: syntax checks plus **18/18** load authorization, photo, bid, acceptance, concurrency, and repair tests.
 - Local Wrangler Pages smoke test served the homepage and assets with 200 responses, redirected unauthenticated member routes to sign-in, and returned 401 for unauthenticated `/api/loads`.
+- Fresh local D1 migration run applies only the nine forward migrations; rollback scripts are stored under `migrations/down/` and are excluded from Wrangler's forward-migration directory.
+- A synthetic signup and email-verification flow completed successfully against fresh local D1. No production account or credential was used.
+- Carrier authority gating was corrected so DOT/MC is conditional for non-commercial-authority carriers; identity and insurance remain required. The focused suite is now **19/19**.
 
 ## Not yet verified
 
 - Full browser/UI automated suite in this repository.
 - Live D1 migration correspondence and production cutover state.
+- Full authenticated carrier browser flow after local verification fields are populated.
 - R2 bucket and cutover state.
 - Authenticated role-based browser flows.
 - Replit import and deployment configuration.
