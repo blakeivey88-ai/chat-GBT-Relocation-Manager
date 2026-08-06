@@ -33,4 +33,4 @@
 
 ## Release hold
 
-Do not push or deploy this branch. The next work item is to resolve the carrier `claim` versus `claim_post` product rule, add the approved regression test, then run a no-deploy local verification.
+Do not push or deploy this branch. Regression coverage is complete; the next work item is to resolve the carrier `claim` versus `claim_post` product rule, then run the approved plan-mapping change through no-deploy local verification.
