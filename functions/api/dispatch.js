@@ -14,6 +14,7 @@ import {
 } from "./_auth.js";
 import { recordAuditEvent } from "../lib/audit.js";
 import {
+  buildDeterministicSummary,
   makeLaneAlertDraft,
   normalizeDispatchInput,
   normalizeMarketplaceLoads,
@@ -33,15 +34,7 @@ export async function onRequestPost(context) {
     if (!access.ok) {
       return json({ ok: false, error: access.error }, access.status || 401);
     }
-    if (!context.env.OPENAI_API_KEY) {
-      return json(
-        {
-          ok: false,
-          error: "AI Dispatch is not configured yet. Contact support.",
-        },
-        503,
-      );
-    }
+    const aiAvailable = Boolean(context.env.OPENAI_API_KEY);
 
     const normalized = normalizeDispatchInput(body);
     if (normalized.error) {
@@ -54,6 +47,18 @@ export async function onRequestPost(context) {
     const loads = isCarrier ? await readMarketplaceLoads(context.env) : [];
     const matches = isCarrier ? rankDispatchLoads(loads, input, 5) : [];
     const laneAlertDraft = isCarrier ? makeLaneAlertDraft(input) : null;
+
+    if (!aiAvailable) {
+      const assistantMode = "deterministic";
+      const assistantMessage = buildDeterministicSummary(
+        input,
+        matches,
+        laneAlertDraft,
+        isCarrier,
+      );
+      await recordDispatchAudit(context.env, access.account, isCarrier, matches, laneAlertDraft, assistantMode);
+      return dispatchResponse(isCarrier, assistantMode, assistantMessage, matches, laneAlertDraft);
+    }
 
     setDefaultOpenAIKey(context.env.OPENAI_API_KEY);
     setTracingDisabled(true);
@@ -105,34 +110,9 @@ export async function onRequestPost(context) {
       return json({ ok: false, error: "AI Dispatch returned no plan." }, 502);
     }
 
-    await recordAuditEvent(context.env, {
-      actionType: "dispatch.assistant.plan",
-      actorUserId: access.account.userId,
-      actorRole: access.account.role,
-      targetType: "dispatch_plan",
-      targetId: `dispatch_${crypto.randomUUID().replace(/-/g, "")}`,
-      after: {
-        role: isCarrier ? "carrier" : "shipper",
-        matchCount: matches.length,
-        laneAlertDrafted: Boolean(laneAlertDraft),
-      },
-      meta: { source: "api/dispatch" },
-    }).catch(() => {});
-
-    return json({
-      ok: true,
-      role: isCarrier ? "carrier" : "shipper",
-      assistantMessage,
-      matches,
-      laneAlertDraft,
-      requiresApproval: true,
-      permissions: {
-        canViewLoads: isCarrier,
-        canClaimLoads: isCarrier,
-        canSaveLaneAlert: isCarrier,
-        canPostLoads: true,
-      },
-    });
+    const assistantMode = "ai";
+    await recordDispatchAudit(context.env, access.account, isCarrier, matches, laneAlertDraft, assistantMode);
+    return dispatchResponse(isCarrier, assistantMode, assistantMessage, matches, laneAlertDraft);
   } catch (error) {
     const message = String(error?.message || "");
     const configurationError = /api key|authentication|model/i.test(message);
@@ -146,6 +126,41 @@ export async function onRequestPost(context) {
       502,
     );
   }
+}
+
+async function recordDispatchAudit(env, account, isCarrier, matches, laneAlertDraft, assistantMode) {
+  await recordAuditEvent(env, {
+    actionType: "dispatch.assistant.plan",
+    actorUserId: account.userId,
+    actorRole: account.role,
+    targetType: "dispatch_plan",
+    targetId: `dispatch_${crypto.randomUUID().replace(/-/g, "")}`,
+    after: {
+      role: isCarrier ? "carrier" : "shipper",
+      matchCount: matches.length,
+      laneAlertDrafted: Boolean(laneAlertDraft),
+      assistantMode,
+    },
+    meta: { source: "api/dispatch" },
+  }).catch(() => {});
+}
+
+function dispatchResponse(isCarrier, assistantMode, assistantMessage, matches, laneAlertDraft) {
+  return json({
+    ok: true,
+    role: isCarrier ? "carrier" : "shipper",
+    assistantMode,
+    assistantMessage,
+    matches,
+    laneAlertDraft,
+    requiresApproval: true,
+    permissions: {
+      canViewLoads: isCarrier,
+      canClaimLoads: isCarrier,
+      canSaveLaneAlert: isCarrier,
+      canPostLoads: true,
+    },
+  });
 }
 
 export async function onRequestOptions() {

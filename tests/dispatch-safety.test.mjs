@@ -2,6 +2,28 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import { buildDeterministicSummary } from "../functions/lib/dispatch.js";
+import { onRequestPost } from "../functions/api/dispatch.js";
+import { createSession, userIdKey } from "../functions/api/_auth.js";
+
+const LOAD_STORE_KEY = "marketplace:loads:v1";
+
+class MemoryKv {
+  constructor() {
+    this.values = new Map();
+  }
+
+  async get(key) {
+    return this.values.get(key) ?? null;
+  }
+
+  async put(key, value) {
+    this.values.set(key, String(value));
+  }
+
+  async delete(key) {
+    this.values.delete(key);
+  }
+}
 
 test("deterministic summary reports an empty board honestly", () => {
   const input = { origin: "Boise, ID", destination: "Anywhere", equipment: "Any" };
@@ -61,4 +83,66 @@ test("shipper summary remains a draft checklist", () => {
   const summary = buildDeterministicSummary({}, [], null, false);
   assert.match(summary, /pickup planning checklist/i);
   assert.match(summary, /Nothing is posted without your approval/);
+});
+
+test("dispatch works without an AI key and preserves draft-only permissions", async () => {
+  const account = {
+    userId: "usr_dispatch_safety",
+    email: "usr_dispatch_safety@example.invalid",
+    emailVerifiedAt: "2026-07-23T00:00:00.000Z",
+    profileComplete: true,
+    name: "Dispatch Safety",
+    company: "Dispatch Safety LLC",
+    role: "Trucking Company",
+    type: "Broker 1–3 trucks - $59.99/mo",
+    paymentStatus: "paid_fleet_starter",
+    subscriptionStatus: "active",
+    subscriptionPriceCents: 5999,
+    loadAccess: "claim_post",
+    subscriptionAccess: "claim_post",
+    carrierVerifiedAt: "2026-07-23T00:00:00.000Z",
+  };
+  const kv = new MemoryKv();
+  const env = { RELOCATION_MANAGER_LEADS: kv };
+  await kv.put(userIdKey(account.userId), JSON.stringify(account));
+  await kv.put(LOAD_STORE_KEY, JSON.stringify([{
+    id: "load-dispatch-safety",
+    from: "Atlanta, GA",
+    to: "Nashville, TN",
+    rate: 750,
+    mi: 250,
+    eq: "26 ft Box",
+    kind: "box",
+    status: "open",
+    trust: 92,
+    insurance: "Verified",
+    expiresAt: "2099-01-01T00:00:00.000Z",
+    contactName: "Private Person",
+    contactPhone: "555-555-0100",
+  }]));
+  const session = await createSession(env, account.userId);
+  const csrf = "dispatch-safety-csrf";
+  const response = await onRequestPost({
+    request: new Request("https://relocationmanagerusa.com/api/dispatch", {
+      method: "POST",
+      headers: {
+        origin: "https://relocationmanagerusa.com",
+        cookie: `rm_session=${session}; rm_csrf=${csrf}`,
+        "content-type": "application/json",
+        "x-csrf-token": csrf,
+      },
+      body: JSON.stringify({ origin: "Atlanta, GA", equipment: "26 ft box truck" }),
+    }),
+    env,
+  });
+  const body = await response.json();
+  assert.equal(response.status, 200, JSON.stringify(body));
+  assert.equal(body.ok, true);
+  assert.equal(body.assistantMode, "deterministic");
+  assert.equal(body.requiresApproval, true);
+  assert.equal(body.matches.length, 1);
+  assert.equal(body.permissions.canSaveLaneAlert, true);
+  assert.ok(body.assistantMessage.length > 0);
+  assert.ok(!JSON.stringify(body).includes("555-555-0100"));
+  assert.ok(!JSON.stringify(body).includes("Private Person"));
 });
