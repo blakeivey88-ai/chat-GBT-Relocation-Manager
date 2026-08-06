@@ -3351,6 +3351,7 @@
             </div>
             <div class="chips" id="leaderboardStats"></div>
             <div id="leaderboardResults"></div>
+            <div id="leaderboardPager" class="leaderboard-pager" hidden></div>
             <div id="risingProfessionals"></div>
           </div>
         </div>
@@ -3761,7 +3762,8 @@
       <a href="/legal.html">Privacy &amp; Terms</a> · Verify every load before
       booking.
     </footer>
-    <script data-source="app.js" src="app.min.js?v=20260801-1"></script>
+    <script type="module" src="leaderboard-paging.js?v=20260806-perf"></script>
+    <script data-source="app.js" src="app.js?v=20260806-perf"></script>
 <script>
   fetch("/api/account", { credentials: "include" }).then(r => r.ok ? r.json() : null).then(account => {
     if (!account || !account.profile) return;

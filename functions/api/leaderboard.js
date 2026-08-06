@@ -10,7 +10,10 @@ import {
   roleFromType,
   requireEntitledAccount,
 } from './_auth.js';
-import { readLoadHistory } from '../lib/load-history.js';
+import { readVerifiedCompletedCounts } from '../lib/load-history.js';
+
+const DEFAULT_PAGE_SIZE = 50;
+const MAX_PAGE_SIZE = 100;
 
 export async function onRequestGet(context) {
   try {
@@ -21,15 +24,64 @@ export async function onRequestGet(context) {
     }
 
     const account = ensureAccountShape(access.account);
+    const { page, pageSize } = readPageParams(request);
 
-    const peers = await loadPublicProfiles(env);
-    const profile = await profileRecord(env, account, { owner: true });
-    const profiles = peers.filter((peer) => peer.userId !== profile.userId);
+    const accounts = (await listLeaderboardAccounts(env)).map((item) =>
+      ensureAccountShape(item),
+    );
+
+    // One bounded aggregation of LIFETIME verified, completed load history for
+    // the owner and every ranked peer. On D1 this is a single grouped query
+    // regardless of account count (was one history read per account); the KV
+    // fallback stays bounded. Derivation itself does no further per-account I/O.
+    const { counts: verifiedCounts, complete } = await readVerifiedCompletedCounts(env, [
+      account.userId,
+      ...accounts.map((item) => item.userId),
+    ]);
+    if (!complete) {
+      // Fail closed: the fallback could not authoritatively resolve every
+      // account's verified history. Publishing would fabricate zero rankings for
+      // unscanned members, so we return a truthful "unavailable" instead.
+      return json(
+        {
+          ok: false,
+          error: 'Leaderboard rankings are temporarily unavailable while verified performance is confirmed.',
+          reason: 'history_unavailable',
+        },
+        503,
+      );
+    }
+
+    const profile = profileRecord(account, {
+      owner: true,
+      verifiedLoads: verifiedCounts.get(account.userId) || 0,
+    });
+
+    const ranked = accounts
+      .filter((item) => item.userId !== profile.userId)
+      .map((item) =>
+        profileRecord(item, {
+          owner: false,
+          verifiedLoads: verifiedCounts.get(item.userId) || 0,
+        }),
+      )
+      .sort(compareProfiles);
+
+    const totalProfiles = ranked.length;
+    const totalPages = Math.max(1, Math.ceil(totalProfiles / pageSize));
+    const safePage = Math.min(page, totalPages);
+    const start = (safePage - 1) * pageSize;
+    const profiles = ranked.slice(start, start + pageSize);
 
     return json({
       ok: true,
       profile,
       profiles,
+      page: safePage,
+      pageSize,
+      totalProfiles,
+      totalPages,
+      hasMore: safePage < totalPages,
       generatedAt: new Date().toISOString(),
     });
   } catch {
@@ -37,29 +89,45 @@ export async function onRequestGet(context) {
   }
 }
 
-async function loadPublicProfiles(env) {
-  return Promise.all(
-    (await listLeaderboardAccounts(env)).map((account) =>
-      profileRecord(env, ensureAccountShape(account), { owner: false }),
-    ),
-  );
+function readPageParams(request) {
+  let params = null;
+  try {
+    params = new URL(request.url).searchParams;
+  } catch {
+    params = null;
+  }
+  const pageText = params?.get('page');
+  const sizeText = params?.get('pageSize');
+  const rawPage = Number(pageText);
+  const rawSize = Number(sizeText);
+  const page = pageText && Number.isFinite(rawPage) && rawPage >= 1 ? Math.floor(rawPage) : 1;
+  const pageSize = sizeText && Number.isFinite(rawSize) && rawSize >= 1
+    ? Math.max(1, Math.min(MAX_PAGE_SIZE, Math.floor(rawSize)))
+    : DEFAULT_PAGE_SIZE;
+  return { page, pageSize };
 }
 
-async function profileRecord(env, account, { owner = false } = {}) {
+// Deterministic, stable ordering so pagination is repeatable across requests:
+// score, then verified loads, then userId as a total tie-breaker.
+function compareProfiles(a, b) {
+  if (b.score !== a.score) return b.score - a.score;
+  const bl = Number(b.verifiedLoads || 0);
+  const al = Number(a.verifiedLoads || 0);
+  if (bl !== al) return bl - al;
+  return String(a.userId || '').localeCompare(String(b.userId || ''));
+}
+
+function profileRecord(account, { owner = false, verifiedLoads = 0 } = {}) {
   const profile = owner ? publicProfile(account) : peerIdentityProfile(account);
   // Every peer-facing derivation must use the same safe projection. Starting
   // with a whitelist and then consulting the original account for location,
   // equipment, or badges would let notes, trips, alerts, or tags leak back
   // into public fields indirectly.
   const rankingAccount = owner ? account : peerRankingAccount(profile, account);
-  // Public performance is derived exclusively from server-recorded, verified load
-  // history. Profile snapshots (recentLoads, trips, alerts, ratings, and custom
-  // metrics) are member-editable and must never become public trust evidence.
-  const history = await readLoadHistory(env, account.userId, 250);
-  const completed = history.filter(
-    (entry) => entry?.verified && String(entry.eventType).toLowerCase() === 'completed',
-  );
-  const verifiedLoads = completed.length;
+  // Public performance is derived exclusively from server-recorded, verified,
+  // completed load history (counted once, in bulk, by the caller). Profile
+  // snapshots (recentLoads, trips, alerts, ratings, and custom metrics) are
+  // member-editable and must never become public trust evidence.
   const verifiedMiles = 0;
   const reviewCount = 0;
   const reviewAverage = 0;
@@ -70,7 +138,10 @@ async function profileRecord(env, account, { owner = false } = {}) {
   const repeatCustomerPct = 0;
   const currentSuccessfulLoadStreak = 0;
   const bestSuccessfulLoadStreak = 0;
-  const recentVerifiedLoads = recentWindowCount(completed);
+  // The 90-day verified window requires per-event dates; it is not derived from
+  // the aggregate and stays 0 here, exactly as before (the prior per-account
+  // path also yielded 0). A dated aggregate is a separate future unit.
+  const recentVerifiedLoads = 0;
   const recentReviews = 0;
   const performance90Days = {
     verifiedLoads: recentVerifiedLoads,
@@ -168,18 +239,6 @@ function peerRankingAccount(profile, account) {
     emailVerifiedAt: cleanString(account?.emailVerifiedAt || "", 80),
     carrierVerifiedAt: cleanString(account?.carrierVerifiedAt || "", 80),
   };
-}
-
-function recentWindowCount(items) {
-  if (!Array.isArray(items)) return 0;
-  const cutoff = Date.now() - 90 * 86400000;
-  let count = 0;
-  for (const item of items) {
-    const text = String(item && typeof item === 'object' ? item.completedAt || item.createdAt || item.updatedAt || item.date || item.when || '' : item || '').trim();
-    const ms = Date.parse(text);
-    if (Number.isFinite(ms) && ms >= cutoff) count += 1;
-  }
-  return count;
 }
 
 function deriveLocation(account) {

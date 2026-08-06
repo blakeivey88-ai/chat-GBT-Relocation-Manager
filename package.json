@@ -4,10 +4,14 @@
   "type": "module",
   "scripts": {
     "check": "node --check dist/app.js && node --check functions/api/dispatch.js && node --check functions/api/loads.js && node --check functions/api/_auth.js && node --test tests/*.test.mjs",
-    "test": "npm run check"
+    "test": "npm run check",
+    "build:worker": "node -e \"const fs=require('fs');fs.rmSync('dist/_worker.js',{force:true});fs.rmSync('dist/.worker-build',{recursive:true,force:true})\" && wrangler pages functions build functions --outdir dist/.worker-build --compatibility-date 2026-07-12 --compatibility-flags nodejs_compat && node -e \"const fs=require('fs');fs.copyFileSync('dist/.worker-build/index.js','dist/_worker.js');fs.rmSync('dist/.worker-build',{recursive:true,force:true})\""
   },
   "dependencies": {
     "@openai/agents": "0.13.5",
     "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "wrangler": "4.119.0"
   }
 }

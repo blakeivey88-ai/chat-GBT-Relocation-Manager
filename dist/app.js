@@ -4156,13 +4156,14 @@ function renderLeaderboardBrowser() {
             )
             .join("")
         : '<div class="empty-state"><h4>No rising professionals match yet</h4><p>Try widening your search to see newer verified users who are performing well.</p></div>');
+  renderLeaderboardPager();
   $$(
     "#leaderboardSearch,#leaderboardEquipment,#leaderboardRole,#leaderboardAvailability,#leaderboardExperience,#leaderboardSort",
   ).forEach((el) => {
     if (el && !el.__leaderboardBound) {
       el.__leaderboardBound = true;
-      el.addEventListener("input", renderLeaderboardBrowser);
-      el.addEventListener("change", renderLeaderboardBrowser);
+      el.addEventListener("input", onLeaderboardFilterInput);
+      el.addEventListener("change", onLeaderboardFilterInput);
     }
   });
 }
@@ -4199,6 +4200,8 @@ let accountBootstrapped = false;
 let authCsrfToken = "";
 let leaderboardPeers = [];
 let leaderboardLoaded = false;
+let leaderboardPageMeta = { page: 1, totalPages: 1, totalProfiles: 0, hasMore: false };
+let leaderboardLoadingMore = false;
 let carrierVerificationState = { query: "", selectedKey: "", loadId: "" };
 function money(n) {
   return "$" + n.toLocaleString();
@@ -5115,23 +5118,182 @@ async function syncAccountState() {
     });
   } catch {}
 }
+function setLeaderboardMeta(data) {
+  const totalPages = Math.max(1, Number(data?.totalPages) || 1);
+  const page = Math.max(1, Number(data?.page) || 1);
+  const totalProfiles = Math.max(
+    0,
+    Number(data?.totalProfiles) || (Array.isArray(data?.profiles) ? data.profiles.length : 0),
+  );
+  leaderboardPageMeta = {
+    page,
+    totalPages,
+    totalProfiles,
+    hasMore: Boolean(data?.hasMore) && page < totalPages,
+  };
+}
+
+function leaderboardFilterActive() {
+  const f = leaderboardFilterState();
+  return Boolean(f.query || f.equipment || f.role || f.availability || f.experience);
+}
+
 async function loadLeaderboardPeers() {
   try {
-    const data = await apiRequest("/api/leaderboard");
-    leaderboardPeers = Array.isArray(data?.profiles) ? data.profiles : [];
+    const data = await apiRequest("/api/leaderboard?page=1");
+    leaderboardPeers = Array.isArray(data?.profiles) ? data.profiles.slice() : [];
+    setLeaderboardMeta(data);
     leaderboardLoaded = true;
     renderLeaderboardBrowser();
+    // A filter set before the first load must still see every page.
+    if (leaderboardFilterActive() && leaderboardPageMeta.hasMore)
+      ensureAllLeaderboardPeersLoaded();
     if (location.hash.slice(1) === "carrier-verification")
       renderCarrierVerification();
     return leaderboardPeers;
   } catch {
     leaderboardPeers = [];
+    leaderboardPageMeta = { page: 1, totalPages: 1, totalProfiles: 0, hasMore: false };
     leaderboardLoaded = true;
     renderLeaderboardBrowser();
     if (location.hash.slice(1) === "carrier-verification")
       renderCarrierVerification();
     return [];
   }
+}
+
+// Fetch the next page and append it, reporting success/progress. The API is
+// bounded per request; the client assembles pages so a member can browse the
+// full ranking. Returns { ok, progressed, added } so the load-all controller
+// can stop immediately on a failed or no-progress page.
+async function loadMoreLeaderboardPeers() {
+  if (leaderboardLoadingMore || !leaderboardPageMeta.hasMore)
+    return { ok: false, progressed: false, added: 0 };
+  leaderboardLoadingMore = true;
+  renderLeaderboardBrowser();
+  const fromPage = leaderboardPageMeta.page;
+  try {
+    const data = await apiRequest("/api/leaderboard?page=" + (fromPage + 1));
+    const incoming = Array.isArray(data?.profiles) ? data.profiles : [];
+    const seen = new Set(leaderboardPeers.map((p) => p && p.userId));
+    let added = 0;
+    for (const p of incoming) {
+      if (p && !seen.has(p.userId)) {
+        leaderboardPeers.push(p);
+        seen.add(p.userId);
+        added += 1;
+      }
+    }
+    setLeaderboardMeta(data);
+    const progressed = added > 0 || leaderboardPageMeta.page > fromPage;
+    return { ok: true, progressed, added };
+  } catch {
+    // Leave already-loaded peers intact; a manual retry path stays available.
+    return { ok: false, progressed: false, added: 0 };
+  } finally {
+    leaderboardLoadingMore = false;
+    renderLeaderboardBrowser();
+  }
+}
+
+// Shared load-all controller (one in-flight promise, one attempt per page,
+// stop-on-failure). Uses the injectable module so the behaviour is unit tested.
+let leaderboardLoader = null;
+let leaderboardLoadAllFailed = false;
+function getLeaderboardLoader() {
+  if (leaderboardLoader) return leaderboardLoader;
+  const factory =
+    typeof window !== "undefined" &&
+    window.RMLeaderboardPaging &&
+    window.RMLeaderboardPaging.createLeaderboardLoader;
+  if (!factory) return null;
+  leaderboardLoader = factory({
+    hasMore: () => leaderboardPageMeta.hasMore,
+    loadNextPage: () => loadMoreLeaderboardPeers(),
+  });
+  return leaderboardLoader;
+}
+
+// Load every remaining page so search/filter never silently excludes peers
+// beyond the first page. One shared in-flight run; stops after a single failed
+// or no-progress page and records it so a manual retry can be offered.
+function ensureAllLeaderboardPeersLoaded() {
+  const loader = getLeaderboardLoader();
+  const run = loader
+    ? loader.loadAll()
+    : // Fallback if the module did not load: one bounded pass, no retry loop.
+      (async () => {
+        let stoppedForError = false;
+        while (leaderboardPageMeta.hasMore) {
+          const result = await loadMoreLeaderboardPeers();
+          if (!result || result.ok !== true) {
+            stoppedForError = true;
+            break;
+          }
+          if (result.progressed !== true) break;
+        }
+        return { complete: !leaderboardPageMeta.hasMore, stoppedForError };
+      })();
+  return Promise.resolve(run).then((summary) => {
+    leaderboardLoadAllFailed = Boolean(summary && summary.stoppedForError);
+    renderLeaderboardBrowser();
+    return summary;
+  });
+}
+
+// Filter/search changes must consider the whole ranking, so load all pages
+// first, then re-render.
+function onLeaderboardFilterInput() {
+  renderLeaderboardBrowser();
+  if (leaderboardFilterActive() && leaderboardPageMeta.hasMore)
+    ensureAllLeaderboardPeersLoaded();
+}
+
+function renderLeaderboardPager() {
+  const pager = $("#leaderboardPager");
+  if (!pager) return;
+  // While filtering we auto-load every page, so no manual "Load more" is shown.
+  if (leaderboardFilterActive() || !leaderboardPageMeta.hasMore) {
+    if (leaderboardLoadingMore) {
+      pager.hidden = false;
+      pager.innerHTML =
+        '<p class="muted" role="status">Loading more verified members…</p>';
+    } else if (
+      leaderboardFilterActive() &&
+      leaderboardPageMeta.hasMore &&
+      leaderboardLoadAllFailed
+    ) {
+      // A page failed while loading all pages for this filter. Surface it and
+      // give a safe manual retry instead of silently showing partial results.
+      pager.hidden = false;
+      pager.innerHTML =
+        '<p class="muted" role="status">Some results could not load, so this filter may be incomplete.</p>' +
+        '<button type="button" id="leaderboardRetryAll" class="btn secondary">Retry loading all results</button>';
+      const retry = $("#leaderboardRetryAll");
+      if (retry)
+        retry.addEventListener("click", () => ensureAllLeaderboardPeersLoaded());
+    } else {
+      pager.hidden = true;
+      pager.innerHTML = "";
+    }
+    return;
+  }
+  const shown = Array.isArray(leaderboardPeers) ? leaderboardPeers.length : 0;
+  const total = leaderboardPageMeta.totalProfiles || shown;
+  pager.hidden = false;
+  pager.innerHTML =
+    '<button type="button" id="leaderboardLoadMore" class="btn secondary"' +
+    (leaderboardLoadingMore ? " disabled" : "") +
+    ' aria-label="Load more verified members">' +
+    (leaderboardLoadingMore ? "Loading…" : "Load more results") +
+    "</button>" +
+    '<p class="muted" role="status">Showing ' +
+    shown +
+    " of " +
+    total +
+    " verified members</p>";
+  const button = $("#leaderboardLoadMore");
+  if (button) button.addEventListener("click", loadMoreLeaderboardPeers);
 }
 async function registerAccount(profile, password = "") {
   const data = await apiRequest("/api/account", {
