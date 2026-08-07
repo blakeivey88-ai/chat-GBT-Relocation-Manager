@@ -1,0 +1,77 @@
+{
+  "comment": "Partner offer registry. DATA ONLY - Blake adds referral URLs from approved affiliate programs and flips active:true; no code change needed. A partner renders ONLY when active is true AND url is a real https referral link. Categories: factoring | fuel-card | insurance | eld | tax. equipment/fuel_type: ['all'] or specific equipment ids from rate-calc-core presets.",
+  "partners": [
+    {
+      "id": "uc-factors",
+      "name": "UC Factors",
+      "category": "factoring",
+      "headline": "Slow-paying broker? Factoring pays you the day you deliver.",
+      "equipment": ["all"],
+      "fuel_type": ["all"],
+      "disclosure_label": "Partner offer",
+      "url": "",
+      "weight": 90,
+      "active": false
+    },
+    {
+      "id": "porter-freight-funding",
+      "name": "Porter Freight Funding",
+      "category": "factoring",
+      "headline": "Get paid on delivery instead of in 30-60 days.",
+      "equipment": ["all"],
+      "fuel_type": ["all"],
+      "disclosure_label": "Partner offer",
+      "url": "",
+      "weight": 80,
+      "active": false
+    },
+    {
+      "id": "summar-financial",
+      "name": "Summar Financial",
+      "category": "factoring",
+      "headline": "Factoring for small carriers, including new authorities.",
+      "equipment": ["all"],
+      "fuel_type": ["all"],
+      "disclosure_label": "Partner offer",
+      "url": "",
+      "weight": 70,
+      "active": false
+    },
+    {
+      "id": "rts-fuel-card",
+      "name": "RTS Fuel Card",
+      "category": "fuel-card",
+      "headline": "Fuel discounts at major truck stops on every diesel fill.",
+      "equipment": ["all"],
+      "fuel_type": ["diesel"],
+      "disclosure_label": "Partner offer",
+      "url": "",
+      "weight": 90,
+      "active": false
+    },
+    {
+      "id": "atob-fuel-card",
+      "name": "AtoB Fuel Card",
+      "category": "fuel-card",
+      "headline": "A fuel card that works for gas and diesel fleets.",
+      "equipment": ["all"],
+      "fuel_type": ["all"],
+      "disclosure_label": "Partner offer",
+      "url": "",
+      "weight": 80,
+      "active": false
+    },
+    {
+      "id": "mudflap",
+      "name": "Mudflap",
+      "category": "fuel-card",
+      "headline": "App-based diesel discounts popular with hot shots and box trucks.",
+      "equipment": ["hot-shot", "box-truck", "cargo-van", "reefer", "dry-van", "flatbed", "step-deck", "lowboy-rgn", "conestoga", "power-only", "car-hauler", "tanker", "dump"],
+      "fuel_type": ["diesel"],
+      "disclosure_label": "Partner offer",
+      "url": "",
+      "weight": 70,
+      "active": false
+    }
+  ]
+}

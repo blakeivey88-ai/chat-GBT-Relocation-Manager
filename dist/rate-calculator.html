@@ -21,23 +21,33 @@
       .calc-row.profit strong { color: #0c7a43; }
       .calc-row.loss strong { color: #b3261e; }
       .calc-note { margin: 12px 0 0; color: #607086; font-size: 13px; line-height: 1.5; }
+      .calc-sanity { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; background: #fdf6ec; color: #7a5518; font-size: 13px; line-height: 1.5; }
       .calc-actions { display: grid; gap: 8px; margin-top: 14px; }
+      .partner-slot { margin-top: 14px; padding: 14px; border: 1px solid #e3ebf4; border-radius: 12px; background: #f7fafc; }
+      .partner-slot .partner-tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #607086; margin-bottom: 6px; }
+      .partner-slot h3 { margin: 0 0 4px; font-size: 15px; }
+      .partner-slot p { margin: 0 0 10px; color: #607086; font-size: 13px; line-height: 1.5; }
+      .partner-slot small { display: block; margin-top: 8px; color: #8a97a8; font-size: 11px; line-height: 1.4; }
     </style>
   </head>
   <body>
     <header class="site-header"><div class="header-inner"><a class="brand" href="/"><span class="brand-mark">🦅</span><span>Relocation <strong>Manager USA</strong></span></a><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="siteNav" data-nav-toggle>Menu</button><nav class="site-nav" id="siteNav" data-site-nav><a href="/">Home</a><a href="/pricing.html">Pricing</a><a href="/safety.html">Safety</a><a href="/support.html">Support</a><a class="nav-cta" href="/signin">Member sign in</a></nav></div></header>
     <main>
-      <section class="page-hero"><div class="container"><div class="breadcrumbs"><a href="/">Home</a><span>›</span><span>Rate calculator</span></div><div class="kicker">Free tool · No signup needed</div><h1>Know your break-even before you quote.</h1><p>Enter your trip and your truck's real costs. Get your cost per mile, break-even rate, and a target rate with your profit built in — before you post or negotiate.</p></div></section>
+      <section class="page-hero"><div class="container"><div class="breadcrumbs"><a href="/">Home</a><span>›</span><span>Rate calculator</span></div><div class="kicker">Free tool · No signup needed</div><h1>Know your break-even before you quote.</h1><p>Enter your trip and your truck's real costs. Get your cost per mile, break-even rate, and a target rate with your profit built in — before you post or negotiate. Works for every truck: hot shot, cargo van, box truck, reefer, and full-size semi.</p></div></section>
       <section class="section"><div class="container calc-grid">
         <form class="card form-card" id="calcForm">
           <div class="form-grid">
+            <label>Your truck (optional)<select name="equipment" id="equipmentSelect"><option value="">Choose equipment — prefills an average MPG</option></select><small class="muted">Prefills an average MPG for that equipment. Always replace it with your truck's real number.</small></label>
+            <label>Fuel type<select name="fuelType" id="fuelTypeSelect"><option value="diesel">Diesel</option><option value="gas">Gas</option></select></label>
             <label>Loaded miles<input name="loadedMiles" type="number" min="0" step="1" inputmode="numeric" placeholder="420" required /></label>
-            <label>Deadhead miles<input name="deadheadMiles" type="number" min="0" step="1" inputmode="numeric" placeholder="60" /></label>
+            <label>Deadhead miles<input name="deadheadMiles" type="number" min="0" step="1" inputmode="numeric" placeholder="60" /><small class="muted">Empty miles burn the same fuel. Leaving these out is the #1 way a load looks profitable and isn't.</small></label>
             <label>Truck MPG<input name="mpg" type="number" min="1" step="0.1" inputmode="decimal" placeholder="8.5" required /></label>
-            <label>Fuel price ($ / gallon)<input name="fuelPrice" type="number" min="0" step="0.01" inputmode="decimal" placeholder="3.85" required /><small class="muted">Enter what you actually pay. <a href="https://www.eia.gov/petroleum/gasdiesel/" target="_blank" rel="noopener">Check the current U.S. national diesel average (EIA)</a> — it's updated weekly and dated on their page.</small></label>
+            <label>Fuel price ($ / gallon)<input name="fuelPrice" type="number" min="0" step="0.01" inputmode="decimal" placeholder="3.85" required /><small class="muted">Enter what you actually pay. <a href="https://www.eia.gov/petroleum/gasdiesel/" target="_blank" rel="noopener">Check the current U.S. average (EIA)</a> — updated weekly and dated on their page.</small></label>
+            <label>Reefer unit hours (if any)<input name="reeferHours" type="number" min="0" step="0.5" inputmode="decimal" placeholder="0" /><small class="muted">Refrigeration units burn their own diesel (assumed ~0.85 gal/hr here — typical range is roughly 0.4–1.1 depending on unit and mode). Most calculators skip this entirely.</small></label>
+            <label>Idle hours (optional)<input name="idleHours" type="number" min="0" step="0.5" inputmode="decimal" placeholder="0" /><small class="muted">Waiting at docks or overnight idling (assumed ~0.8 gal/hr). Detention time isn't free fuel.</small></label>
             <label>Tolls for this trip ($)<input name="tolls" type="number" min="0" step="0.01" inputmode="decimal" placeholder="35" /></label>
-            <label>Other trip expenses ($)<input name="extras" type="number" min="0" step="0.01" inputmode="decimal" placeholder="50" /><small class="muted">Lumpers, parking, permits, extra labor.</small></label>
-            <label>Fixed operating cost ($ / mile)<input name="fixedPerMile" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0.75" /><small class="muted">Truck payment, insurance, maintenance, tires spread per mile. Skip if you only want fuel-based numbers.</small></label>
+            <label>Other trip expenses ($)<input name="extras" type="number" min="0" step="0.01" inputmode="decimal" placeholder="50" /><small class="muted">Lumpers, detention, parking, permits, extra labor.</small></label>
+            <label>Fixed operating cost ($ / mile)<input name="fixedPerMile" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0.75" /><small class="muted">Truck payment, insurance, maintenance reserve, tires — plus the ones most people forget: health insurance, your own pay, and downtime between loads. Skip if you only want fuel-based numbers.</small></label>
             <label>Desired profit margin (%)<input name="margin" type="number" min="0" max="95" step="1" inputmode="numeric" placeholder="20" /></label>
             <label>Offered rate ($) — optional<input name="offered" type="number" min="0" step="0.01" inputmode="decimal" placeholder="1250" /><small class="muted">Enter a rate you were offered to see the profit or loss on it.</small></label>
           </div>
@@ -48,6 +58,8 @@
           <h2>Your numbers</h2>
           <div class="calc-row"><span>Total miles (loaded + deadhead)</span><strong id="outMiles">—</strong></div>
           <div class="calc-row"><span>Fuel cost</span><strong id="outFuel">—</strong></div>
+          <div class="calc-row" id="rowReefer" hidden><span>Reefer unit fuel</span><strong id="outReefer">—</strong></div>
+          <div class="calc-row" id="rowIdle" hidden><span>Idle fuel</span><strong id="outIdle">—</strong></div>
           <div class="calc-row"><span>Tolls &amp; other expenses</span><strong id="outExtras">—</strong></div>
           <div class="calc-row"><span>Fixed operating cost</span><strong id="outFixed">—</strong></div>
           <div class="calc-row"><span>Operating cost per loaded mile</span><strong id="outCpm">—</strong></div>
@@ -55,7 +67,10 @@
           <div class="calc-row total"><span>Target rate (with your margin)</span><strong id="outTarget">—</strong></div>
           <div class="calc-row" id="rowTargetProfit"><span>Profit at target rate</span><strong id="outTargetProfit">—</strong></div>
           <div class="calc-row" id="rowOffered" hidden><span>Offered rate result</span><strong id="outOffered">—</strong></div>
+          <p class="calc-sanity" id="calcSanity" hidden></p>
+          <p class="calc-note" id="cardSavings" hidden></p>
           <p class="calc-note">Use this rate when preparing a post or negotiation. Knowing your break-even is the difference between a paying load and hauling for free.</p>
+          <div class="partner-slot" id="partnerSlot" hidden></div>
           <div class="calc-actions">
             <a class="btn btn-primary" href="/signup.html?plan=driver">Create a free profile to put it to work</a>
             <a class="btn btn-light" href="/pricing.html">See member plans</a>
@@ -63,7 +78,7 @@
         </aside>
       </div></section>
       <section class="section"><div class="container content-narrow prose">
-        <article class="card"><h2>How the math works</h2><p>Fuel cost = total miles ÷ your MPG × your fuel price. Your break-even is fuel plus tolls, trip expenses, and your fixed cost per mile across every mile you'll drive — including deadhead, because the empty miles cost the same fuel. The target rate adds your chosen profit margin on top. If an offered rate is below break-even, you are paying to work.</p></article>
+        <article class="card"><h2>How the math works</h2><p>Fuel cost = total miles ÷ your MPG × your fuel price, plus fuel your engine burns idling and fuel a reefer unit burns keeping the trailer cold — both are real gallons that per-mile math silently skips. Your break-even is fuel plus tolls, trip expenses, and your fixed cost per mile across every mile you'll drive — including deadhead, because the empty miles cost the same fuel. The target rate adds your chosen profit margin on top. If an offered rate is below break-even, you are paying to work.</p></article>
 
         <article class="card"><h2>Common questions about rate per mile</h2>
           <h3>What should I charge per mile?</h3>
@@ -79,7 +94,7 @@
           <p>That's your decision, not an industry constant. The margin has to cover the things break-even doesn't: your own pay, downtime between loads, and money set aside for the repair you can't predict. This calculator defaults to 20% because it's a common starting point, but the number that matters is the one that keeps your truck running next year.</p>
 
           <h3>Is this calculator really free?</h3>
-          <p>Yes — no signup, no card, no email. It runs entirely in your browser and we don't store the numbers you enter. Relocation Manager USA makes money from monthly subscriptions to the marketplace, and takes no commission on any load. The calculator is useful on its own and you're welcome to use it without ever creating an account.</p>
+          <p>Yes — no signup, no card, no email. It runs entirely in your browser and we don't store the numbers you enter. Relocation Manager USA makes money from monthly subscriptions to the marketplace, and takes no commission on any load. If a partner offer appears with your results it is clearly labeled, optional, and we may earn a commission if you use it — but the calculator works the same whether you do or not.</p>
         </article>
       </div></section>
     </main>
@@ -123,7 +138,7 @@
             {
               "@type": "Question",
               "name": "Is this calculator really free?",
-              "acceptedAnswer": { "@type": "Answer", "text": "Yes — no signup, no card, no email. It runs in your browser and the numbers you enter are not stored. Relocation Manager USA earns from monthly subscriptions and takes no commission on loads." }
+              "acceptedAnswer": { "@type": "Answer", "text": "Yes — no signup, no card, no email. It runs in your browser and the numbers you enter are not stored. Relocation Manager USA earns from monthly subscriptions and takes no commission on loads. Any partner offer shown is clearly labeled and optional." }
             }
           ]
         }
@@ -131,54 +146,147 @@
     }
     </script>
     <footer class="site-footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><a class="brand" href="/" style="color:#fff"><span class="brand-mark">🦅</span><span>Relocation <strong>Manager USA</strong></span></a></div><nav class="footer-col"><strong>Marketplace</strong><a href="/pricing.html">Pricing</a><a href="/signup.html?plan=shipper">Post a Pickup</a><a href="/signup.html?plan=driver">Find Loads</a><a href="/carrier-profile.html">Carrier Profile</a></nav><nav class="footer-col"><strong>Trust</strong><a href="/safety.html">Safety</a><a href="/support.html">Support</a><a href="/knowledge/index.html">Knowledge</a></nav><nav class="footer-col"><strong>Legal</strong><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a><a href="/cancellation.html">Cancellation</a></nav></div><div class="footer-bottom"><span>© <span data-year>2026</span> Relocation Manager USA</span></div></div></footer>
-    <script>
+    <script type="module">
+      import { EQUIPMENT_PRESETS, calcTrip, FUEL_CARD_ADVERTISED_RANGE } from "/rate-calc-core.js?v=20260807-1";
+      import { selectPartner } from "/partner-select.js?v=20260807-1";
+
       const form = document.getElementById("calcForm");
+      const equipmentSelect = document.getElementById("equipmentSelect");
+      const fuelTypeSelect = document.getElementById("fuelTypeSelect");
+
+      // Populate equipment options from the tested preset module (single source).
+      for (const preset of EQUIPMENT_PRESETS) {
+        const option = document.createElement("option");
+        option.value = preset.id;
+        option.textContent = preset.label;
+        equipmentSelect.appendChild(option);
+      }
+
+      // Choosing equipment prefill an AVERAGE — the note tells drivers to
+      // replace it with their real MPG. Choosing is a deliberate action, so it
+      // overwrites the field; typing afterward always wins.
+      equipmentSelect.addEventListener("change", () => {
+        const preset = EQUIPMENT_PRESETS.find((item) => item.id === equipmentSelect.value);
+        if (!preset) return;
+        form.elements.mpg.value = preset.mpg;
+        fuelTypeSelect.value = preset.fuel;
+      });
+
       // Prefill from links (e.g. the AI Dispatch Assistant hands off a load here).
       const prefill = new URLSearchParams(location.search);
-      const prefillMap = { loaded: "loadedMiles", deadhead: "deadheadMiles", mpg: "mpg", fuel: "fuelPrice", tolls: "tolls", extras: "extras", fixed: "fixedPerMile", margin: "margin", offered: "offered" };
+      const prefillMap = { loaded: "loadedMiles", deadhead: "deadheadMiles", mpg: "mpg", fuel: "fuelPrice", tolls: "tolls", extras: "extras", fixed: "fixedPerMile", margin: "margin", offered: "offered", reefer: "reeferHours", idle: "idleHours" };
       Object.entries(prefillMap).forEach(([param, field]) => {
         const value = Number(prefill.get(param));
         if (Number.isFinite(value) && value > 0 && form.elements[field]) form.elements[field].value = value;
       });
+      const prefillEquipment = String(prefill.get("equipment") || "");
+      if (prefillEquipment && EQUIPMENT_PRESETS.some((item) => item.id === prefillEquipment)) {
+        equipmentSelect.value = prefillEquipment;
+        equipmentSelect.dispatchEvent(new Event("change"));
+      }
+
       const money = (value) => "$" + value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       const num = (name) => {
         const value = Number(form.elements[name].value);
         return Number.isFinite(value) && value > 0 ? value : 0;
       };
       const set = (id, text) => { document.getElementById(id).textContent = text; };
+
+      // Partner offers: pure data from /partners.json. If none is active and
+      // matching, the slot stays hidden — no placeholder ads, ever.
+      let partnerData = null;
+      fetch("/partners.json").then((r) => (r.ok ? r.json() : null)).then((data) => { partnerData = data; }).catch(() => {});
+
+      function renderPartner(equipment, fuelType) {
+        const slot = document.getElementById("partnerSlot");
+        const { primary } = selectPartner(partnerData?.partners, { equipment, fuelType });
+        if (!primary) { slot.hidden = true; slot.innerHTML = ""; return; }
+        slot.innerHTML = "";
+        const tag = document.createElement("span");
+        tag.className = "partner-tag";
+        tag.textContent = primary.disclosure_label || "Partner offer";
+        const title = document.createElement("h3");
+        title.textContent = primary.name;
+        const copy = document.createElement("p");
+        copy.textContent = primary.headline || "";
+        const link = document.createElement("a");
+        link.className = "btn btn-light";
+        link.href = primary.url;
+        link.rel = "noopener sponsored";
+        link.target = "_blank";
+        link.textContent = "Learn more";
+        link.addEventListener("click", () => { if (window.rmTrack) window.rmTrack("partner_click", { partner: primary.id }); });
+        const fine = document.createElement("small");
+        fine.textContent = "Optional. We may earn a commission if you sign up. It never changes your price, and the calculator works the same without it.";
+        slot.append(tag, title, copy, link, fine);
+        slot.hidden = false;
+      }
+
       form.addEventListener("submit", (event) => {
         event.preventDefault();
         if (!form.reportValidity()) return;
+        const result = calcTrip({
+          loadedMiles: num("loadedMiles"),
+          deadheadMiles: num("deadheadMiles"),
+          mpg: num("mpg"),
+          fuelPrice: num("fuelPrice"),
+          tolls: num("tolls"),
+          extras: num("extras"),
+          fixedPerMile: num("fixedPerMile"),
+          marginPct: num("margin"),
+          offered: num("offered"),
+          reeferHours: num("reeferHours"),
+          idleHours: num("idleHours"),
+        });
+        if (!result) return;
         const loaded = num("loadedMiles");
-        const deadhead = num("deadheadMiles");
-        const totalMiles = loaded + deadhead;
-        const mpg = num("mpg");
-        if (!loaded || !mpg) return;
-        const fuel = (totalMiles / mpg) * num("fuelPrice");
-        const extras = num("tolls") + num("extras");
-        const fixed = num("fixedPerMile") * totalMiles;
-        const cost = fuel + extras + fixed;
-        const margin = Math.min(num("margin"), 95) / 100;
-        const target = cost * (1 + margin);
-        set("outMiles", `${totalMiles.toLocaleString()} mi`);
-        set("outFuel", money(fuel));
-        set("outExtras", money(extras));
-        set("outFixed", money(fixed));
-        set("outCpm", money(cost / loaded) + " /mi");
-        set("outBreakEven", money(cost) + ` (${money(cost / loaded)}/mi)`);
-        set("outTarget", money(target) + ` (${money(target / loaded)}/mi)`);
-        set("outTargetProfit", money(target - cost));
-        const offered = num("offered");
+        set("outMiles", `${result.totalMiles.toLocaleString()} mi`);
+        set("outFuel", money(result.fuelCost));
+        const reeferRow = document.getElementById("rowReefer");
+        reeferRow.hidden = result.reeferCost <= 0;
+        if (result.reeferCost > 0) set("outReefer", money(result.reeferCost));
+        const idleRow = document.getElementById("rowIdle");
+        idleRow.hidden = result.idleCost <= 0;
+        if (result.idleCost > 0) set("outIdle", money(result.idleCost));
+        set("outExtras", money(result.extras));
+        set("outFixed", money(result.fixed));
+        set("outCpm", money(result.cpmLoaded) + " /mi");
+        set("outBreakEven", money(result.breakEven) + ` (${money(result.cpmLoaded)}/mi)`);
+        set("outTarget", money(result.target) + ` (${money(result.target / loaded)}/mi)`);
+        set("outTargetProfit", money(result.targetProfit));
         const offeredRow = document.getElementById("rowOffered");
-        if (offered > 0) {
+        if (result.offered > 0) {
           offeredRow.hidden = false;
-          const diff = offered - cost;
-          offeredRow.className = "calc-row " + (diff >= 0 ? "profit" : "loss");
-          set("outOffered", diff >= 0 ? `+${money(diff)} profit` : `${money(diff)} LOSS`);
+          offeredRow.className = "calc-row " + (result.offeredDiff >= 0 ? "profit" : "loss");
+          set("outOffered", result.offeredDiff >= 0 ? `+${money(result.offeredDiff)} profit` : `${money(result.offeredDiff)} LOSS`);
         } else {
           offeredRow.hidden = true;
         }
-        if (window.rmTrack) window.rmTrack("calculator_used", { miles: totalMiles });
+
+        // Plausibility nudge — the most common calculator failure is a number
+        // that looks profitable because half the real costs were left out.
+        const sanity = document.getElementById("calcSanity");
+        if (num("fixedPerMile") > 0 && result.cpmLoaded < 1.0) {
+          sanity.hidden = false;
+          sanity.textContent = "Heads up: your all-in cost per mile came out under $1.00. Many full-time owner-operators report landing around $1.15–$1.45/mi once maintenance reserve, insurance, your own pay, and downtime are included. Double-check what your fixed cost per mile covers.";
+        } else if (num("fixedPerMile") === 0) {
+          sanity.hidden = false;
+          sanity.textContent = "These are fuel-and-trip numbers only. Your real break-even is higher once truck payment, insurance, maintenance reserve, and your own pay are included — add a fixed cost per mile to see it.";
+        } else {
+          sanity.hidden = true;
+        }
+
+        // Illustrative fuel-card savings, labeled as advertised-and-varies.
+        const savings = document.getElementById("cardSavings");
+        if (result.totalGal > 0) {
+          savings.hidden = false;
+          savings.textContent = `This trip burns about ${result.totalGal.toFixed(1)} gallons. If a fuel card saved you $${FUEL_CARD_ADVERTISED_RANGE.low.toFixed(2)}–$${FUEL_CARD_ADVERTISED_RANGE.high.toFixed(2)}/gal (advertised ranges — actual discounts vary by program and location), that's roughly ${money(result.cardSavingsLow)}–${money(result.cardSavingsHigh)} back on fuel.`;
+        } else {
+          savings.hidden = true;
+        }
+
+        renderPartner(equipmentSelect.value, fuelTypeSelect.value);
+        if (window.rmTrack) window.rmTrack("calculator_used", { miles: result.totalMiles, equipment: equipmentSelect.value || "unspecified", fuel: fuelTypeSelect.value });
       });
     </script>
   </body>
