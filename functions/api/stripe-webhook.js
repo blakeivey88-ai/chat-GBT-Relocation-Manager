@@ -23,6 +23,7 @@ import {
 } from './_auth.js';
 
 import { recordAuditEvent } from '../lib/audit.js';
+import { isInitialPaidShipperEvent, sendWhopPaidShipperConversion } from '../lib/marketing-attribution.js';
 
 const PAYMENT_BY_AMOUNT = new Map([
   [999, { paymentStatus: 'paid_shipper', planLabel: 'Shippers Plan', type: 'Customer needing pickup - $9.99/mo' }],
@@ -152,6 +153,26 @@ export async function onRequestPost(context) {
       verifiedEventRef: event.id,
     });
     await env.RELOCATION_MANAGER_LEADS.put(eventKey, now);
+
+    if (isInitialPaidShipperEvent(event.type, object, merged)) {
+      const conversionTask = sendWhopPaidShipperConversion(env, {
+        attribution: merged.marketingAttribution,
+        eventId: event.id,
+        eventTime: eventCreatedAt,
+        userId: merged.userId,
+        email: merged.email,
+        amountCents: Number(object.amount_total || object.amount_paid || 0),
+      }).catch((error) => {
+        console.error(JSON.stringify({
+          event: 'whop_paid_shipper_conversion_failed',
+          stripeEventId: cleanString(event.id, 120),
+          reasonCode: 'provider_error',
+        }));
+        return { sent: false, reason: 'provider-error' };
+      });
+      if (typeof context.waitUntil === 'function') context.waitUntil(conversionTask);
+      else await conversionTask;
+    }
 
     return json({
       ok: true,

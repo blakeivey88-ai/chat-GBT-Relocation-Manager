@@ -49,6 +49,7 @@ import {
 import { recordAuditEvent, recordAuthAuditEvent } from '../lib/audit.js';
 import { readLoadHistory, summarizeLoadHistory } from '../lib/load-history.js';
 import { makePasswordResetUrl, sendPasswordResetEmail } from '../lib/email.js';
+import { normalizeMarketingAttribution } from '../lib/marketing-attribution.js';
 
 export async function onRequestGet(context) {
   try {
@@ -196,6 +197,9 @@ async function handleMutation(context) {
         equipmentType: existing?.equipmentType || '',
         equipmentTypes: existing?.equipmentTypes || [],
         checkoutPlan: cleanString(body.checkoutPlan || existing?.checkoutPlan || '', 80) || null,
+        marketingAttribution: Object.keys(existing?.marketingAttribution || {}).length
+          ? existing.marketingAttribution
+          : normalizeMarketingAttribution(body.marketingAttribution),
         createdAt: existing?.createdAt || now,
         updatedAt: now,
       }, existing || {});
@@ -689,6 +693,9 @@ function mergeProfileCompletionPatch(current, body) {
   return ensureAccountShape({
     ...current,
     ...editable,
+    marketingAttribution: Object.keys(current.marketingAttribution || {}).length
+      ? current.marketingAttribution
+      : normalizeMarketingAttribution(body.marketingAttribution),
     updatedAt: new Date().toISOString(),
   }, current);
 }

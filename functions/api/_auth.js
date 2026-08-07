@@ -2700,6 +2700,12 @@ export function ensureAccountShape(input, fallback = {}) {
     checkoutPlan:
       cleanString(current.checkoutPlan || fallback.checkoutPlan || "", 80) ||
       null,
+    marketingAttribution:
+      current.marketingAttribution && typeof current.marketingAttribution === "object"
+        ? current.marketingAttribution
+        : fallback.marketingAttribution && typeof fallback.marketingAttribution === "object"
+          ? fallback.marketingAttribution
+          : {},
     profileView:
       profileView === "driver" && typeWorkspace !== "driver"
         ? typeWorkspace

@@ -238,13 +238,15 @@
             action: "complete-profile",
             profile,
             checkoutPlan: planKey,
-            profileView: profile.profileView
+            profileView: profile.profileView,
+            marketingAttribution: window.rmMarketingAttribution ? window.rmMarketingAttribution() : {}
           } : {
             action: "register",
             profile,
             password,
             checkoutPlan: planKey,
-            profileView: profile.profileView
+            profileView: profile.profileView,
+            marketingAttribution: window.rmMarketingAttribution ? window.rmMarketingAttribution() : {}
           });
           showStatus(data?.verificationEmailSent ? "Profile created. We emailed you a verification link — opening the verification page…" : "Profile created. Opening verification…", "success");
           if (window.rmTrack) window.rmTrack("signup_completed", { plan: planKey });

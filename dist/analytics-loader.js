@@ -1,6 +1,8 @@
 (function () {
   const cfg = window.RELOCATION_MANAGER_ANALYTICS_CONFIG || { ga4Id: 'G-RK9CJW91EN', clarityId: '' };
   const CONSENT_KEY = 'rm-analytics-consent';
+  const ATTRIBUTION_KEY = 'rm-marketing-attribution-v1';
+  const ATTRIBUTION_FIELDS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'utm_id', 'ad_campaign_id', 'ad_set_id', 'ad_id', 'fbclid', 'gclid', 'gbraid', 'wbraid', 'ttclid'];
 
   // Funnel event helper. Safe to call anywhere; drops events silently when
   // analytics are not loaded (no consent) so no user is tracked without opting in.
@@ -8,6 +10,15 @@
     try {
       if (typeof window.gtag === 'function') window.gtag('event', eventName, params || {});
     } catch (e) { /* never break the page for analytics */ }
+  };
+
+  window.rmMarketingAttribution = function () {
+    if (readConsent() !== 'granted') return {};
+    try {
+      const saved = JSON.parse(localStorage.getItem(ATTRIBUTION_KEY) || '{}');
+      const wuid = localStorage.getItem('_wuid');
+      return { ...saved, ...(wuid && /^wuid_[A-Za-z0-9_-]+$/.test(wuid) ? { anonymous_id: wuid } : {}), consent: true };
+    } catch (e) { return {}; }
   };
 
   function readConsent() {
@@ -19,6 +30,18 @@
   }
 
   function loadAnalytics() {
+    captureAttribution();
+
+    if (!window.whop) {
+      (function (w, d, s, u, n, a, b) {
+        if (w[n]) return;
+        a = w[n] = { q: [], t: +new Date(), s: [], o: u, track: function () { a.q.push([+new Date()].concat([].slice.call(arguments))); }, setScope: function () { a.s = [].slice.call(arguments).filter(function (x) { return typeof x === 'string'; }); a.q.push([+new Date(), 'setScope'].concat(a.s)); }, scope: function () { var c = [].slice.call(arguments); return { track: function () { a.q.push([+new Date()].concat([].slice.call(arguments)).concat([{ __scope: c }])); } }; } };
+        b = d.createElement(s); b.async = 1; b.src = u + '/s.js'; d.getElementsByTagName(s)[0].parentNode.insertBefore(b, d.getElementsByTagName(s)[0]);
+      })(window, document, 'script', 'https://t.whop.tw', 'whop');
+      window.whop.setScope('biz_xfgfRxrQ5hdHTS');
+      window.whop.track('page');
+    }
+
     if (cfg.ga4Id) {
       const gtagSrc = document.createElement('script');
       gtagSrc.async = true;
@@ -40,6 +63,38 @@
         y.parentNode.insertBefore(t, y);
       })(window, document, 'clarity', 'script', cfg.clarityId);
     }
+  }
+
+  function captureAttribution() {
+    try {
+      const existing = JSON.parse(localStorage.getItem(ATTRIBUTION_KEY) || '{}');
+      if (existing && existing.captured_at) return;
+      const params = new URLSearchParams(location.search);
+      const next = { consent: true };
+      let found = false;
+      ATTRIBUTION_FIELDS.forEach(function (field) {
+        const value = String(params.get(field) || '').trim().slice(0, field.endsWith('clid') ? 300 : 160);
+        if (value) { next[field] = value; found = true; }
+      });
+      if (!found) return;
+      next.captured_at = new Date().toISOString();
+      const landing = new URL(location.href);
+      const safeQuery = new URLSearchParams();
+      ATTRIBUTION_FIELDS.forEach(function (field) {
+        const value = String(landing.searchParams.get(field) || '').trim();
+        if (value) safeQuery.set(field, value.slice(0, field.endsWith('clid') ? 300 : 160));
+      });
+      landing.search = safeQuery.toString();
+      landing.hash = '';
+      next.landing_url = landing.toString().slice(0, 500);
+      if (document.referrer && document.referrer.startsWith('https://')) {
+        const referrer = new URL(document.referrer);
+        referrer.search = '';
+        referrer.hash = '';
+        next.referrer_url = referrer.toString().slice(0, 500);
+      }
+      localStorage.setItem(ATTRIBUTION_KEY, JSON.stringify(next));
+    } catch (e) { /* private mode */ }
   }
 
   function removeBanner() {
