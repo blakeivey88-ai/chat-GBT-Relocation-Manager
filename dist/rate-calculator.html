@@ -148,7 +148,7 @@
     <footer class="site-footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><a class="brand" href="/" style="color:#fff"><span class="brand-mark">🦅</span><span>Relocation <strong>Manager USA</strong></span></a></div><nav class="footer-col"><strong>Marketplace</strong><a href="/pricing.html">Pricing</a><a href="/signup.html?plan=shipper">Post a Pickup</a><a href="/signup.html?plan=driver">Find Loads</a><a href="/carrier-profile.html">Carrier Profile</a></nav><nav class="footer-col"><strong>Trust</strong><a href="/safety.html">Safety</a><a href="/support.html">Support</a><a href="/knowledge/index.html">Knowledge</a></nav><nav class="footer-col"><strong>Legal</strong><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a><a href="/cancellation.html">Cancellation</a></nav></div><div class="footer-bottom"><span>© <span data-year>2026</span> Relocation Manager USA</span></div></div></footer>
     <script type="module">
       import { EQUIPMENT_PRESETS, calcTrip } from "/rate-calc-core.js?v=20260807-2";
-      import { selectPartner } from "/partner-select.js?v=20260807-2";
+      import { selectPartner, savingsRange } from "/partner-select.js?v=20260807-3";
 
       const form = document.getElementById("calcForm");
       const equipmentSelect = document.getElementById("equipmentSelect");
@@ -279,17 +279,15 @@
           sanity.hidden = true;
         }
 
-        // Illustrative fuel-card savings — the range comes from partners.json
-        // claims data (with source + verification date), never hardcoded here.
-        // No fetched claim data means no savings line: no data, no claim.
+        // Fuel-savings estimate: shown ONLY when an ACTIVE eligible fuel-card
+        // partner supplies its own advertised range with a direct https source
+        // and verification date (savingsRange enforces all of it). While no
+        // partner qualifies, no savings claim appears anywhere on this page.
         const savings = document.getElementById("cardSavings");
-        const discount = partnerData?.claims?.fuel_card_advertised_discount;
-        const rangeOk = discount && Number(discount.low) > 0 && Number(discount.high) > Number(discount.low);
-        if (result.totalGal > 0 && rangeOk) {
-          const low = Number(discount.low);
-          const high = Number(discount.high);
+        const range = savingsRange(partnerData?.partners, { equipment: equipmentSelect.value, fuelType: fuelTypeSelect.value });
+        if (result.totalGal > 0 && range) {
           savings.hidden = false;
-          savings.textContent = `This trip burns about ${result.totalGal.toFixed(1)} gallons. If a fuel card saved you $${low.toFixed(2)}–$${high.toFixed(2)}/gal (advertised ranges — actual discounts vary by program and location), that's roughly ${money(result.totalGal * low)}–${money(result.totalGal * high)} back on fuel.`;
+          savings.textContent = `This trip burns about ${result.totalGal.toFixed(1)} gallons. ${range.partner.name} advertises fuel discounts of $${range.low.toFixed(2)}–$${range.high.toFixed(2)}/gal (their advertised range as of ${range.verified_date} — actual discounts vary by location and volume). At that range this trip would cost roughly ${money(result.totalGal * range.low)}–${money(result.totalGal * range.high)} less.`;
         } else {
           savings.hidden = true;
         }

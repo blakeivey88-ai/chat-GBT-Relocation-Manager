@@ -1,15 +1,5 @@
 {
-  "comment": "Partner offer registry + advertised-claim data. DATA ONLY - update offers, payouts, and claim ranges here without touching calculator code. A partner renders ONLY when active is true AND url is a real https referral link. payout_* fields are informational metadata (advertised terms, with source and verification date), never shown as promises. Categories: factoring | fuel-card | insurance | eld | tax.",
-  "claims": {
-    "fuel_card_advertised_discount": {
-      "low": 0.1,
-      "high": 0.25,
-      "unit": "usd_per_gallon",
-      "source": "Industry marketing ranges cited by factoring/fuel-card providers (e.g. factorfinders.com freight-fuel-advance pages)",
-      "verified_date": "2026-08-06",
-      "note": "Advertised ranges vary by program, location, and volume; shown to users only as an illustration labeled as such."
-    }
-  },
+  "comment": "Partner offer registry. DATA ONLY - update offers and payouts here without touching calculator code. A partner renders ONLY when active is true AND url is a real https referral link. The fuel-savings line renders ONLY when an ACTIVE eligible fuel-card partner carries its own discount_range: { low, high, unit: 'usd_per_gallon', source: '<direct https URL to the partner's advertised terms>', verified_date: 'YYYY-MM-DD' } - taken from that partner's WRITTEN terms, never a generic industry range. No qualifying partner means no savings claim on the page. payout_* fields are informational metadata, never shown as promises. Categories: factoring | fuel-card | insurance | eld | tax.",
   "partners": [
     {
       "id": "uc-factors",

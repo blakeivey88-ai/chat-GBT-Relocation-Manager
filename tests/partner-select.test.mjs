@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
-import { eligiblePartners, selectPartner } from "../dist/partner-select.js";
+import { eligiblePartners, selectPartner, savingsRange } from "../dist/partner-select.js";
 
 const partner = (overrides = {}) => ({
   id: "p1",
@@ -52,24 +52,44 @@ test("empty context still works (no equipment chosen) and empty registry yields 
   assert.equal(anyMatch.primary.id, "p1");
 });
 
+test("savings range requires an ACTIVE eligible fuel-card partner with a verifiable range", () => {
+  const validRange = { low: 0.15, high: 0.4, unit: "usd_per_gallon", source: "https://example.com/fuel-terms", verified_date: "2026-08-07" };
+  // No partners / no fuel-card partner / inactive partner -> null.
+  assert.equal(savingsRange([], {}), null);
+  assert.equal(savingsRange([partner({ category: "factoring", discount_range: validRange })], {}), null);
+  assert.equal(savingsRange([partner({ category: "fuel-card", active: false, discount_range: validRange })], {}), null);
+  // Active fuel-card partner but WITHOUT its own range -> null (never a generic claim).
+  assert.equal(savingsRange([partner({ category: "fuel-card" })], {}), null);
+  // Invalid ranges are rejected: bad bounds, non-https source, missing date.
+  assert.equal(savingsRange([partner({ category: "fuel-card", discount_range: { ...validRange, low: 0.5 } })], {}), null);
+  assert.equal(savingsRange([partner({ category: "fuel-card", discount_range: { ...validRange, source: "industry marketing pages" } })], {}), null);
+  assert.equal(savingsRange([partner({ category: "fuel-card", discount_range: { ...validRange, verified_date: "" } })], {}), null);
+  // A fully valid one is returned, honoring eligibility (fuel type) and weight.
+  const partners = [
+    partner({ id: "gas-card", category: "fuel-card", fuel_type: ["gas"], weight: 99, discount_range: validRange }),
+    partner({ id: "diesel-card", category: "fuel-card", fuel_type: ["diesel"], weight: 10, discount_range: { ...validRange, low: 0.2 } }),
+  ];
+  const forDiesel = savingsRange(partners, { equipment: "hot-shot", fuelType: "diesel" });
+  assert.equal(forDiesel.partner.id, "diesel-card");
+  assert.equal(forDiesel.low, 0.2);
+  assert.equal(forDiesel.source, validRange.source);
+});
+
 test("shipped partners.json parses, matches the schema, and every entry starts INACTIVE with no url", async () => {
   const raw = await readFile(new URL("../dist/partners.json", import.meta.url), "utf8");
   const data = JSON.parse(raw);
   assert.ok(Array.isArray(data.partners) && data.partners.length >= 3);
-
-  // Advertised-claim data lives HERE (not hardcoded in calculator code), with
-  // a source and verification date so changing offers are data updates only.
-  const discount = data.claims?.fuel_card_advertised_discount;
-  assert.ok(discount, "claims.fuel_card_advertised_discount missing");
-  assert.ok(Number(discount.low) > 0 && Number(discount.high) > Number(discount.low));
-  assert.ok(discount.source && discount.source.length > 5, "claim needs a source");
-  assert.match(String(discount.verified_date), /^\d{4}-\d{2}-\d{2}$/, "claim needs a verification date");
+  assert.equal("claims" in data, false, "generic claims block must not exist; ranges are per-partner");
 
   // Every partner's payout is metadata with a verification date, never a promise.
   for (const p of data.partners) {
     assert.ok(p.payout_advertised, `${p.id} missing payout_advertised`);
     assert.match(String(p.payout_verified_date), /^\d{4}-\d{2}-\d{2}$/, `${p.id} missing payout_verified_date`);
+    // Until written partner terms exist, no shipped partner may carry a range.
+    assert.equal("discount_range" in p, false, `${p.id} must not ship a discount_range without written terms`);
   }
+  // Therefore no savings claim can render from the shipped registry.
+  assert.equal(savingsRange(data.partners, { equipment: "hot-shot", fuelType: "diesel" }), null);
   const ids = new Set();
   for (const p of data.partners) {
     assert.ok(p.id && !ids.has(p.id));

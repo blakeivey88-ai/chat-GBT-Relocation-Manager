@@ -27,17 +27,19 @@ test("a driver's URL-provided MPG always beats the equipment preset (order of pr
   assert.ok(equipmentIdx < numericIdx, "equipment prefill must run before numeric prefills");
 });
 
-test("margin is described and computed as TRUE margin, and claims come from partners.json", () => {
+test("margin is described and computed as TRUE margin, and savings come only from a qualifying partner", () => {
   assert.match(page, /True margin, not markup/i);
-  assert.match(page, /fuel_card_advertised_discount/); // savings range read from fetched claims
-  assert.doesNotMatch(page, /FUEL_CARD_ADVERTISED_RANGE/); // no hardcoded claim import
+  assert.match(page, /savingsRange\(partnerData\?\.partners/); // range from an active eligible partner's own data
+  assert.doesNotMatch(page, /FUEL_CARD_ADVERTISED_RANGE/); // no hardcoded claim constant
+  assert.doesNotMatch(page, /fuel_card_advertised_discount/); // no generic claims block either
+  assert.doesNotMatch(page, /\$0\.10|\$0\.25/); // no hardcoded discount figures anywhere in the page
 });
 
 test("honesty guardrails are present in the page copy", () => {
   // MPG prefill labeled as an average to replace with the real number.
   assert.match(page, /replace it with your truck's real number/i);
-  // Savings line wording is advertised-and-varies, never a promise.
-  assert.match(page, /advertised ranges — actual discounts vary/i);
+  // Savings line wording cites the partner's own dated range, never a promise.
+  assert.match(page, /their advertised range as of .*actual discounts vary/i);
   // Plausibility nudge thresholds exist in the script.
   assert.match(page, /1\.15–\$1\.45/);
   // Partner slot ships hidden and discloses commission.

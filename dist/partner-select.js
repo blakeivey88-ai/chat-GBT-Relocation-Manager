@@ -32,6 +32,27 @@ export function selectPartner(partners, ctx = {}) {
   return { primary: matches[0] || null, matches };
 }
 
+// A savings estimate may be shown ONLY when an ACTIVE, eligible fuel-card
+// partner supplies its own advertised discount range, backed by a direct
+// https source URL and a verification date. No qualifying partner -> null,
+// and the page shows no savings line at all. We never advertise a generic
+// benefit that no live partner actually offers.
+export function savingsRange(partners, ctx = {}) {
+  const candidates = eligiblePartners(partners, ctx).filter((p) => p.category === "fuel-card");
+  candidates.sort((a, b) => (Number(b.weight) || 0) - (Number(a.weight) || 0) || String(a.id).localeCompare(String(b.id)));
+  for (const p of candidates) {
+    const r = p.discount_range;
+    if (!r) continue;
+    const low = Number(r.low);
+    const high = Number(r.high);
+    if (!(low > 0 && high > low)) continue;
+    if (typeof r.source !== "string" || !/^https:\/\/\S+$/.test(r.source)) continue;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(String(r.verified_date || ""))) continue;
+    return { low, high, source: r.source, verified_date: r.verified_date, partner: p };
+  }
+  return null;
+}
+
 if (typeof window !== "undefined") {
-  window.RMPartnerSelect = { eligiblePartners, selectPartner };
+  window.RMPartnerSelect = { eligiblePartners, selectPartner, savingsRange };
 }
