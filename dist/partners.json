@@ -1,5 +1,15 @@
 {
-  "comment": "Partner offer registry. DATA ONLY - Blake adds referral URLs from approved affiliate programs and flips active:true; no code change needed. A partner renders ONLY when active is true AND url is a real https referral link. Categories: factoring | fuel-card | insurance | eld | tax. equipment/fuel_type: ['all'] or specific equipment ids from rate-calc-core presets.",
+  "comment": "Partner offer registry + advertised-claim data. DATA ONLY - update offers, payouts, and claim ranges here without touching calculator code. A partner renders ONLY when active is true AND url is a real https referral link. payout_* fields are informational metadata (advertised terms, with source and verification date), never shown as promises. Categories: factoring | fuel-card | insurance | eld | tax.",
+  "claims": {
+    "fuel_card_advertised_discount": {
+      "low": 0.1,
+      "high": 0.25,
+      "unit": "usd_per_gallon",
+      "source": "Industry marketing ranges cited by factoring/fuel-card providers (e.g. factorfinders.com freight-fuel-advance pages)",
+      "verified_date": "2026-08-06",
+      "note": "Advertised ranges vary by program, location, and volume; shown to users only as an illustration labeled as such."
+    }
+  },
   "partners": [
     {
       "id": "uc-factors",
@@ -11,7 +21,11 @@
       "disclosure_label": "Partner offer",
       "url": "",
       "weight": 90,
-      "active": false
+      "active": false,
+      "payout_advertised": "$250-$1,000 per funded referral, or 10% of earnings for the life of the account (broker option)",
+      "payout_source": "https://www.ucfactors.com/factoring-referral-programs",
+      "payout_verified_date": "2026-08-07",
+      "notes": "Priority application per Codex review."
     },
     {
       "id": "porter-freight-funding",
@@ -23,7 +37,11 @@
       "disclosure_label": "Partner offer",
       "url": "",
       "weight": 80,
-      "active": false
+      "active": false,
+      "payout_advertised": "$300 per funded referral",
+      "payout_source": "https://porterfreightfunding.com/freight-factoring-referral-program/",
+      "payout_verified_date": "2026-08-07",
+      "notes": "Priority application per Codex review."
     },
     {
       "id": "summar-financial",
@@ -35,7 +53,11 @@
       "disclosure_label": "Partner offer",
       "url": "",
       "weight": 70,
-      "active": false
+      "active": false,
+      "payout_advertised": "10% recurring commission (advertised; earlier 10-15% range was not dependable)",
+      "payout_source": "https://summar.com/freight-referrals/",
+      "payout_verified_date": "2026-08-07",
+      "notes": "Priority application per Codex review."
     },
     {
       "id": "rts-fuel-card",
@@ -47,7 +69,11 @@
       "disclosure_label": "Partner offer",
       "url": "",
       "weight": 90,
-      "active": false
+      "active": false,
+      "payout_advertised": "Agent program with monthly commissions; amount not publicly stated",
+      "payout_source": "https://rtsinc.com/resources/referral-program",
+      "payout_verified_date": "2026-08-07",
+      "notes": "Priority application per Codex review; confirm commission amount in the agent agreement."
     },
     {
       "id": "atob-fuel-card",
@@ -59,7 +85,11 @@
       "disclosure_label": "Partner offer",
       "url": "",
       "weight": 80,
-      "active": false
+      "active": false,
+      "payout_advertised": "Unverified: the advertised $250 is a bonus for the referred applicant, not a confirmed affiliate payment to the referrer",
+      "payout_source": "https://go.atob.com/referrals",
+      "payout_verified_date": "2026-08-07",
+      "notes": "HOLD per Codex review: do not activate until written partner terms and a genuine tracking link are received."
     },
     {
       "id": "mudflap",
@@ -71,7 +101,11 @@
       "disclosure_label": "Partner offer",
       "url": "",
       "weight": 70,
-      "active": false
+      "active": false,
+      "payout_advertised": "Unverified: consumer referral credits (~$10 fuel credit) reported by third parties; no written partner terms",
+      "payout_source": "",
+      "payout_verified_date": "2026-08-07",
+      "notes": "HOLD per Codex review: do not activate until written partner terms and a genuine tracking link are received."
     }
   ]
 }

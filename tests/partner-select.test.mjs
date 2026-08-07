@@ -56,6 +56,20 @@ test("shipped partners.json parses, matches the schema, and every entry starts I
   const raw = await readFile(new URL("../dist/partners.json", import.meta.url), "utf8");
   const data = JSON.parse(raw);
   assert.ok(Array.isArray(data.partners) && data.partners.length >= 3);
+
+  // Advertised-claim data lives HERE (not hardcoded in calculator code), with
+  // a source and verification date so changing offers are data updates only.
+  const discount = data.claims?.fuel_card_advertised_discount;
+  assert.ok(discount, "claims.fuel_card_advertised_discount missing");
+  assert.ok(Number(discount.low) > 0 && Number(discount.high) > Number(discount.low));
+  assert.ok(discount.source && discount.source.length > 5, "claim needs a source");
+  assert.match(String(discount.verified_date), /^\d{4}-\d{2}-\d{2}$/, "claim needs a verification date");
+
+  // Every partner's payout is metadata with a verification date, never a promise.
+  for (const p of data.partners) {
+    assert.ok(p.payout_advertised, `${p.id} missing payout_advertised`);
+    assert.match(String(p.payout_verified_date), /^\d{4}-\d{2}-\d{2}$/, `${p.id} missing payout_verified_date`);
+  }
   const ids = new Set();
   for (const p of data.partners) {
     assert.ok(p.id && !ids.has(p.id));

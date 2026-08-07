@@ -48,7 +48,7 @@
             <label>Tolls for this trip ($)<input name="tolls" type="number" min="0" step="0.01" inputmode="decimal" placeholder="35" /></label>
             <label>Other trip expenses ($)<input name="extras" type="number" min="0" step="0.01" inputmode="decimal" placeholder="50" /><small class="muted">Lumpers, detention, parking, permits, extra labor.</small></label>
             <label>Fixed operating cost ($ / mile)<input name="fixedPerMile" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0.75" /><small class="muted">Truck payment, insurance, maintenance reserve, tires — plus the ones most people forget: health insurance, your own pay, and downtime between loads. Skip if you only want fuel-based numbers.</small></label>
-            <label>Desired profit margin (%)<input name="margin" type="number" min="0" max="95" step="1" inputmode="numeric" placeholder="20" /></label>
+            <label>Desired profit margin (%)<input name="margin" type="number" min="0" max="95" step="1" inputmode="numeric" placeholder="20" /><small class="muted">True margin, not markup: at 20%, twenty percent of the target rate is profit. (Markup math would quietly give you only 16.7%.)</small></label>
             <label>Offered rate ($) — optional<input name="offered" type="number" min="0" step="0.01" inputmode="decimal" placeholder="1250" /><small class="muted">Enter a rate you were offered to see the profit or loss on it.</small></label>
           </div>
           <button class="btn btn-primary btn-block" type="submit">Calculate my rate</button>
@@ -78,7 +78,7 @@
         </aside>
       </div></section>
       <section class="section"><div class="container content-narrow prose">
-        <article class="card"><h2>How the math works</h2><p>Fuel cost = total miles ÷ your MPG × your fuel price, plus fuel your engine burns idling and fuel a reefer unit burns keeping the trailer cold — both are real gallons that per-mile math silently skips. Your break-even is fuel plus tolls, trip expenses, and your fixed cost per mile across every mile you'll drive — including deadhead, because the empty miles cost the same fuel. The target rate adds your chosen profit margin on top. If an offered rate is below break-even, you are paying to work.</p></article>
+        <article class="card"><h2>How the math works</h2><p>Fuel cost = total miles ÷ your MPG × your fuel price, plus fuel your engine burns idling and fuel a reefer unit burns keeping the trailer cold — both are real gallons that per-mile math silently skips. Your break-even is fuel plus tolls, trip expenses, and your fixed cost per mile across every mile you'll drive — including deadhead, because the empty miles cost the same fuel. The target rate builds in a <em>true</em> profit margin — at 20%, twenty percent of the final rate is profit (cost ÷ 0.80), not the weaker "cost + 20%" markup that only nets 16.7%. If an offered rate is below break-even, you are paying to work.</p></article>
 
         <article class="card"><h2>Common questions about rate per mile</h2>
           <h3>What should I charge per mile?</h3>
@@ -147,8 +147,8 @@
     </script>
     <footer class="site-footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><a class="brand" href="/" style="color:#fff"><span class="brand-mark">🦅</span><span>Relocation <strong>Manager USA</strong></span></a></div><nav class="footer-col"><strong>Marketplace</strong><a href="/pricing.html">Pricing</a><a href="/signup.html?plan=shipper">Post a Pickup</a><a href="/signup.html?plan=driver">Find Loads</a><a href="/carrier-profile.html">Carrier Profile</a></nav><nav class="footer-col"><strong>Trust</strong><a href="/safety.html">Safety</a><a href="/support.html">Support</a><a href="/knowledge/index.html">Knowledge</a></nav><nav class="footer-col"><strong>Legal</strong><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a><a href="/cancellation.html">Cancellation</a></nav></div><div class="footer-bottom"><span>© <span data-year>2026</span> Relocation Manager USA</span></div></div></footer>
     <script type="module">
-      import { EQUIPMENT_PRESETS, calcTrip, FUEL_CARD_ADVERTISED_RANGE } from "/rate-calc-core.js?v=20260807-1";
-      import { selectPartner } from "/partner-select.js?v=20260807-1";
+      import { EQUIPMENT_PRESETS, calcTrip } from "/rate-calc-core.js?v=20260807-2";
+      import { selectPartner } from "/partner-select.js?v=20260807-2";
 
       const form = document.getElementById("calcForm");
       const equipmentSelect = document.getElementById("equipmentSelect");
@@ -173,17 +173,20 @@
       });
 
       // Prefill from links (e.g. the AI Dispatch Assistant hands off a load here).
+      // ORDER MATTERS: apply the equipment preset FIRST, then the explicit URL
+      // numbers — so a link carrying both equipment and the driver's real MPG
+      // keeps the driver's number. Their number always wins over our average.
       const prefill = new URLSearchParams(location.search);
-      const prefillMap = { loaded: "loadedMiles", deadhead: "deadheadMiles", mpg: "mpg", fuel: "fuelPrice", tolls: "tolls", extras: "extras", fixed: "fixedPerMile", margin: "margin", offered: "offered", reefer: "reeferHours", idle: "idleHours" };
-      Object.entries(prefillMap).forEach(([param, field]) => {
-        const value = Number(prefill.get(param));
-        if (Number.isFinite(value) && value > 0 && form.elements[field]) form.elements[field].value = value;
-      });
       const prefillEquipment = String(prefill.get("equipment") || "");
       if (prefillEquipment && EQUIPMENT_PRESETS.some((item) => item.id === prefillEquipment)) {
         equipmentSelect.value = prefillEquipment;
         equipmentSelect.dispatchEvent(new Event("change"));
       }
+      const prefillMap = { loaded: "loadedMiles", deadhead: "deadheadMiles", mpg: "mpg", fuel: "fuelPrice", tolls: "tolls", extras: "extras", fixed: "fixedPerMile", margin: "margin", offered: "offered", reefer: "reeferHours", idle: "idleHours" };
+      Object.entries(prefillMap).forEach(([param, field]) => {
+        const value = Number(prefill.get(param));
+        if (Number.isFinite(value) && value > 0 && form.elements[field]) form.elements[field].value = value;
+      });
 
       const money = (value) => "$" + value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       const num = (name) => {
@@ -276,11 +279,17 @@
           sanity.hidden = true;
         }
 
-        // Illustrative fuel-card savings, labeled as advertised-and-varies.
+        // Illustrative fuel-card savings — the range comes from partners.json
+        // claims data (with source + verification date), never hardcoded here.
+        // No fetched claim data means no savings line: no data, no claim.
         const savings = document.getElementById("cardSavings");
-        if (result.totalGal > 0) {
+        const discount = partnerData?.claims?.fuel_card_advertised_discount;
+        const rangeOk = discount && Number(discount.low) > 0 && Number(discount.high) > Number(discount.low);
+        if (result.totalGal > 0 && rangeOk) {
+          const low = Number(discount.low);
+          const high = Number(discount.high);
           savings.hidden = false;
-          savings.textContent = `This trip burns about ${result.totalGal.toFixed(1)} gallons. If a fuel card saved you $${FUEL_CARD_ADVERTISED_RANGE.low.toFixed(2)}–$${FUEL_CARD_ADVERTISED_RANGE.high.toFixed(2)}/gal (advertised ranges — actual discounts vary by program and location), that's roughly ${money(result.cardSavingsLow)}–${money(result.cardSavingsHigh)} back on fuel.`;
+          savings.textContent = `This trip burns about ${result.totalGal.toFixed(1)} gallons. If a fuel card saved you $${low.toFixed(2)}–$${high.toFixed(2)}/gal (advertised ranges — actual discounts vary by program and location), that's roughly ${money(result.totalGal * low)}–${money(result.totalGal * high)} back on fuel.`;
         } else {
           savings.hidden = true;
         }

@@ -17,6 +17,22 @@ test("new inputs exist: equipment, fuel type, reefer hours, idle hours", () => {
   }
 });
 
+test("a driver's URL-provided MPG always beats the equipment preset (order of prefills)", () => {
+  // The equipment prefill (which overwrites MPG with an average) must run
+  // BEFORE the explicit numeric URL prefills, so ?equipment=...&mpg=REAL keeps
+  // the driver's real number.
+  const equipmentIdx = page.indexOf("prefillEquipment");
+  const numericIdx = page.indexOf("Object.entries(prefillMap)");
+  assert.ok(equipmentIdx > 0 && numericIdx > 0);
+  assert.ok(equipmentIdx < numericIdx, "equipment prefill must run before numeric prefills");
+});
+
+test("margin is described and computed as TRUE margin, and claims come from partners.json", () => {
+  assert.match(page, /True margin, not markup/i);
+  assert.match(page, /fuel_card_advertised_discount/); // savings range read from fetched claims
+  assert.doesNotMatch(page, /FUEL_CARD_ADVERTISED_RANGE/); // no hardcoded claim import
+});
+
 test("honesty guardrails are present in the page copy", () => {
   // MPG prefill labeled as an average to replace with the real number.
   assert.match(page, /replace it with your truck's real number/i);

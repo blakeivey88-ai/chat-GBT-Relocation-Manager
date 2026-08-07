@@ -24,10 +24,6 @@ export const EQUIPMENT_PRESETS = [
 export const DEFAULT_REEFER_GAL_PER_HR = 0.85;
 export const DEFAULT_IDLE_GAL_PER_HR = 0.8;
 
-// Advertised fuel-card discount range used ONLY for an illustrative savings
-// line, always labeled as advertised-and-varies, never a promise.
-export const FUEL_CARD_ADVERTISED_RANGE = { low: 0.1, high: 0.25 };
-
 function positive(value) {
   const n = Number(value);
   return Number.isFinite(n) && n > 0 ? n : 0;
@@ -53,14 +49,15 @@ export function calcTrip(input = {}) {
   const fixed = positive(input.fixedPerMile) * totalMiles;
   const breakEven = fuelCost + reeferCost + idleCost + extras + fixed;
 
+  // TRUE profit margin, not markup: at a 20% margin, 20% of the final rate is
+  // profit (target = cost / (1 - margin)). Markup (cost * 1.2) only yields a
+  // 16.7% margin — a classic trucking-pricing confusion this tool must not
+  // repeat. Clamped at 95% so the divisor stays positive.
   const margin = Math.min(positive(input.marginPct), 95) / 100;
-  const target = breakEven * (1 + margin);
+  const target = breakEven / (1 - margin);
 
   const offered = positive(input.offered);
   const offeredDiff = offered > 0 ? offered - breakEven : null;
-
-  const cardLow = totalGal * FUEL_CARD_ADVERTISED_RANGE.low;
-  const cardHigh = totalGal * FUEL_CARD_ADVERTISED_RANGE.high;
 
   return {
     totalMiles,
@@ -79,11 +76,9 @@ export function calcTrip(input = {}) {
     targetProfit: target - breakEven,
     offered,
     offeredDiff,
-    cardSavingsLow: cardLow,
-    cardSavingsHigh: cardHigh,
   };
 }
 
 if (typeof window !== "undefined") {
-  window.RMRateCalcCore = { EQUIPMENT_PRESETS, DEFAULT_REEFER_GAL_PER_HR, DEFAULT_IDLE_GAL_PER_HR, FUEL_CARD_ADVERTISED_RANGE, calcTrip };
+  window.RMRateCalcCore = { EQUIPMENT_PRESETS, DEFAULT_REEFER_GAL_PER_HR, DEFAULT_IDLE_GAL_PER_HR, calcTrip };
 }

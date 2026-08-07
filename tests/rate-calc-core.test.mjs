@@ -5,7 +5,6 @@ import {
   EQUIPMENT_PRESETS,
   DEFAULT_REEFER_GAL_PER_HR,
   DEFAULT_IDLE_GAL_PER_HR,
-  FUEL_CARD_ADVERTISED_RANGE,
   calcTrip,
 } from "../dist/rate-calc-core.js";
 
@@ -19,8 +18,16 @@ test("baseline trip math matches the long-standing calculator behavior", () => {
   assert.equal(r.extras, 85);
   assert.equal(r.fixed, 360);
   assert.ok(Math.abs(r.breakEven - (r.fuelCost + 85 + 360)) < 1e-9);
-  assert.ok(Math.abs(r.target - r.breakEven * 1.2) < 1e-9);
+  assert.ok(Math.abs(r.target - r.breakEven / 0.8) < 1e-9); // TRUE 20% margin
   assert.ok(Math.abs(r.cpmLoaded - r.breakEven / 420) < 1e-9);
+});
+
+test("margin is a TRUE margin, not markup: $100 of cost at 20% targets $125, and profit is 20% of the rate", () => {
+  // Codex's review example: markup math would say $120 (only a 16.7% margin).
+  const r = calcTrip({ loadedMiles: 100, mpg: 4, fuelPrice: 4, marginPct: 20 }); // fuel = 100/4*4 = $100 cost
+  assert.ok(Math.abs(r.breakEven - 100) < 1e-9);
+  assert.ok(Math.abs(r.target - 125) < 1e-9);
+  assert.ok(Math.abs(r.targetProfit / r.target - 0.2) < 1e-9); // 20% of the final rate is profit
 });
 
 test("reefer and idle fuel are added as their own gallons, not per-mile guesses", () => {
@@ -36,11 +43,12 @@ test("reefer and idle fuel are added as their own gallons, not per-mile guesses"
   assert.ok(Math.abs(custom.reeferGal - 11) < 1e-9);
 });
 
-test("offered-rate result and margin clamp behave like the live page", () => {
+test("offered-rate result works and the margin clamps at 95% (divisor stays positive)", () => {
   const r = calcTrip({ loadedMiles: 100, mpg: 10, fuelPrice: 4, offered: 30, marginPct: 500 });
   assert.equal(r.offered, 30);
   assert.ok(Math.abs(r.offeredDiff - (30 - r.breakEven)) < 1e-9);
-  assert.ok(Math.abs(r.target - r.breakEven * 1.95) < 1e-9); // clamped at 95%
+  assert.ok(Math.abs(r.target - r.breakEven / 0.05) < 1e-9); // clamped at 95% true margin
+  assert.ok(Number.isFinite(r.target) && r.target > 0);
 });
 
 test("invalid or zero core inputs return null instead of fake numbers", () => {
@@ -50,11 +58,11 @@ test("invalid or zero core inputs return null instead of fake numbers", () => {
   assert.equal(calcTrip({}), null);
 });
 
-test("fuel-card savings line uses the advertised range on total gallons", () => {
+test("core exposes gallons but no hardcoded marketing claims — claim ranges live in partners.json", () => {
   const r = calcTrip({ loadedMiles: 100, mpg: 10, fuelPrice: 4, idleHours: 0 });
-  assert.ok(Math.abs(r.cardSavingsLow - r.totalGal * FUEL_CARD_ADVERTISED_RANGE.low) < 1e-9);
-  assert.ok(Math.abs(r.cardSavingsHigh - r.totalGal * FUEL_CARD_ADVERTISED_RANGE.high) < 1e-9);
-  assert.ok(FUEL_CARD_ADVERTISED_RANGE.low < FUEL_CARD_ADVERTISED_RANGE.high);
+  assert.ok(r.totalGal > 0);
+  assert.equal("cardSavingsLow" in r, false);
+  assert.equal("cardSavingsHigh" in r, false);
 });
 
 test("equipment presets are well-formed, cover the small-equipment niche, and stay editable defaults", () => {
