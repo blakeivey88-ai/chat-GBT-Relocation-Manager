@@ -562,8 +562,36 @@
       const adminDestination = document.getElementById("adminDestination");
       const useAnotherAccount = document.getElementById("useAnotherAccount");
       let csrfToken = "";
+      let csrfSeedPromise = null;
       const rememberKey = "relocation_manager_signin_email";
       const emailFromQuery = String(params.get("email") || "").trim();
+      const memberScreenHashes = new Set([
+        "ai-agents",
+        "alerts",
+        "billing",
+        "bulletin",
+        "bulletin-form",
+        "carrier-verification",
+        "communication",
+        "dashboard",
+        "dispatch",
+        "fraud",
+        "hardships",
+        "loads",
+        "post",
+        "profile",
+        "ratings",
+        "request-form",
+        "requests",
+        "rewards",
+        "roadmap",
+        "safety",
+        "tiers",
+        "trust",
+        "trusted-partners",
+        "verification-guide",
+        "workbench",
+      ]);
 
       function showStatus(message, tone = "info") {
         if (!statusBox) return;
@@ -623,6 +651,19 @@
           if (/^\/admin(\.html)?(\/|$)/i.test(next.pathname)) return "";
           if (/^\/(signin|sign-in|login)(\.html)?$/i.test(next.pathname))
             return "";
+          if (/^\/member(?:\.html)?\/?$/i.test(next.pathname)) {
+            for (const key of [...next.searchParams.keys()]) {
+              if (key.toLowerCase() === "preview")
+                next.searchParams.delete(key);
+            }
+            const requestedHash = decodeURIComponent(
+              next.hash.slice(1),
+            ).toLowerCase();
+            next.pathname = "/member.html";
+            next.hash = memberScreenHashes.has(requestedHash)
+              ? requestedHash
+              : "profile";
+          }
           return `${next.pathname}${next.search}${next.hash}`;
         } catch {
           return "";
@@ -676,13 +717,23 @@
         location.replace("/member.html#profile");
       }
 
-      async function seedCsrfToken() {
-        const response = await fetch("/api/account", {
-          credentials: "include",
+      function seedCsrfToken({ force = false } = {}) {
+        if (!force && csrfToken)
+          return Promise.resolve({ csrfToken });
+        if (!force && csrfSeedPromise) return csrfSeedPromise;
+
+        const request = (async () => {
+          const response = await fetch("/api/account", {
+            credentials: "include",
+          });
+          const data = await response.json();
+          if (data?.csrfToken) csrfToken = String(data.csrfToken || "");
+          return data;
+        })();
+        csrfSeedPromise = request;
+        return request.finally(() => {
+          if (csrfSeedPromise === request) csrfSeedPromise = null;
         });
-        const data = await response.json();
-        if (data?.csrfToken) csrfToken = String(data.csrfToken || "");
-        return data;
       }
 
       async function readCurrentAccount() {
@@ -700,9 +751,8 @@
       }
 
       async function loginAccount(email, secret) {
-        // Refresh the browser/server security handshake immediately before
-        // every login. This avoids stale tokens left behind by password-reset
-        // pages or another open Relocation Manager tab.
+        // Reuse the page's security handshake when it is already available or
+        // still in flight. A rejected token still receives one fresh retry.
         await seedCsrfToken();
         if (!csrfToken) {
           throw {
@@ -732,7 +782,7 @@
         let data = await response.json().catch(() => ({}));
         if (data?.csrfToken) csrfToken = String(data.csrfToken || "");
         if (response.status === 403) {
-          await seedCsrfToken();
+          await seedCsrfToken({ force: true });
           response = await sendLogin();
           data = await response.json().catch(() => ({}));
           if (data?.csrfToken) csrfToken = String(data.csrfToken || "");
@@ -818,7 +868,6 @@
             "Welcome back to Relocation Manager USA. Redirecting you now…",
           );
           if (passwordInput) passwordInput.value = "";
-          await new Promise((resolve) => setTimeout(resolve, 350));
           goNext(data);
         } catch (err) {
           const serverMessage = String(err?.error || "").trim();

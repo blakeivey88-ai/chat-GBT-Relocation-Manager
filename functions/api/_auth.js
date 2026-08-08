@@ -280,6 +280,57 @@ function safeInternalRedirectTarget(value = "") {
   }
 }
 
+const MEMBER_SCREEN_HASHES = new Set([
+  "ai-agents",
+  "alerts",
+  "billing",
+  "bulletin",
+  "bulletin-form",
+  "carrier-verification",
+  "communication",
+  "dashboard",
+  "dispatch",
+  "fraud",
+  "hardships",
+  "loads",
+  "post",
+  "profile",
+  "ratings",
+  "request-form",
+  "requests",
+  "rewards",
+  "roadmap",
+  "safety",
+  "tiers",
+  "trust",
+  "trusted-partners",
+  "verification-guide",
+  "workbench",
+]);
+
+function normalizeMemberRedirectTarget(value = "") {
+  const safeRedirect = safeInternalRedirectTarget(value);
+  if (!safeRedirect) return "";
+  const next = new URL(safeRedirect, "https://relocationmanagerusa.invalid");
+  if (!/^\/member(?:\.html)?\/?$/i.test(next.pathname)) return safeRedirect;
+
+  for (const key of [...next.searchParams.keys()]) {
+    if (key.toLowerCase() === "preview") next.searchParams.delete(key);
+  }
+  let requestedHash = "";
+  try {
+    requestedHash = decodeURIComponent(next.hash.slice(1)).toLowerCase();
+  } catch {
+    requestedHash = "";
+  }
+  const memberHash = MEMBER_SCREEN_HASHES.has(requestedHash)
+    ? requestedHash
+    : "profile";
+  next.pathname = "/member.html";
+  next.hash = memberHash;
+  return `${next.pathname}${next.search}${next.hash}`;
+}
+
 export function authRedirectPath(account, { redirectTarget = "" } = {}) {
   const normalized = ensureAccountShape(account || {}, account || {});
   if (!normalized.userId) return "/signin";
@@ -287,7 +338,7 @@ export function authRedirectPath(account, { redirectTarget = "" } = {}) {
   const dashboard = dashboardRoute(normalized);
   if (dashboard === "admin") return "/admin.html";
   if (dashboard === "verify") return "/verify.html";
-  const safeRedirect = safeInternalRedirectTarget(redirectTarget);
+  const safeRedirect = normalizeMemberRedirectTarget(redirectTarget);
   if (dashboard === "profile-completion") return "/signup.html?mode=complete";
   if (dashboard === "billing")
     return safeRedirect

@@ -5096,13 +5096,13 @@ async function openBillingPortal() {
   if (data?.url) location.href = data.url;
   return data;
 }
-async function loadAccountState() {
+async function loadAccountState({ refreshLoads = true } = {}) {
   try {
     const data = await apiRequest("/api/account", { method: "GET" });
     if (data?.ok && data.profile) {
       mergeAccountState(data);
       accountBootstrapped = true;
-      await loadLoadCatalog(true).catch(() => {});
+      if (refreshLoads) await loadLoadCatalog(true).catch(() => {});
       return data;
     }
   } catch {}
@@ -11323,7 +11323,7 @@ function bind() {
     };
 }
 (async () => {
-  const account = await loadAccountState();
+  const account = await loadAccountState({ refreshLoads: false });
   const previewRole = requestedAdminPreviewRole();
   const accountDashboardRoute = String(
     account?.dashboardRoute || account?.memberAccess?.dashboardRoute || "",
@@ -11337,13 +11337,6 @@ function bind() {
   }
   applyCheckoutStateFromUrl();
   renderAuthExtras();
-  if (["dashboard", "bulletin-form"].includes(location.hash.slice(1))) {
-    route(location.hash.slice(1));
-  }
-  await loadLoadCatalog();
-  await loadBulletinBoard();
-  await loadCommunicationHub();
-  await loadLeaderboardPeers();
   initStats();
   initTiers();
   initVerification();
@@ -11400,6 +11393,19 @@ function bind() {
       route(hasProfileIdentity(getProfile()) ? "workbench" : "home");
     }
   }
+  const startupLoads = [
+    loadLoadCatalog(),
+    loadBulletinBoard(),
+    loadLeaderboardPeers(),
+  ];
+  if (location.hash.slice(1) !== "communication") {
+    startupLoads.push(loadCommunicationHub());
+  }
+  await Promise.allSettled(startupLoads);
+  renderRequests();
+  renderBulletinBoard();
+  renderMemberWorkbench();
+  renderLoads();
 })().catch((error) => {
   console.error("Relocation Manager startup failed.", error);
   document.body.dataset.startupError = String(error?.message || error || "Unknown startup error");
