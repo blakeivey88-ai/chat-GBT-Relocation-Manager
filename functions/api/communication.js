@@ -10,6 +10,7 @@ import {
   readAccountByUserId,
   requireEntitledAccount,
   upsertAccount,
+  validateCsrfToken,
 } from './_auth.js';
 
 const HUB_KEY = 'communication:hub';
@@ -83,11 +84,16 @@ export async function onRequestPost(context) {
 
     const account = ensureAccountShape(access.account);
     const body = await context.request.json().catch(() => ({}));
+    if (!validateCsrfToken(context.request, body)) {
+      return json({ ok: false, error: 'Session expired. Refresh the page and try again.' }, 403);
+    }
     const action = cleanString(body.action || 'send', 24).toLowerCase();
     const hub = await readHub(context.env);
 
     if (action === 'send') {
-      const result = await sendMessage(context.env, hub, account, body);
+      const securedBody = await secureLoadConversationBody(context.env, account, body);
+      if (securedBody.error) return json({ ok: false, error: securedBody.error }, 403);
+      const result = await sendMessage(context.env, hub, account, securedBody.body);
       if (result.error) return json({ ok: false, error: result.error }, 400);
       await saveHub(context.env, hub);
       return json({ ok: true, thread: result.thread, message: result.message, notifications: result.notifications || [] });
@@ -98,7 +104,9 @@ export async function onRequestPost(context) {
       if (!bookingDecision.allowed) {
         return json({ ok: false, error: bookingDecision.message || 'Load booking is available only to verified carrier accounts with an active $29.99-or-higher subscription.' }, 403);
       }
-      const thread = ensureLoadThread(hub, account, body);
+      const securedBody = await secureLoadConversationBody(context.env, account, { ...body, type: 'load' });
+      if (securedBody.error) return json({ ok: false, error: securedBody.error }, 403);
+      const thread = ensureLoadThread(hub, account, securedBody.body);
       await saveHub(context.env, hub);
       return json({ ok: true, thread });
     }
@@ -365,6 +373,59 @@ async function sendMessage(env, hub, account, body) {
   const recipients = await collectRecipients(env, account, thread, mentions);
   const notifications = await sendNotifications(env, recipients, account, thread, message, body);
   return { thread, message, notifications };
+}
+
+async function secureLoadConversationBody(env, account, body) {
+  const type = normalizeType(body.type || body.threadType || (body.action === 'ensure-load-thread' ? 'load' : 'dm'));
+  if (type !== 'load') return { body };
+  const loadId = cleanString(body.loadId || '', 120);
+  if (!loadId) return { error: 'An accepted load is required for a load conversation.' };
+  const participants = await acceptedLoadParticipants(env, loadId);
+  if (!participants.length || !participants.includes(account.userId)) {
+    return { error: 'Only the posting shipper and accepted carrier can use this load conversation.' };
+  }
+  const requested = uniqueStrings([
+    ...normalizeMembers(body.members),
+    ...normalizeMembers(body.participants),
+    ...normalizeMembers(body.approvedParticipantIds),
+  ]);
+  if (requested.some((userId) => !participants.includes(userId))) {
+    return { error: 'Load conversation participants must match the accepted booking.' };
+  }
+  return {
+    body: {
+      ...body,
+      type: 'load',
+      threadType: 'load',
+      members: participants,
+      participants,
+      approvedParticipantIds: participants,
+    },
+  };
+}
+
+async function acceptedLoadParticipants(env, loadId) {
+  try {
+    const raw = await env.RELOCATION_MANAGER_LEADS.get('marketplace:loads:v1');
+    const loads = raw ? JSON.parse(raw) : [];
+    const load = Array.isArray(loads) ? loads.find((item) => String(item?.id || '') === loadId) : null;
+    if (load && String(load.status || '').toLowerCase() === 'accepted') {
+      return uniqueStrings([load.postedByUserId, load.acceptedByUserId]);
+    }
+  } catch {
+    // D1 remains the authoritative fallback for accepted bookings.
+  }
+  if (!env?.RELOCATION_MANAGER_DB?.prepare) return [];
+  try {
+    const row = await env.RELOCATION_MANAGER_DB.prepare(
+      "SELECT posted_by_user_id, route, status FROM loads WHERE load_id = ? LIMIT 1",
+    ).bind(loadId).first();
+    if (!row || String(row.status || '').toLowerCase() !== 'accepted') return [];
+    const acceptance = JSON.parse(String(row.route || '{}'));
+    return uniqueStrings([row.posted_by_user_id, acceptance.carrierUserId]);
+  } catch {
+    return [];
+  }
 }
 
 function communityPostViolation(body = {}) {
