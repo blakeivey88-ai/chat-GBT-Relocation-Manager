@@ -30,7 +30,17 @@ const PAYMENT_BY_AMOUNT = new Map([
   [2999, { paymentStatus: 'paid_driver', planLabel: 'Independent Driver', type: 'Independent driver / self-insured - $29.99/mo' }],
   [5999, { paymentStatus: 'paid_fleet_starter', planLabel: 'Fleet Starter', type: 'Broker 1–3 trucks - $59.99/mo' }],
   [7999, { paymentStatus: 'paid_fleet_growth', planLabel: 'Fleet Growth', type: 'Broker 4–7 trucks - $79.99/mo' }],
-  [14999, { paymentStatus: 'paid_fleet_pro', planLabel: 'Fleet Pro', type: 'Broker 7–12 trucks - $149.99/mo' }],
+  [14999, { paymentStatus: 'paid_fleet_pro', planLabel: 'Fleet Pro', type: 'Broker 8–12 trucks - $149.99/mo' }],
+  [18999, { paymentStatus: 'paid_dispatcher_broker', planLabel: 'Dispatcher & Broker', type: 'Dispatcher / broker - $189.99/mo' }],
+]);
+
+const PAYMENT_BY_CHECKOUT_PLAN = new Map([
+  ['shipper', PAYMENT_BY_AMOUNT.get(999)],
+  ['driver', PAYMENT_BY_AMOUNT.get(2999)],
+  ['fleet-starter', PAYMENT_BY_AMOUNT.get(5999)],
+  ['fleet-growth', PAYMENT_BY_AMOUNT.get(7999)],
+  ['fleet-pro', PAYMENT_BY_AMOUNT.get(14999)],
+  ['dispatcher-broker', PAYMENT_BY_AMOUNT.get(18999)],
 ]);
 
 const HANDLED_EVENTS = new Set([
@@ -77,12 +87,26 @@ export async function onRequestPost(context) {
     const object = event.data?.object || {};
     const paymentInfo = paymentInfoFromEvent(event.type, object);
     const metadata = extractStripeMetadata(object);
-    const userId = await resolveUserIdFromStripe(env, object);
+    const userId = metadata.userId || await resolveUserIdFromStripe(env, object);
 
     const account = await resolveAccount(env, { userId, email: metadata.email, customerId: metadata.customerId, subscriptionId: metadata.subscriptionId });
-    if (!account && !userId) {
-      return json({ ok: true, ignored: 'unmatched-account' });
+    if (!account) {
+      const recordedAt = new Date().toISOString();
+      await recordAuditEvent(env, {
+        actionType: `stripe.${event.type}.unmatched`,
+        actorRole: 'stripe',
+        targetType: 'stripe_event',
+        targetId: event.id,
+        after: { outcome: 'unmatched' },
+        reason: 'unmatched-account',
+        meta: { eventId: event.id, eventType: event.type, customerId: metadata.customerId, subscriptionId: metadata.subscriptionId },
+        verifiedEventRef: event.id,
+        createdAt: recordedAt,
+      });
+      await env.RELOCATION_MANAGER_LEADS.put(eventKey, recordedAt);
+      return json({ ok: true, ignored: 'unmatched-account', eventId: event.id });
     }
+    const effectivePaymentInfo = preserveVerifiedCheckoutPlan(account, paymentInfo);
     const now = new Date().toISOString();
     const eventCreatedAt = Number.isFinite(Number(event.created)) ? new Date(Number(event.created) * 1000).toISOString() : now;
     if (account?.stripeLastEventCreatedAt && eventCreatedAt < account.stripeLastEventCreatedAt) {
@@ -94,31 +118,31 @@ export async function onRequestPost(context) {
       email: account?.email || metadata.email,
       name: account?.name || object.customer_details?.name || metadata.email.split('@')[0] || 'Guest',
       company: account?.company || object.customer_details?.company || '',
-      type: paymentInfo.type || account?.type || 'Independent driver / self-insured - $29.99/mo',
-      role: account?.role || roleFromType(paymentInfo.type || account?.type),
-      verification: paymentInfo.subscriptionStatus === 'active' || paymentInfo.subscriptionStatus === 'trialing' ? (account?.emailVerifiedAt ? 'Verified member' : 'Payment active') : (account?.verification || 'Not verified'),
+      type: effectivePaymentInfo.type || account?.type || 'Independent driver / self-insured - $29.99/mo',
+      role: account?.role || roleFromType(effectivePaymentInfo.type || account?.type),
+      verification: effectivePaymentInfo.subscriptionStatus === 'active' || effectivePaymentInfo.subscriptionStatus === 'trialing' ? (account?.emailVerifiedAt ? 'Verified member' : 'Payment active') : (account?.verification || 'Not verified'),
       note: account?.note || 'Payment synced from Stripe checkout.',
-      paymentStatus: paymentInfo.paymentStatus || normalizePaidStatusFromPlan(paymentInfo),
-      subscriptionStatus: paymentInfo.subscriptionStatus || normalizeSubscriptionStatus(paymentInfo.paymentStatus),
-      paidAt: paymentInfo.paidAt || account?.paidAt || now,
-      planLabel: paymentInfo.planLabel || account?.planLabel || 'Paid plan',
-      planName: paymentInfo.planName || account?.planName || paymentInfo.planLabel || 'Paid plan',
+      paymentStatus: effectivePaymentInfo.paymentStatus || normalizePaidStatusFromPlan(effectivePaymentInfo),
+      subscriptionStatus: effectivePaymentInfo.subscriptionStatus || normalizeSubscriptionStatus(effectivePaymentInfo.paymentStatus),
+      paidAt: effectivePaymentInfo.paidAt || account?.paidAt || '',
+      planLabel: effectivePaymentInfo.planLabel || account?.planLabel || 'Paid plan',
+      planName: effectivePaymentInfo.planName || account?.planName || effectivePaymentInfo.planLabel || 'Paid plan',
       stripeCustomerId: metadata.customerId || account?.stripeCustomerId || '',
       stripeSubscriptionId: metadata.subscriptionId || account?.stripeSubscriptionId || '',
-      stripePriceId: paymentInfo.priceId || account?.stripePriceId || '',
+      stripePriceId: effectivePaymentInfo.priceId || account?.stripePriceId || '',
       stripeSessionId: object.id || account?.stripeSessionId || '',
       stripeLastEventCreatedAt: eventCreatedAt,
       stripeLastEventId: event.id || account?.stripeLastEventId || '',
       stripeLastEventType: event.type || account?.stripeLastEventType || '',
-      subscriptionCurrentPeriodEnd: paymentInfo.currentPeriodEnd || account?.subscriptionCurrentPeriodEnd || '',
-      subscriptionCanceledAt: paymentInfo.canceledAt || account?.subscriptionCanceledAt || '',
-      subscriptionCancelAtPeriodEnd: paymentInfo.cancelAtPeriodEnd ?? account?.subscriptionCancelAtPeriodEnd ?? false,
-      subscriptionGraceUntil: paymentInfo.graceUntil || account?.subscriptionGraceUntil || '',
-      subscriptionTrialAllowed: Boolean(paymentInfo.trialAllowed ?? account?.subscriptionTrialAllowed ?? false),
-      subscriptionAccess: loadAccessFromType(paymentInfo.type || account?.type, paymentInfo.paymentStatus || account?.paymentStatus),
-      loadAccess: loadAccessFromType(paymentInfo.type || account?.type, paymentInfo.paymentStatus || account?.paymentStatus),
-      truckCount: account?.truckCount || truckCountFromType(paymentInfo.type || account?.type),
-      tags: mergeTags(account?.tags, paymentTags(paymentInfo)),
+      subscriptionCurrentPeriodEnd: effectivePaymentInfo.currentPeriodEnd || account?.subscriptionCurrentPeriodEnd || '',
+      subscriptionCanceledAt: effectivePaymentInfo.canceledAt || account?.subscriptionCanceledAt || '',
+      subscriptionCancelAtPeriodEnd: effectivePaymentInfo.cancelAtPeriodEnd ?? account?.subscriptionCancelAtPeriodEnd ?? false,
+      subscriptionGraceUntil: effectivePaymentInfo.graceUntil || account?.subscriptionGraceUntil || '',
+      subscriptionTrialAllowed: Boolean(effectivePaymentInfo.trialAllowed ?? account?.subscriptionTrialAllowed ?? false),
+      subscriptionAccess: loadAccessFromType(effectivePaymentInfo.type || account?.type, effectivePaymentInfo.paymentStatus || account?.paymentStatus),
+      loadAccess: loadAccessFromType(effectivePaymentInfo.type || account?.type, effectivePaymentInfo.paymentStatus || account?.paymentStatus),
+      truckCount: account?.truckCount || truckCountFromType(effectivePaymentInfo.type || account?.type),
+      tags: mergePaymentTags(account?.tags, effectivePaymentInfo),
       recentLoads: account?.recentLoads || [],
       recentRequests: account?.recentRequests || [],
       messages: account?.messages || [],
@@ -140,7 +164,7 @@ export async function onRequestPost(context) {
       await linkStripeSubscription(env, merged.stripeSubscriptionId, merged.userId);
     }
 
-    await markLeadPaid(env, merged, object, paymentInfo);
+    await syncLeadPayment(env, merged, object, effectivePaymentInfo);
     await recordAuditEvent(env, {
       actionType: `stripe.${event.type}`,
       actorUserId: merged.userId,
@@ -193,6 +217,18 @@ export async function onRequestOptions() {
   return new Response(null, { status: 204, headers: corsHeaders() });
 }
 
+function preserveVerifiedCheckoutPlan(account, paymentInfo) {
+  const plan = PAYMENT_BY_CHECKOUT_PLAN.get(cleanString(account?.checkoutPlan || '', 80));
+  if (!plan) return paymentInfo;
+  return {
+    ...paymentInfo,
+    ...plan,
+    paymentStatus: paymentInfo.paymentStatus === 'paid' ? plan.paymentStatus : paymentInfo.paymentStatus,
+    subscriptionStatus: paymentInfo.subscriptionStatus,
+    paidAt: paymentInfo.paidAt,
+  };
+}
+
 function paymentInfoFromEvent(eventType, object) {
   if (eventType.startsWith('customer.subscription.')) {
     return subscriptionPaymentInfo(object, eventType);
@@ -234,12 +270,17 @@ function sessionPaymentInfo(session, eventType) {
     planName: cleanString(session.metadata?.plan_name || session.metadata?.plan_label || session.metadata?.plan || session.metadata?.product || 'Paid plan', 80),
     type: cleanString(session.metadata?.profile_type || session.metadata?.type || 'Independent driver / self-insured - $29.99/mo', 120),
   };
+  const paymentFailed = eventType === 'checkout.session.async_payment_failed';
+  const paymentSucceeded = eventType === 'checkout.session.async_payment_succeeded'
+    || session.payment_status === 'paid'
+    || session.payment_status === 'no_payment_required';
 
   return {
     ...base,
+    paymentStatus: paymentFailed ? 'failed' : (paymentSucceeded ? base.paymentStatus : 'pending'),
     priceId: cleanString(session.metadata?.price_id || session.metadata?.stripe_price_id || '', 120),
-    subscriptionStatus: session.payment_status === 'paid' ? 'active' : 'incomplete',
-    paidAt: new Date().toISOString(),
+    subscriptionStatus: paymentSucceeded ? 'active' : 'incomplete',
+    paidAt: paymentSucceeded ? new Date().toISOString() : '',
     currentPeriodEnd: cleanString(session.subscription?.current_period_end ? new Date(session.subscription.current_period_end * 1000).toISOString() : '', 80),
     canceledAt: '',
     cancelAtPeriodEnd: false,
@@ -293,7 +334,9 @@ function subscriptionPaymentInfo(subscription, eventType) {
 async function resolveAccount(env, { userId, email, customerId, subscriptionId }) {
   if (userId) {
     const byId = await readAccountByUserId(env, userId);
-    if (byId) return byId;
+    if (!byId) return null;
+    if (email && normalizeEmail(byId.email) !== normalizeEmail(email)) return null;
+    return byId;
   }
   if (customerId) {
     const customerUserId = await env.RELOCATION_MANAGER_LEADS.get(`stripe:customer:${cleanString(customerId, 160)}`);
@@ -316,14 +359,14 @@ async function resolveAccount(env, { userId, email, customerId, subscriptionId }
   return null;
 }
 
-async function markLeadPaid(env, account, session, paymentInfo) {
+async function syncLeadPayment(env, account, session, paymentInfo) {
   const email = normalizeEmail(account.email || session.customer_details?.email || session.customer_email || session.metadata?.email || session.client_reference_id);
   if (!email) return;
   const indexKey = `lead:email:${email}`;
   const leadId = await env.RELOCATION_MANAGER_LEADS.get(indexKey);
   const leadRaw = leadId ? await env.RELOCATION_MANAGER_LEADS.get(leadId) : null;
   const lead = leadRaw ? JSON.parse(leadRaw) : null;
-  const tags = mergeTags(lead?.tags, paymentTags(paymentInfo)).filter((tag) => tag !== 'new-lead');
+  const tags = mergePaymentTags(lead?.tags, paymentInfo);
   const updated = {
     ...(lead || createShellLead(email, paymentInfo, session)),
     payment_status: paymentInfo.paymentStatus,
@@ -331,7 +374,7 @@ async function markLeadPaid(env, account, session, paymentInfo) {
     stripe_customer_id: account.stripeCustomerId || session.customer || lead?.stripe_customer_id || '',
     stripe_session_id: account.stripeSessionId || session.id || lead?.stripe_session_id || '',
     stripe_subscription_id: account.stripeSubscriptionId || session.subscription || lead?.stripe_subscription_id || '',
-    paid_at: new Date().toISOString(),
+    paid_at: paymentInfo.paidAt || lead?.paid_at || '',
     tags,
     user_id: account.userId,
   };
@@ -347,6 +390,7 @@ async function markLeadPaid(env, account, session, paymentInfo) {
 
 function createShellLead(email, paymentInfo, session) {
   const now = new Date().toISOString();
+  const paymentSucceeded = isSuccessfulPaymentStatus(paymentInfo.paymentStatus);
   return {
     id: `lead:${now}-${crypto.randomUUID()}`,
     name: session.customer_details?.name || email.split('@')[0],
@@ -359,22 +403,46 @@ function createShellLead(email, paymentInfo, session) {
     preferred_lane: '',
     min_rate: '',
     instagram: '',
-    notes: 'Created from Stripe payment success.',
+    notes: paymentSucceeded ? 'Created from Stripe payment success.' : 'Created from a Stripe payment attempt.',
     consent: true,
     created_at: now,
     updated_at: now,
     source: 'stripe-checkout',
-    verification_status: 'paid',
+    verification_status: paymentSucceeded ? 'paid' : `payment_${paymentInfo.paymentStatus || 'pending'}`,
     payment_status: paymentInfo.paymentStatus,
     payment_plan: paymentInfo.planLabel,
     submission_count: 1,
     consent_to_communications: true,
-    tags: dedupeTags(['new-lead', 'payment-success', ...paymentTags(paymentInfo)]),
+    tags: mergePaymentTags(['new-lead'], paymentInfo),
   };
 }
 
 function mergeTags(existing, additions) {
   return dedupeTags([...(Array.isArray(existing) ? existing : []), ...(additions || [])]);
+}
+
+function mergePaymentTags(existing, paymentInfo) {
+  const current = Array.isArray(existing) ? existing : [];
+  const status = String(paymentInfo.paymentStatus || '').trim().toLowerCase();
+  if (!isSuccessfulPaymentStatus(status)) {
+    const paidTags = new Set(['paid-member', 'payment-success', ...paymentTags(paymentInfo)]);
+    const needsAttention = ['failed', 'past_due', 'unpaid', 'incomplete', 'incomplete_expired'].includes(status);
+    return dedupeTags([
+      ...current.filter((tag) => !paidTags.has(tag) && !String(tag).startsWith('payment-') && tag !== 'billing-attention'),
+      `payment-${(status || 'pending').replace(/_/g, '-')}`,
+      ...(needsAttention ? ['billing-attention'] : []),
+    ]);
+  }
+  return dedupeTags([
+    ...current.filter((tag) => !String(tag).startsWith('payment-') && tag !== 'billing-attention' && tag !== 'new-lead'),
+    'payment-success',
+    ...paymentTags(paymentInfo),
+  ]);
+}
+
+function isSuccessfulPaymentStatus(status) {
+  const normalized = String(status || '').trim().toLowerCase();
+  return normalized === 'paid' || normalized.startsWith('paid_');
 }
 
 function stripeEventKey(eventId) {

@@ -280,6 +280,57 @@ function safeInternalRedirectTarget(value = "") {
   }
 }
 
+const MEMBER_SCREEN_HASHES = new Set([
+  "ai-agents",
+  "alerts",
+  "billing",
+  "bulletin",
+  "bulletin-form",
+  "carrier-verification",
+  "communication",
+  "dashboard",
+  "dispatch",
+  "fraud",
+  "hardships",
+  "loads",
+  "post",
+  "profile",
+  "ratings",
+  "request-form",
+  "requests",
+  "rewards",
+  "roadmap",
+  "safety",
+  "tiers",
+  "trust",
+  "trusted-partners",
+  "verification-guide",
+  "workbench",
+]);
+
+function normalizeMemberRedirectTarget(value = "") {
+  const safeRedirect = safeInternalRedirectTarget(value);
+  if (!safeRedirect) return "";
+  const next = new URL(safeRedirect, "https://relocationmanagerusa.invalid");
+  if (!/^\/member(?:\.html)?\/?$/i.test(next.pathname)) return safeRedirect;
+
+  for (const key of [...next.searchParams.keys()]) {
+    if (key.toLowerCase() === "preview") next.searchParams.delete(key);
+  }
+  let requestedHash = "";
+  try {
+    requestedHash = decodeURIComponent(next.hash.slice(1)).toLowerCase();
+  } catch {
+    requestedHash = "";
+  }
+  const memberHash = MEMBER_SCREEN_HASHES.has(requestedHash)
+    ? requestedHash
+    : "profile";
+  next.pathname = "/member.html";
+  next.hash = memberHash;
+  return `${next.pathname}${next.search}${next.hash}`;
+}
+
 export function authRedirectPath(account, { redirectTarget = "" } = {}) {
   const normalized = ensureAccountShape(account || {}, account || {});
   if (!normalized.userId) return "/signin";
@@ -287,7 +338,7 @@ export function authRedirectPath(account, { redirectTarget = "" } = {}) {
   const dashboard = dashboardRoute(normalized);
   if (dashboard === "admin") return "/admin.html";
   if (dashboard === "verify") return "/verify.html";
-  const safeRedirect = safeInternalRedirectTarget(redirectTarget);
+  const safeRedirect = normalizeMemberRedirectTarget(redirectTarget);
   if (dashboard === "profile-completion") return "/signup.html?mode=complete";
   if (dashboard === "billing")
     return safeRedirect
@@ -697,13 +748,14 @@ function carrierAuthorityRequired(account = {}) {
   if (account.authorityRequired === true || account.requiresAuthority === true) {
     return true;
   }
-  const text = String(
-    account.role || account.type || account.companyType || "",
-  ).toLowerCase();
   const declaredAuthority = String(
     account.mc_dot || account.mcDot || account.dotNumber || account.mcNumber || "",
   ).trim();
-  return Boolean(declaredAuthority) || /broker|fleet|motor carrier|commercial authority|carrier company/.test(text);
+  // A role label alone cannot prove that federal operating authority applies.
+  // Box trucks, cargo vans, hotshots, and other operators may legitimately run
+  // without a DOT/MC number. Require authority verification only when the
+  // member explicitly declares that it applies or supplies an authority ID.
+  return Boolean(declaredAuthority);
 }
 
 export function carrierVerificationDecision(account) {
@@ -2003,10 +2055,11 @@ export async function removeSessionsForUser(
   userId,
   {
     requireAllStores = false,
-    requireD1 = requireAllStores,
+    requireD1,
     requireKv = requireAllStores,
   } = {},
 ) {
+  const mustRevokeD1 = requireD1 ?? (requireAllStores && hasD1(env));
   const normalizedUserId = cleanString(userId, 80);
   if (!normalizedUserId) {
     if (requireAllStores) throw new Error("A user is required for session revocation.");
@@ -2055,7 +2108,7 @@ export async function removeSessionsForUser(
     kvError = error;
   }
   if (
-    (requireD1 && d1Revoked !== true) ||
+    (mustRevokeD1 && d1Revoked !== true) ||
     (requireKv && !kvRevoked)
   ) {
     throw d1Error || kvError || new Error("All session stores must be revoked.");
@@ -3471,6 +3524,7 @@ export async function requireAdminAccount(request, env) {
 export function memberAccessPayload(account) {
   const loadBookingAccess = carrierLoadBookingPayload(account);
   return {
+    authenticated: Boolean(account?.userId),
     emailVerified: emailVerified(account),
     emailVerifiedAt: account?.emailVerifiedAt || "",
     subscriptionStatus: subscriptionStatus(account),

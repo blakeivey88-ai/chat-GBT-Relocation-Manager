@@ -689,10 +689,12 @@ async function handleMutation(context) {
 function mergeProfileCompletionPatch(current, body) {
   const profile = normalizeProfile(body.profile || body);
   const editable = pickEditableProfile(profile);
-  editable.type = current.type || editable.type;
   return ensureAccountShape({
     ...current,
     ...editable,
+    profileView: normalizeProfileView(
+      body.profileView || profile.profileView || current.profileView || 'driver',
+    ),
     marketingAttribution: Object.keys(current.marketingAttribution || {}).length
       ? current.marketingAttribution
       : normalizeMarketingAttribution(body.marketingAttribution),

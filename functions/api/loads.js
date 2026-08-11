@@ -781,7 +781,16 @@ export async function onRequestGet(context) {
         403,
       );
     }
-    if (!postedScope && !decision.allowed) {
+    // Paid carrier members may browse/search the board while identity or
+    // insurance review is still pending. Booking remains protected below in
+    // the POST bid/claim path by the full carrierLoadBookingDecision gate.
+    const mayBrowseWhileVerificationPending =
+      decision.route === "carrier-verification";
+    if (
+      !postedScope &&
+      !decision.allowed &&
+      !mayBrowseWhileVerificationPending
+    ) {
       return json(
         {
           ok: false,

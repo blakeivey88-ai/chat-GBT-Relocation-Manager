@@ -1,6 +1,7 @@
 document.documentElement.classList.add("js-ready");
 let adminPreviewMode = false;
 let adminPreviewRole = "";
+let accountSetupReturnRoute = "";
 
 function cleanString(value, max = 120) {
   return String(value || "")
@@ -4880,6 +4881,9 @@ function accountSnapshot() {
 function mergeAccountState(data) {
   if (!data) return;
   const profile = readJSON(storageKeys.profile, {});
+  const sessionAuthenticated = Boolean(
+    data.session?.authenticated || data.memberAccess?.authenticated,
+  );
   const carrierLoadBookingAccess =
     data.carrierLoadBookingAccess ||
     data.memberAccess?.carrierLoadBookingAccess ||
@@ -4898,6 +4902,7 @@ function mergeAccountState(data) {
           {},
           profile.memberAccess || {},
           data.memberAccess || {},
+          sessionAuthenticated ? { authenticated: true } : {},
           carrierLoadBookingAccess ? { carrierLoadBookingAccess } : {},
         ),
         checkoutPlan:
@@ -5096,13 +5101,13 @@ async function openBillingPortal() {
   if (data?.url) location.href = data.url;
   return data;
 }
-async function loadAccountState() {
+async function loadAccountState({ refreshLoads = true } = {}) {
   try {
     const data = await apiRequest("/api/account", { method: "GET" });
     if (data?.ok && data.profile) {
       mergeAccountState(data);
       accountBootstrapped = true;
-      await loadLoadCatalog(true).catch(() => {});
+      if (refreshLoads) await loadLoadCatalog(true).catch(() => {});
       return data;
     }
   } catch {}
@@ -5322,7 +5327,10 @@ async function completeProfileAccount(profile) {
   mergeAccountState(data);
   return data;
 }
-function continueAfterAccountSetup(data, { planHref = "/pricing" } = {}) {
+function continueAfterAccountSetup(
+  data,
+  { planHref = "/pricing", returnRoute = "" } = {},
+) {
   const dashboardRoute = String(
     data?.dashboardRoute || data?.memberAccess?.dashboardRoute || "",
   ).trim();
@@ -5350,6 +5358,11 @@ function continueAfterAccountSetup(data, { planHref = "/pricing" } = {}) {
     accessRoute === "billing"
   ) {
     route("billing");
+    return;
+  }
+  if (["post", "profile", "workbench"].includes(returnRoute)) {
+    accountSetupReturnRoute = "";
+    route(returnRoute);
     return;
   }
   location.hash = "dashboard";
@@ -5591,6 +5604,32 @@ function canPostBulletin(profile = getProfile()) {
   return hasProfileIdentity(profile) && isPaidProfile(profile);
 }
 function updateAccessChrome(profile = getProfile()) {
+  const authenticated = Boolean(
+    profile?.memberAccess?.authenticated || profile?.userId || profile?.email,
+  );
+  const headerAuth = document.querySelector(
+    '#mainNav a[href^="/signin"], #mainNav [data-signout], .site-nav a[href^="/signin"], .site-nav [data-signout]',
+  );
+  if (headerAuth && authenticated) {
+    headerAuth.textContent = "Sign out";
+    headerAuth.href = "/";
+    headerAuth.removeAttribute("data-route");
+    headerAuth.setAttribute("data-signout", "");
+    headerAuth.onclick = (event) => {
+      event.preventDefault();
+      logoutAccount();
+    };
+  }
+  const headerCta = document.querySelector(".topbar-plan");
+  if (headerCta && authenticated) {
+    headerCta.textContent = "Workbench";
+    headerCta.href = "#workbench";
+    headerCta.dataset.route = "workbench";
+    headerCta.onclick = (event) => {
+      event.preventDefault();
+      route("workbench");
+    };
+  }
   const canMember =
     hasProfileIdentity(profile) &&
     isPaidProfile(profile) &&
@@ -7685,6 +7724,7 @@ function workspaceFromProfile(profile) {
 }
 function route(id) {
   const profile = getProfile();
+  const currentRoute = String(location.hash.slice(1) || "").trim();
   const ownerPreviewActive =
     adminPreviewMode ||
     document.documentElement.classList.contains("admin-preview");
@@ -7694,6 +7734,12 @@ function route(id) {
     id = "profile";
   }
   if (id === "profile-completion") id = "signup";
+  if (
+    id === "signup" &&
+    ["post", "profile", "workbench"].includes(currentRoute)
+  ) {
+    accountSetupReturnRoute = currentRoute;
+  }
   if (id === "renewal") id = "billing";
   if (id === "plan-selection") id = "pricing";
   if (id === "signin") {
@@ -7800,9 +7846,7 @@ function configureSignupForm() {
   if (!form) return;
   const profile = getProfile();
   const completionMode = Boolean(
-    profile?.memberAccess?.authenticated &&
-      profile?.userId &&
-      !isProfileCompleteState(profile),
+    profile?.memberAccess?.authenticated && profile?.userId,
   );
   form.dataset.mode = completionMode ? "complete-profile" : "register";
   const passwordLabel = $("#signupPasswordLabel");
@@ -7815,15 +7859,18 @@ function configureSignupForm() {
   const submit = $("#signupSubmitButton");
 
   if (completionMode) {
-    if (eyebrow) eyebrow.textContent = "Finish your company profile";
-    if (title) title.textContent = "Add company and DOT details";
+    if (eyebrow) eyebrow.textContent = "Edit your company profile";
+    if (title) title.textContent = "Edit company details";
     if (intro)
       intro.textContent =
         "You are already signed in. Add your business details without entering your password again.";
     if (steps)
       steps.innerHTML =
         '<span>1 · Account created</span><span class="active">2 · Company details</span><span>3 · Verify & payment</span><span>4 · Dashboard</span>';
-    if (passwordLabel) passwordLabel.hidden = true;
+    if (passwordLabel) {
+      passwordLabel.hidden = true;
+      passwordLabel.style.display = "none";
+    }
     if (passwordInput) {
       passwordInput.required = false;
       passwordInput.value = "";
@@ -7856,7 +7903,10 @@ function configureSignupForm() {
   if (steps)
     steps.innerHTML =
       '<span class="active">1 · Account & company</span><span>2 · Verify email</span><span>3 · Payment</span><span>4 · Dashboard</span>';
-  if (passwordLabel) passwordLabel.hidden = false;
+  if (passwordLabel) {
+    passwordLabel.hidden = false;
+    passwordLabel.style.removeProperty("display");
+  }
   if (passwordInput) passwordInput.required = true;
   if (emailInput) emailInput.readOnly = false;
   if (submit) submit.textContent = "Create account & continue";
@@ -9849,11 +9899,21 @@ function initForms() {
             ? "Company details saved. No second password needed."
             : "Account created. You are signed in.",
         );
-        continueAfterAccountSetup(data, { planHref: plan.href });
+        continueAfterAccountSetup(data, {
+          planHref: plan.href,
+          returnRoute: completionMode
+            ? accountSetupReturnRoute || "profile"
+            : "",
+        });
       } catch (err) {
         if (err?.data?.existingAccount && err?.data?.signInPath) {
-          toast("That account already exists. Opening sign in.");
-          location.href = String(err.data.signInPath);
+          const accountNotice = $("#accountNotice");
+          if (accountNotice) {
+            accountNotice.hidden = false;
+            accountNotice.textContent =
+              "That email already has an account. Your entries are still here; sign in before saving them to that profile.";
+          }
+          toast("That account already exists. Your profile entries were kept.");
           return;
         }
         toast(
@@ -11323,7 +11383,7 @@ function bind() {
     };
 }
 (async () => {
-  const account = await loadAccountState();
+  const account = await loadAccountState({ refreshLoads: false });
   const previewRole = requestedAdminPreviewRole();
   const accountDashboardRoute = String(
     account?.dashboardRoute || account?.memberAccess?.dashboardRoute || "",
@@ -11337,13 +11397,6 @@ function bind() {
   }
   applyCheckoutStateFromUrl();
   renderAuthExtras();
-  if (["dashboard", "bulletin-form"].includes(location.hash.slice(1))) {
-    route(location.hash.slice(1));
-  }
-  await loadLoadCatalog();
-  await loadBulletinBoard();
-  await loadCommunicationHub();
-  await loadLeaderboardPeers();
   initStats();
   initTiers();
   initVerification();
@@ -11400,6 +11453,19 @@ function bind() {
       route(hasProfileIdentity(getProfile()) ? "workbench" : "home");
     }
   }
+  const startupLoads = [
+    loadLoadCatalog(),
+    loadBulletinBoard(),
+    loadLeaderboardPeers(),
+  ];
+  if (location.hash.slice(1) !== "communication") {
+    startupLoads.push(loadCommunicationHub());
+  }
+  await Promise.allSettled(startupLoads);
+  renderRequests();
+  renderBulletinBoard();
+  renderMemberWorkbench();
+  renderLoads();
 })().catch((error) => {
   console.error("Relocation Manager startup failed.", error);
   document.body.dataset.startupError = String(error?.message || error || "Unknown startup error");

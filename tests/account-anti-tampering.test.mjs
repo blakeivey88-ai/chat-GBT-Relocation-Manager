@@ -131,6 +131,27 @@ test("ordinary allowed profile fields still update, leaving server evidence inta
   assert.equal(stored.activePickups[0].id, "pickup-server-1");
 });
 
+test("an authenticated profile edit can update company and account type without a second password", async () => {
+  const { response, payload, stored } = await saveProfile(entitledAccount(), {
+    action: "complete-profile",
+    profileView: "broker",
+    profile: {
+      name: "Original Name",
+      company: "Updated Company LLC",
+      type: "Dispatcher / broker - $189.99/mo",
+      email: "anti-tamper@example.invalid",
+    },
+  });
+
+  assert.equal(response.status, 200, JSON.stringify(payload));
+  assert.equal(payload.memberAccess.authenticated, true);
+  assert.equal(stored.company, "Updated Company LLC");
+  assert.equal(stored.type, "Dispatcher / broker - $189.99/mo");
+  assert.equal(stored.profileView, "broker");
+  assert.equal(stored.paymentStatus, "paid_driver");
+  assert.equal(stored.subscriptionAccess, "claim");
+});
+
 // --- E1c: trustAudit is server-controlled; trustDisputes stays member-writable ---
 
 const SERVER_TRUST_AUDIT = [

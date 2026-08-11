@@ -22,10 +22,35 @@
     node.textContent = String(new Date().getFullYear());
   });
 
+  document.querySelectorAll('.site-footer .footer-col').forEach((column) => {
+    if (!column.querySelector('a[href="/share-an-idea.html"]') && /support|trust|help/i.test(column.textContent || '')) {
+      column.insertAdjacentHTML('beforeend', '<a href="/share-an-idea.html">Share an idea</a>');
+    }
+  });
+
   fetch("/api/account", { credentials: "include" })
     .then((response) => (response.ok ? response.json() : null))
     .then((account) => {
-      if (!account || !account.profile) return;
+      if (!account?.session?.authenticated) return;
+      document
+        .querySelectorAll('.site-nav a[href^="/signin"]')
+        .forEach((link) => {
+          link.textContent = "Sign out";
+          link.href = "/";
+          link.setAttribute("data-signout", "");
+          link.addEventListener("click", async (event) => {
+            event.preventDefault();
+            link.setAttribute("aria-disabled", "true");
+            try {
+              await fetch("/api/account", {
+                method: "DELETE",
+                credentials: "include",
+              });
+            } finally {
+              location.assign("/");
+            }
+          });
+        });
       const cta = document.querySelector("[data-member-cta]");
       if (cta) { cta.textContent = "Member workspace"; cta.href = "/member.html#workbench"; }
       const nav = document.querySelector("[data-site-nav]");

@@ -69,6 +69,8 @@ const PUBLIC_PATHS = new Set([
   '/resources.html',
   '/support',
   '/support.html',
+  '/share-an-idea',
+  '/share-an-idea.html',
   '/safety',
   '/safety.html',
   '/demo',
@@ -138,6 +140,7 @@ const KNOWN_API_PATHS = new Set([
   '/api/leads',
   '/api/loads',
   '/api/metrics',
+  '/api/suggestions',
   '/api/stripe-webhook',
   '/api/translate',
 ]);

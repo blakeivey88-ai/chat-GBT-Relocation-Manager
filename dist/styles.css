@@ -548,6 +548,9 @@ a {
   color: var(--muted);
   font-weight: 900;
 }
+.form-card label[hidden] {
+  display: none !important;
+}
 .searchbar input,
 .searchbar select,
 .form-card input,
@@ -1656,8 +1659,8 @@ footer {
 .equipment-card.thumbed .equip-icon {
   background-image: var(--thumb-image);
   background-repeat: no-repeat;
-  background-size: 340% 560%;
-  background-position: calc(var(--thumb-x) + 10%) calc(var(--thumb-y) + 10%);
+  background-size: 300% 500%;
+  background-position: var(--thumb-x) var(--thumb-y);
   font-size: 0;
   color: transparent;
 }
@@ -2149,8 +2152,8 @@ footer {
 .request-thumb.thumbed {
   background-image: var(--thumb-image);
   background-repeat: no-repeat;
-  background-size: 340% 560%;
-  background-position: calc(var(--thumb-x) + 10%) calc(var(--thumb-y) + 10%);
+  background-size: 300% 500%;
+  background-position: var(--thumb-x) var(--thumb-y);
 }
 .load-card {
   display: grid;
@@ -5319,8 +5322,8 @@ html body #post .equipment-card.thumbed .equip-icon {
   background-color: #172744 !important;
   background-image: var(--thumb-image) !important;
   background-repeat: no-repeat !important;
-  background-size: 340% 560% !important;
-  background-position: calc(var(--thumb-x) + 10%) calc(var(--thumb-y) + 10%) !important;
+  background-size: 300% 500% !important;
+  background-position: var(--thumb-x) var(--thumb-y) !important;
   font-size: 0 !important;
 }
 
@@ -5507,11 +5510,6 @@ html body #post .equipment-card[data-equipment-choice*="Car carrier"] .equip-ico
   background-repeat: no-repeat !important;
   font-size: 0 !important;
 }
-/* Crop the gallery to the vehicle portion, keeping thumbnails centered. */
-html body #post .equipment-card.thumbed .equip-icon {
-  background-position: calc(var(--thumb-x) + 10%) calc(var(--thumb-y) - 40%) !important;
-}
-
 /* --- Post-a-load composer (sectioned form + live preview) --- */
 .post-composer-head {
   display: flex;
