@@ -2055,10 +2055,11 @@ export async function removeSessionsForUser(
   userId,
   {
     requireAllStores = false,
-    requireD1 = requireAllStores,
+    requireD1,
     requireKv = requireAllStores,
   } = {},
 ) {
+  const mustRevokeD1 = requireD1 ?? (requireAllStores && hasD1(env));
   const normalizedUserId = cleanString(userId, 80);
   if (!normalizedUserId) {
     if (requireAllStores) throw new Error("A user is required for session revocation.");
@@ -2107,7 +2108,7 @@ export async function removeSessionsForUser(
     kvError = error;
   }
   if (
-    (requireD1 && d1Revoked !== true) ||
+    (mustRevokeD1 && d1Revoked !== true) ||
     (requireKv && !kvRevoked)
   ) {
     throw d1Error || kvError || new Error("All session stores must be revoked.");
