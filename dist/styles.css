@@ -199,6 +199,7 @@ a {
 }
 .menu-btn {
   display: none;
+  min-height: 44px;
   margin-left: auto;
   background: rgba(255, 255, 255, 0.1);
   color: #fff;
