@@ -548,6 +548,9 @@ a {
   color: var(--muted);
   font-weight: 900;
 }
+.form-card label[hidden] {
+  display: none !important;
+}
 .searchbar input,
 .searchbar select,
 .form-card input,

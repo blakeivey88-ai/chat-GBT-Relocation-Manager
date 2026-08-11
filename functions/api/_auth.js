@@ -748,13 +748,14 @@ function carrierAuthorityRequired(account = {}) {
   if (account.authorityRequired === true || account.requiresAuthority === true) {
     return true;
   }
-  const text = String(
-    account.role || account.type || account.companyType || "",
-  ).toLowerCase();
   const declaredAuthority = String(
     account.mc_dot || account.mcDot || account.dotNumber || account.mcNumber || "",
   ).trim();
-  return Boolean(declaredAuthority) || /broker|fleet|motor carrier|commercial authority|carrier company/.test(text);
+  // A role label alone cannot prove that federal operating authority applies.
+  // Box trucks, cargo vans, hotshots, and other operators may legitimately run
+  // without a DOT/MC number. Require authority verification only when the
+  // member explicitly declares that it applies or supplies an authority ID.
+  return Boolean(declaredAuthority);
 }
 
 export function carrierVerificationDecision(account) {
@@ -3522,6 +3523,7 @@ export async function requireAdminAccount(request, env) {
 export function memberAccessPayload(account) {
   const loadBookingAccess = carrierLoadBookingPayload(account);
   return {
+    authenticated: Boolean(account?.userId),
     emailVerified: emailVerified(account),
     emailVerifiedAt: account?.emailVerifiedAt || "",
     subscriptionStatus: subscriptionStatus(account),

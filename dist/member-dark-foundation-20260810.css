@@ -1,0 +1,285 @@
+/* Member workspace dark foundation.
+   This file loads after the legacy shared stylesheet so signed-in components
+   inherit one coherent palette instead of requiring per-screen hotfixes. */
+:root {
+  color-scheme: dark;
+
+  /* Semantic member tokens. Components describe their role instead of
+     carrying raw light/dark colors, so new member UI inherits a legible
+     dark foundation without another override pass. */
+  --surface-page: #05070d;
+  --surface-panel: #0a1020;
+  --surface-raised: #0d1526;
+  --surface-interactive: #16284a;
+  --surface-field: #0b1427;
+  --surface-success: #123523;
+  --surface-warning: #3b2b0d;
+  --surface-danger: #421a1a;
+  --surface-brand: #0a2a6b;
+  --ink-strong: #ffffff;
+  --ink-body: #edf3ff;
+  --ink-muted: #b8c7df;
+  --ink-success: #7ff19c;
+  --ink-warning: #ffd27d;
+  --ink-danger: #ffaaa4;
+  --border-subtle: #2b4266;
+  --border-focus: #6e9bff;
+
+  /* Compatibility aliases while legacy component rules are retired. */
+  --member-bg: var(--surface-page);
+  --member-surface: var(--surface-panel);
+  --member-surface-raised: var(--surface-raised);
+  --member-surface-active: var(--surface-interactive);
+  --member-border: var(--border-subtle);
+  --member-border-strong: var(--border-focus);
+  --member-text: var(--ink-strong);
+  --member-muted: var(--ink-muted);
+  --member-field: var(--surface-field);
+}
+
+body,
+body main,
+body .screen {
+  color: var(--member-text);
+  background-color: var(--member-bg);
+}
+
+body .card,
+body .panel,
+body .surface,
+body .form-card,
+body .searchbar,
+body .load-card,
+body .request-card,
+body .profile-card,
+body .profile-panel,
+body .profile-block .card,
+body .profile-id,
+body .profile-jump,
+body .profile-tabs,
+body .profile-section,
+body .metric-card,
+body .status-card,
+body .plan-card,
+body .tile,
+body .tile-card,
+body .workspace-card,
+body .workbench-panel,
+body .workbench-metrics article,
+body .workbench-row,
+body .settings-card,
+body .account-card,
+body .activity-card,
+body .credential-card,
+body .billing-card,
+body .communication-thread-info,
+body .communication-messages,
+body .communication-privacy,
+body .communication-composer,
+body .message-row,
+body .message-load-share,
+body .message-reply,
+body .message-asset,
+body .message-location,
+body .message-translation,
+body .comm-item,
+body .conversation-item,
+body .comm-contact-card,
+body .comm-notification,
+body .community-side-panel,
+body .community-member-card,
+body .community-terminal,
+body .community-composer,
+body .community-feed-toolbar,
+body .community-feed .bulletin-card,
+body .community-company,
+body .community-side-note,
+body .community-rail-nav,
+body .community-quick-actions,
+body .empty-state,
+body .message-empty,
+body .communication-empty,
+body fieldset,
+body .load-bid-form,
+body .my-load-bid,
+body .bid-review-terms {
+  color: var(--member-text);
+  border-color: var(--member-border);
+  background: linear-gradient(145deg, var(--member-surface-raised), var(--member-surface));
+  background-image: none;
+}
+
+body .message-row.mine,
+body .comm-item.active,
+body .conversation-item.active,
+body .profile-tab.active,
+body .profile-tabs button.active,
+body .equipment-card.active {
+  color: var(--member-text);
+  border-color: var(--member-border-strong);
+  background: var(--member-surface-active);
+}
+
+body .screen h1,
+body .screen h2,
+body .screen h3,
+body .screen h4,
+body .screen h5,
+body .screen h6,
+body .screen legend,
+body .screen label,
+body .screen strong,
+body .screen .route,
+body .screen .message-translation strong,
+body .screen .communication-reply strong,
+body .screen .comm-contact-card strong,
+body .screen .message-load-share strong {
+  color: var(--member-text);
+}
+
+body .screen p,
+body .screen small,
+body .screen .muted,
+body .screen .helper,
+body .screen .message-meta,
+body .screen .message-meta span,
+body .screen .message-row p,
+body .screen .message-row span,
+body .screen .message-load-share span,
+body .screen .message-load-share small,
+body .screen .message-reply p,
+body .screen .message-location,
+body .screen .comm-item span,
+body .screen .comm-item small,
+body .screen .empty-state p,
+body .screen .workbench-row span,
+body .screen .workbench-row small {
+  color: var(--member-muted);
+}
+
+body input,
+body select,
+body textarea,
+body .communication-composer textarea,
+body .communication-composer label input,
+body .post-photo-field input[type="file"] {
+  color: var(--member-text);
+  border-color: var(--member-border);
+  background: var(--member-field);
+}
+
+body input::placeholder,
+body textarea::placeholder {
+  color: var(--member-muted);
+  opacity: 1;
+}
+
+body .chip,
+body .profile-tag,
+body .message-reaction,
+body .file-button,
+body .message-file,
+body .message-reaction,
+body .community-mention,
+body .community-mention-suggestions button {
+  color: var(--member-text);
+  border-color: var(--member-border);
+  background: var(--member-surface-active);
+}
+
+body .chip.good {
+  color: var(--ink-success);
+  background: var(--surface-success);
+}
+
+body .chip.warn {
+  color: var(--ink-warning);
+  background: var(--surface-warning);
+}
+
+body .chip.risk {
+  color: var(--ink-danger);
+  background: var(--surface-danger);
+}
+
+/* One ID-level member scope cleanly outranks legacy per-screen color rules. */
+body :is(#home, #signup, #workbench, #loads, #requests, #bulletin, #ai-agents, #communication, #request-form, #bulletin-form, #post, #safety, #hardships, #carrier-verification, #verification-guide, #trust, #dispatch, #alerts, #trusted-partners, #profile, #ratings, #tiers, #rewards, #fraud, #pricing, #faq, #verify, #reset, #billing, #roadmap)
+  :is(h1, h2, h3, h4, h5, h6, legend, label, strong, .route) {
+  color: var(--member-text);
+}
+
+body :is(#home, #signup, #workbench, #loads, #requests, #bulletin, #ai-agents, #communication, #request-form, #bulletin-form, #post, #safety, #hardships, #carrier-verification, #verification-guide, #trust, #dispatch, #alerts, #trusted-partners, #profile, #ratings, #tiers, #rewards, #fraud, #pricing, #faq, #verify, #reset, #billing, #roadmap)
+  :is(p, small, .muted, .helper) {
+  color: var(--member-muted);
+}
+
+body :is(#home, #signup, #workbench, #loads, #requests, #bulletin, #ai-agents, #communication, #request-form, #bulletin-form, #post, #safety, #hardships, #carrier-verification, #verification-guide, #trust, #dispatch, #alerts, #trusted-partners, #profile, #ratings, #tiers, #rewards, #fraud, #pricing, #faq, #verify, #reset, #billing, #roadmap)
+  :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+  color: var(--member-text);
+  border-color: var(--member-border);
+  background: var(--member-field);
+}
+
+body :is(#home, #signup, #workbench, #loads, #requests, #bulletin, #ai-agents, #communication, #request-form, #bulletin-form, #post, #safety, #hardships, #carrier-verification, #verification-guide, #trust, #dispatch, #alerts, #trusted-partners, #profile, #ratings, #tiers, #rewards, #fraud, #pricing, #faq, #verify, #reset, #billing, #roadmap)
+  :is(.load-detail-grid > div, .reward, .mini-item, .history-event, .rating-row, .tier, .plan, .fraud-panel, .workbench-tool-list button) {
+  color: var(--member-text);
+  border-color: var(--member-border);
+  background: var(--member-surface-raised);
+}
+
+body :is(#home, #signup, #workbench, #loads, #requests, #bulletin, #ai-agents, #communication, #request-form, #bulletin-form, #post, #safety, #hardships, #carrier-verification, #verification-guide, #trust, #dispatch, #alerts, #trusted-partners, #profile, #ratings, #tiers, #rewards, #fraud, #pricing, #faq, #verify, #reset, #billing, #roadmap)
+  :is(.tag, .badge) {
+  color: var(--member-text);
+  border-color: var(--member-border);
+  background: var(--member-surface-active);
+}
+
+body #profile .profile-jump button {
+  color: var(--member-text);
+  background: var(--member-surface-raised);
+}
+
+body #profile .profile-jump button:hover,
+body #profile .profile-jump button:focus-visible {
+  color: var(--member-text);
+  background: var(--member-surface-active);
+}
+
+body #rmConsentAccept {
+  color: var(--ink-strong);
+  background: var(--surface-brand);
+}
+
+body #pricing .plan-choice,
+body #bulletin .bulletin-reply-bubble,
+body #bulletin-form .bulletin-reply-bubble,
+body #trust .trust-score,
+body #home .home-safety-proof,
+body #home .home-safety-proof .btn-soft {
+  color: var(--member-text);
+  border-color: var(--member-border);
+  background: var(--member-surface-raised);
+}
+
+body #home .home-safety-proof span,
+body #home .home-safety-proof p,
+body #bulletin .bulletin-reply-bubble p,
+body #bulletin .bulletin-reply-bubble small,
+body #bulletin-form .bulletin-reply-bubble p,
+body #bulletin-form .bulletin-reply-bubble small {
+  color: var(--member-muted);
+}
+
+body #home .preview-proof-list span,
+body #ai-agents .classroom-spotlight-stats > div,
+body #ai-agents .classroom-spotlight-stats span {
+  color: var(--member-text);
+  border-color: var(--member-border);
+  background: var(--member-surface-raised);
+}
+
+body #bulletin .community-company-avatar,
+body #bulletin-form .community-company-avatar {
+  color: var(--ink-strong);
+  background: var(--surface-brand);
+}

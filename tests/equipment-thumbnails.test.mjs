@@ -23,5 +23,5 @@ test("truck-equipment sprite uses the 3-column by 5-row grid without offset nudg
   assert.doesNotMatch(styles, /background-size:\s*340% 560%/);
   assert.doesNotMatch(styles, /var\(--thumb-x\)\s*\+\s*10%/);
   assert.doesNotMatch(styles, /var\(--thumb-y\)\s*-\s*40%/);
-  assert.match(member, /href="styles\.css\?v=20260808-1"/);
+  assert.match(member, /href="styles\.css\?v=20260810-password-edit-4"/);
 });

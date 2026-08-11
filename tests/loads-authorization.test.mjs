@@ -22,6 +22,37 @@ test("does not require DOT/MC when a carrier has no commercial authority", () =>
   assert.equal(decision.verified, true);
   assert.deepEqual(decision.missing, undefined);
 });
+
+test("does not infer DOT/MC authority from a paid carrier or fleet role", () => {
+  for (const type of [
+    "Box Truck Carrier - $29.99/mo",
+    "Hot Shot Operator - $29.99/mo",
+    "Carrier company - $29.99/mo",
+    "Fleet starter (1-3 trucks) - $59.99/mo",
+  ]) {
+    const decision = carrierVerificationDecision({
+      role: type,
+      type,
+      mc_dot: "",
+      insuranceStatus: "Verified",
+      idCheckStatus: "Verified",
+    });
+    assert.equal(decision.allowed, true, type);
+    assert.equal(decision.missing, undefined, type);
+  }
+});
+
+test("still requires authority verification when a DOT/MC number is declared", () => {
+  const decision = carrierVerificationDecision({
+    role: "Box Truck Carrier",
+    type: "Box Truck Carrier - $29.99/mo",
+    mc_dot: "USDOT 123456",
+    insuranceStatus: "Verified",
+    idCheckStatus: "Verified",
+  });
+  assert.equal(decision.allowed, false);
+  assert.deepEqual(decision.missing, ["authority/DOT-MC"]);
+});
 import { SqliteD1 } from "./helpers/sqlite-d1.mjs";
 
 const LOAD_STORE_KEY = "marketplace:loads:v1";
@@ -85,6 +116,24 @@ async function claimRequest(account) {
   const body = await response.json();
   const storedLoads = JSON.parse(await kv.get(LOAD_STORE_KEY));
   return { response, body, storedLoads };
+}
+
+async function browseLoads(account) {
+  const kv = new MemoryKv();
+  const env = { RELOCATION_MANAGER_LEADS: kv };
+  await kv.put(userIdKey(account.userId), JSON.stringify(account));
+  await kv.put(LOAD_STORE_KEY, JSON.stringify([openLoad()]));
+  const session = await createSession(env, account.userId);
+  const response = await onRequestGet({
+    request: new Request("https://relocationmanagerusa.com/api/loads", {
+      headers: {
+        origin: "https://relocationmanagerusa.com",
+        cookie: `rm_session=${session}`,
+      },
+    }),
+    env,
+  });
+  return { response, body: await response.json() };
 }
 
 async function assertShipperPostOnlyContract(accessValue) {
@@ -237,6 +286,25 @@ test("allows an active verified carrier to request pickup", async () => {
     storedLoads[0].claimRequests[0].userId,
     "usr_carrier_authorization_test",
   );
+});
+
+test("an active $29.99 carrier may browse loads while verification is pending", async () => {
+  const carrier = activeVerifiedCarrier({
+    carrierVerifiedAt: "",
+    insuranceStatus: "Not submitted",
+    idCheckStatus: "Pending",
+  });
+
+  const browse = await browseLoads(carrier);
+  assert.equal(browse.response.status, 200, JSON.stringify(browse.body));
+  assert.equal(browse.body.ok, true);
+  assert.equal(browse.body.loads.length, 1);
+  assert.equal(browse.body.bookingAccess.allowed, false);
+  assert.equal(browse.body.bookingAccess.route, "carrier-verification");
+
+  const claim = await claimRequest(carrier);
+  assert.equal(claim.response.status, 403, JSON.stringify(claim.body));
+  assert.equal(claim.storedLoads[0].claimRequests.length, 0);
 });
 
 test("paid carrier claim access may bid and publish a load", async () => {

@@ -65,7 +65,7 @@ function notImplementedClass(name) {
 }
 var init_utils = __esm({
   "../node_modules/unenv/dist/runtime/_internal/utils.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -79,7 +79,7 @@ var init_utils = __esm({
 var _timeOrigin, _performanceNow, nodeTiming, PerformanceEntry, PerformanceMark, PerformanceMeasure, PerformanceResourceTiming, PerformanceObserverEntryList, Performance, PerformanceObserver, performance;
 var init_performance = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/perf_hooks/performance.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -326,7 +326,7 @@ var init_performance = __esm({
 // ../node_modules/unenv/dist/runtime/node/perf_hooks.mjs
 var init_perf_hooks = __esm({
   "../node_modules/unenv/dist/runtime/node/perf_hooks.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -364,7 +364,7 @@ var init_performance2 = __esm({
 var noop_default;
 var init_noop = __esm({
   "../node_modules/unenv/dist/runtime/mock/noop.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -378,7 +378,7 @@ import { Writable } from "node:stream";
 var _console, _ignoreErrors, _stderr, _stdout, log, info, trace, debug, table, error, warn, createTask, clear, count, countReset, dir, dirxml, group, groupEnd, groupCollapsed, profile, profileEnd, time, timeEnd, timeLog, timeStamp, Console, _times, _stdoutErrorHandler, _stderrErrorHandler;
 var init_console = __esm({
   "../node_modules/unenv/dist/runtime/node/console.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -421,7 +421,7 @@ var init_console = __esm({
 var workerdConsole, assert, clear2, context, count2, countReset2, createTask2, debug2, dir2, dirxml2, error2, group2, groupCollapsed2, groupEnd2, info2, log2, profile2, profileEnd2, table2, time2, timeEnd2, timeLog2, timeStamp2, trace2, warn2, console_default;
 var init_console2 = __esm({
   "../node_modules/@cloudflare/unenv-preset/dist/runtime/node/console.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -484,7 +484,7 @@ var init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console = __
 var hrtime;
 var init_hrtime = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/process/hrtime.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -512,7 +512,7 @@ var init_hrtime = __esm({
 var ReadStream;
 var init_read_stream = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/tty/read-stream.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -538,7 +538,7 @@ var init_read_stream = __esm({
 var WriteStream;
 var init_write_stream = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/tty/write-stream.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -597,7 +597,7 @@ var init_write_stream = __esm({
 var isatty, tty_default;
 var init_tty = __esm({
   "../node_modules/unenv/dist/runtime/node/tty.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -620,7 +620,7 @@ var init_tty = __esm({
 var NODE_VERSION;
 var init_node_version = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/process/node-version.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -633,7 +633,7 @@ import { EventEmitter } from "node:events";
 var Process;
 var init_process = __esm({
   "../node_modules/unenv/dist/runtime/node/internal/process/process.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -993,7 +993,7 @@ __export(process_exports, {
 var globalProcess, getBuiltinModule, workerdProcess, unenvProcess, exit, features, platform, _channel, _debugEnd, _debugProcess, _disconnect, _events, _eventsCount, _exiting, _fatalException, _getActiveHandles, _getActiveRequests, _handleQueue, _kill, _linkedBinding, _maxListeners, _pendingMessage, _preload_modules, _rawDebug, _send, _startProfilerIdleNotifier, _stopProfilerIdleNotifier, _tickCallback, abort, addListener, allowedNodeEnvironmentFlags, arch, argv, argv0, assert2, availableMemory, binding, channel, chdir, config, connected, constrainedMemory, cpuUsage, cwd, debugPort, disconnect, dlopen, domain, emit, emitWarning, env, eventNames, execArgv, execPath, exitCode, finalization, getActiveResourcesInfo, getegid, geteuid, getgid, getgroups, getMaxListeners, getuid, hasUncaughtExceptionCaptureCallback, hrtime3, initgroups, kill, listenerCount, listeners, loadEnvFile, mainModule, memoryUsage, moduleLoadList, nextTick, off, on, once, openStdin, permission, pid, ppid, prependListener, prependOnceListener, rawListeners, reallyExit, ref, release, removeAllListeners, removeListener, report, resourceUsage, send, setegid, seteuid, setgid, setgroups, setMaxListeners, setSourceMapsEnabled, setuid, setUncaughtExceptionCaptureCallback, sourceMapsEnabled, stderr, stdin, stdout, throwDeprecation, title, traceDeprecation, umask, unref, uptime, version, versions, _process, process_default;
 var init_process2 = __esm({
   "../node_modules/@cloudflare/unenv-preset/dist/runtime/node/process.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -1365,7 +1365,7 @@ async function recordAuthAuditEvent(env2, input = {}) {
 var KV_PREFIX;
 var init_audit = __esm({
   "lib/audit.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -1821,13 +1821,10 @@ function carrierAuthorityRequired(account = {}) {
   if (account.authorityRequired === true || account.requiresAuthority === true) {
     return true;
   }
-  const text2 = String(
-    account.role || account.type || account.companyType || ""
-  ).toLowerCase();
   const declaredAuthority = String(
     account.mc_dot || account.mcDot || account.dotNumber || account.mcNumber || ""
   ).trim();
-  return Boolean(declaredAuthority) || /broker|fleet|motor carrier|commercial authority|carrier company/.test(text2);
+  return Boolean(declaredAuthority);
 }
 function carrierVerificationDecision(account) {
   const completedAt = [
@@ -3925,6 +3922,7 @@ function authorizeRouteAccess(request, account, pathname = "") {
 function memberAccessPayload(account) {
   const loadBookingAccess = carrierLoadBookingPayload(account);
   return {
+    authenticated: Boolean(account?.userId),
     emailVerified: emailVerified(account),
     emailVerifiedAt: account?.emailVerifiedAt || "",
     subscriptionStatus: subscriptionStatus(account),
@@ -3970,7 +3968,7 @@ function extractStripeMetadata(session = {}) {
 var COOKIE_NAME, SESSION_TTL_SECONDS, REMEMBER_ME_SESSION_TTL_SECONDS, CSRF_COOKIE_NAME, CSRF_TTL_SECONDS, VERIFICATION_TTL_SECONDS, RESET_TTL_SECONDS, PASSWORD_PBKDF2_ITERATIONS, LEGACY_ACCOUNT_PREFIX, ADMIN_EMAIL_ALLOWLIST, LANGUAGE_LABELS, MEMBER_SCREEN_HASHES, CARRIER_BOOKING_MINIMUM_CENTS, CARRIER_ROLE_PATTERNS, CARRIER_VERIFICATION_PATTERNS, CARRIER_PRICE_HINTS, ACCOUNT_DB_COLUMNS, ACCOUNT_DB_UPSERT_COLUMNS;
 var init_auth = __esm({
   "api/_auth.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -4471,7 +4469,7 @@ function safeJson(value) {
 var HISTORY_PREFIX;
 var init_load_history = __esm({
   "lib/load-history.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -4578,7 +4576,7 @@ async function sendPasswordResetEmail(env2, { to, resetUrl, name = "", requestId
 var DEFAULT_SITE_ORIGIN, DEFAULT_FROM;
 var init_email = __esm({
   "lib/email.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -4702,7 +4700,7 @@ function compactObject(input) {
 var ATTRIBUTION_FIELDS, CLICK_FIELDS, WHOP_COMPANY_ID, WHOP_CONVERSIONS_URL;
 var init_marketing_attribution = __esm({
   "lib/marketing-attribution.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5312,10 +5310,12 @@ async function handleMutation(context2) {
 function mergeProfileCompletionPatch(current, body) {
   const profile3 = normalizeProfile(body.profile || body);
   const editable = pickEditableProfile(profile3);
-  editable.type = current.type || editable.type;
   return ensureAccountShape({
     ...current,
     ...editable,
+    profileView: normalizeProfileView(
+      body.profileView || profile3.profileView || current.profileView || "driver"
+    ),
     marketingAttribution: Object.keys(current.marketingAttribution || {}).length ? current.marketingAttribution : normalizeMarketingAttribution(body.marketingAttribution),
     updatedAt: (/* @__PURE__ */ new Date()).toISOString()
   }, current);
@@ -5699,7 +5699,7 @@ function clientIp(request) {
 }
 var init_account = __esm({
   "api/account.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -5908,7 +5908,7 @@ function corsHeaders2() {
 var TELEMETRY_KEY, MAX_AGE_SECONDS;
 var init_agent_telemetry = __esm({
   "api/agent-telemetry.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6114,7 +6114,7 @@ function corsHeaders3() {
 }
 var init_bulletin = __esm({
   "api/bulletin.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6139,7 +6139,7 @@ function stripeSecretKey(env2 = {}) {
 }
 var init_stripe_config = __esm({
   "lib/stripe-config.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -6259,7 +6259,7 @@ function corsHeaders4() {
 var PLAN_LINKS;
 var init_checkout = __esm({
   "api/checkout.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -7354,7 +7354,7 @@ function cleanHandle(value = "") {
 var HUB_KEY, DEFAULT_CHANNELS;
 var init_communication = __esm({
   "api/communication.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -7451,7 +7451,7 @@ function loadEnv() {
 }
 var init_config_node = __esm({
   "../node_modules/@openai/agents-core/dist/shims/config-node.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -7471,7 +7471,7 @@ function isBrowserEnvironment() {
 }
 var init_config_workerd = __esm({
   "../node_modules/@openai/agents-core/dist/shims/config-workerd.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -7484,7 +7484,7 @@ var init_config_workerd = __esm({
 var util, objectUtil, ZodParsedType, getParsedType;
 var init_util = __esm({
   "../node_modules/zod/v3/helpers/util.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -7628,7 +7628,7 @@ var init_util = __esm({
 var ZodIssueCode, ZodError;
 var init_ZodError = __esm({
   "../node_modules/zod/v3/ZodError.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -7755,7 +7755,7 @@ var init_ZodError = __esm({
 var errorMap, en_default;
 var init_en = __esm({
   "../node_modules/zod/v3/locales/en.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -7872,7 +7872,7 @@ function getErrorMap() {
 var overrideErrorMap;
 var init_errors = __esm({
   "../node_modules/zod/v3/errors.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -7905,7 +7905,7 @@ function addIssueToContext(ctx, issueData) {
 var makeIssue, ParseStatus, INVALID, DIRTY, OK, isAborted, isDirty, isValid, isAsync;
 var init_parseUtil = __esm({
   "../node_modules/zod/v3/helpers/parseUtil.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -8009,7 +8009,7 @@ var init_parseUtil = __esm({
 // ../node_modules/zod/v3/helpers/typeAliases.js
 var init_typeAliases = __esm({
   "../node_modules/zod/v3/helpers/typeAliases.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -8020,7 +8020,7 @@ var init_typeAliases = __esm({
 var errorUtil;
 var init_errorUtil = __esm({
   "../node_modules/zod/v3/helpers/errorUtil.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -8199,7 +8199,7 @@ function createZodEnum(values, params) {
 var ParseInputLazyPath, handleResult, ZodType, cuidRegex, cuid2Regex, ulidRegex, uuidRegex, nanoidRegex, jwtRegex, durationRegex, emailRegex, _emojiRegex, emojiRegex, ipv4Regex, ipv4CidrRegex, ipv6Regex, ipv6CidrRegex, base64Regex, base64urlRegex, dateRegexSource, dateRegex, ZodString, ZodNumber, ZodBigInt, ZodBoolean, ZodDate, ZodSymbol, ZodUndefined, ZodNull, ZodAny, ZodUnknown, ZodNever, ZodVoid, ZodArray, ZodObject, ZodUnion, getDiscriminator, ZodDiscriminatedUnion, ZodIntersection, ZodTuple, ZodRecord, ZodMap, ZodSet, ZodFunction, ZodLazy, ZodLiteral, ZodEnum, ZodNativeEnum, ZodPromise, ZodEffects, ZodOptional, ZodNullable, ZodDefault, ZodCatch, ZodNaN, ZodBranded, ZodPipeline, ZodReadonly, late, ZodFirstPartyTypeKind, stringType, numberType, nanType, bigIntType, booleanType, dateType, symbolType, undefinedType, nullType, anyType, unknownType, neverType, voidType, arrayType, objectType, strictObjectType, unionType, discriminatedUnionType, intersectionType, tupleType, recordType, mapType, setType, functionType, lazyType, literalType, enumType, nativeEnumType, promiseType, effectsType, optionalType, nullableType, preprocessType, pipelineType;
 var init_types = __esm({
   "../node_modules/zod/v3/types.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -11578,7 +11578,7 @@ var init_types = __esm({
 // ../node_modules/zod/v3/external.js
 var init_external = __esm({
   "../node_modules/zod/v3/external.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -11594,7 +11594,7 @@ var init_external = __esm({
 // ../node_modules/zod/v3/index.js
 var init_v3 = __esm({
   "../node_modules/zod/v3/index.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -11668,7 +11668,7 @@ function config2(newConfig) {
 var _a, NEVER, $brand, $ZodAsyncError, $ZodEncodeError, globalConfig;
 var init_core = __esm({
   "../node_modules/zod/v4/core/core.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -12312,7 +12312,7 @@ function uint8ArrayToHex(bytes) {
 var EVALUATING, captureStackTrace, allowsEval, getParsedType2, propertyKeyTypes, primitiveTypes, NUMBER_FORMAT_RANGES, BIGINT_FORMAT_RANGES, Class;
 var init_util2 = __esm({
   "../node_modules/zod/v4/core/util.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -12587,7 +12587,7 @@ function prettifyError(error53) {
 var initializer, $ZodError, $ZodRealError;
 var init_errors2 = __esm({
   "../node_modules/zod/v4/core/errors.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -12623,7 +12623,7 @@ var init_errors2 = __esm({
 var _parse, parse, _parseAsync, parseAsync, _safeParse, safeParse, _safeParseAsync, safeParseAsync, _encode, encode, _decode, decode, _encodeAsync, encodeAsync, _decodeAsync, decodeAsync, _safeEncode, safeEncode, _safeDecode, safeDecode, _safeEncodeAsync, safeEncodeAsync, _safeDecodeAsync, safeDecodeAsync;
 var init_parse = __esm({
   "../node_modules/zod/v4/core/parse.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -12812,7 +12812,7 @@ function fixedBase64url(length) {
 var cuid, cuid2, ulid, xid, ksuid, nanoid, duration, extendedDuration, guid, uuid, uuid4, uuid6, uuid7, email, html5Email, rfc5322Email, unicodeEmail, idnEmail, browserEmail, _emoji, ipv4, ipv6, mac, cidrv4, cidrv6, base64, base64url, hostname, domain2, httpProtocol, e164, dateSource, date, string, bigint2, integer, number, boolean, _null, _undefined, lowercase, uppercase, hex, md5_hex, md5_base64, md5_base64url, sha1_hex, sha1_base64, sha1_base64url, sha256_hex, sha256_base64, sha256_base64url, sha384_hex, sha384_base64, sha384_base64url, sha512_hex, sha512_base64, sha512_base64url;
 var init_regexes = __esm({
   "../node_modules/zod/v4/core/regexes.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -12903,7 +12903,7 @@ function handleCheckPropertyResult(result, payload, property) {
 var $ZodCheck, numericOriginMap, $ZodCheckLessThan, $ZodCheckGreaterThan, $ZodCheckMultipleOf, $ZodCheckNumberFormat, $ZodCheckBigIntFormat, $ZodCheckMaxSize, $ZodCheckMinSize, $ZodCheckSizeEquals, $ZodCheckMaxLength, $ZodCheckMinLength, $ZodCheckLengthEquals, $ZodCheckStringFormat, $ZodCheckRegex, $ZodCheckLowerCase, $ZodCheckUpperCase, $ZodCheckIncludes, $ZodCheckStartsWith, $ZodCheckEndsWith, $ZodCheckProperty, $ZodCheckMimeType, $ZodCheckOverwrite;
 var init_checks = __esm({
   "../node_modules/zod/v4/core/checks.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -13459,7 +13459,7 @@ var init_checks = __esm({
 var Doc;
 var init_doc = __esm({
   "../node_modules/zod/v4/core/doc.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -13507,7 +13507,7 @@ var init_doc = __esm({
 var version2;
 var init_versions = __esm({
   "../node_modules/zod/v4/core/versions.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -13926,7 +13926,7 @@ function handleRefineResult(result, payload, input, inst) {
 var $ZodType, $ZodString, $ZodStringFormat, $ZodGUID, $ZodUUID, $ZodEmail, $ZodURL, $ZodEmoji, $ZodNanoID, $ZodCUID, $ZodCUID2, $ZodULID, $ZodXID, $ZodKSUID, $ZodISODateTime, $ZodISODate, $ZodISOTime, $ZodISODuration, $ZodIPv4, $ZodIPv6, $ZodMAC, $ZodCIDRv4, $ZodCIDRv6, $ZodBase64, $ZodBase64URL, $ZodE164, $ZodJWT, $ZodCustomStringFormat, $ZodNumber, $ZodNumberFormat, $ZodBoolean, $ZodBigInt, $ZodBigIntFormat, $ZodSymbol, $ZodUndefined, $ZodNull, $ZodAny, $ZodUnknown, $ZodNever, $ZodVoid, $ZodDate, $ZodArray, $ZodObject, $ZodObjectJIT, $ZodUnion, $ZodXor, $ZodDiscriminatedUnion, $ZodIntersection, $ZodTuple, $ZodRecord, $ZodMap, $ZodSet, $ZodEnum, $ZodLiteral, $ZodFile, $ZodTransform, $ZodOptional, $ZodExactOptional, $ZodNullable, $ZodDefault, $ZodPrefault, $ZodNonOptional, $ZodSuccess, $ZodCatch, $ZodNaN, $ZodPipe, $ZodCodec, $ZodPreprocess, $ZodReadonly, $ZodTemplateLiteral, $ZodFunction, $ZodPromise, $ZodLazy, $ZodCustom;
 var init_schemas = __esm({
   "../node_modules/zod/v4/core/schemas.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -15662,7 +15662,7 @@ function ar_default() {
 var error3;
 var init_ar = __esm({
   "../node_modules/zod/v4/locales/ar.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -15781,7 +15781,7 @@ function az_default() {
 var error4;
 var init_az = __esm({
   "../node_modules/zod/v4/locales/az.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -15914,7 +15914,7 @@ function be_default() {
 var error5;
 var init_be = __esm({
   "../node_modules/zod/v4/locales/be.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -16069,7 +16069,7 @@ function bg_default() {
 var error6;
 var init_bg = __esm({
   "../node_modules/zod/v4/locales/bg.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -16202,7 +16202,7 @@ function ca_default() {
 var error7;
 var init_ca = __esm({
   "../node_modules/zod/v4/locales/ca.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -16323,7 +16323,7 @@ function cs_default() {
 var error8;
 var init_cs = __esm({
   "../node_modules/zod/v4/locales/cs.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -16447,7 +16447,7 @@ function da_default() {
 var error9;
 var init_da = __esm({
   "../node_modules/zod/v4/locales/da.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -16575,7 +16575,7 @@ function de_default() {
 var error10;
 var init_de = __esm({
   "../node_modules/zod/v4/locales/de.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -16696,7 +16696,7 @@ function el_default() {
 var error11;
 var init_el = __esm({
   "../node_modules/zod/v4/locales/el.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -16818,7 +16818,7 @@ function en_default2() {
 var error12;
 var init_en2 = __esm({
   "../node_modules/zod/v4/locales/en.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -16943,7 +16943,7 @@ function eo_default() {
 var error13;
 var init_eo = __esm({
   "../node_modules/zod/v4/locales/eo.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -17065,7 +17065,7 @@ function es_default() {
 var error14;
 var init_es = __esm({
   "../node_modules/zod/v4/locales/es.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -17210,7 +17210,7 @@ function fa_default() {
 var error15;
 var init_fa = __esm({
   "../node_modules/zod/v4/locales/fa.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -17337,7 +17337,7 @@ function fi_default() {
 var error16;
 var init_fi = __esm({
   "../node_modules/zod/v4/locales/fi.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -17462,7 +17462,7 @@ function fr_default() {
 var error17;
 var init_fr = __esm({
   "../node_modules/zod/v4/locales/fr.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -17600,7 +17600,7 @@ function fr_CA_default() {
 var error18;
 var init_fr_CA = __esm({
   "../node_modules/zod/v4/locales/fr-CA.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -17720,7 +17720,7 @@ function he_default() {
 var error19;
 var init_he = __esm({
   "../node_modules/zod/v4/locales/he.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -17926,7 +17926,7 @@ function hr_default() {
 var error20;
 var init_hr = __esm({
   "../node_modules/zod/v4/locales/hr.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -18061,7 +18061,7 @@ function hu_default() {
 var error21;
 var init_hu = __esm({
   "../node_modules/zod/v4/locales/hu.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -18192,7 +18192,7 @@ function hy_default() {
 var error22;
 var init_hy = __esm({
   "../node_modules/zod/v4/locales/hy.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -18344,7 +18344,7 @@ function id_default() {
 var error23;
 var init_id = __esm({
   "../node_modules/zod/v4/locales/id.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -18463,7 +18463,7 @@ function is_default() {
 var error24;
 var init_is = __esm({
   "../node_modules/zod/v4/locales/is.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -18585,7 +18585,7 @@ function it_default() {
 var error25;
 var init_it = __esm({
   "../node_modules/zod/v4/locales/it.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -18706,7 +18706,7 @@ function ja_default() {
 var error26;
 var init_ja = __esm({
   "../node_modules/zod/v4/locales/ja.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -18826,7 +18826,7 @@ function ka_default() {
 var error27;
 var init_ka = __esm({
   "../node_modules/zod/v4/locales/ka.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -18951,7 +18951,7 @@ function km_default() {
 var error28;
 var init_km = __esm({
   "../node_modules/zod/v4/locales/km.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -19071,7 +19071,7 @@ function kh_default() {
 }
 var init_kh = __esm({
   "../node_modules/zod/v4/locales/kh.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -19089,7 +19089,7 @@ function ko_default() {
 var error29;
 var init_ko = __esm({
   "../node_modules/zod/v4/locales/ko.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -19223,7 +19223,7 @@ function lt_default() {
 var capitalizeFirstCharacter, error30;
 var init_lt = __esm({
   "../node_modules/zod/v4/locales/lt.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -19430,7 +19430,7 @@ function mk_default() {
 var error31;
 var init_mk = __esm({
   "../node_modules/zod/v4/locales/mk.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -19552,7 +19552,7 @@ function ms_default() {
 var error32;
 var init_ms = __esm({
   "../node_modules/zod/v4/locales/ms.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -19672,7 +19672,7 @@ function nl_default() {
 var error33;
 var init_nl = __esm({
   "../node_modules/zod/v4/locales/nl.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -19795,7 +19795,7 @@ function no_default() {
 var error34;
 var init_no = __esm({
   "../node_modules/zod/v4/locales/no.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -19916,7 +19916,7 @@ function ota_default() {
 var error35;
 var init_ota = __esm({
   "../node_modules/zod/v4/locales/ota.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -20038,7 +20038,7 @@ function ps_default() {
 var error36;
 var init_ps = __esm({
   "../node_modules/zod/v4/locales/ps.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -20165,7 +20165,7 @@ function pl_default() {
 var error37;
 var init_pl = __esm({
   "../node_modules/zod/v4/locales/pl.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -20287,7 +20287,7 @@ function pt_default() {
 var error38;
 var init_pt = __esm({
   "../node_modules/zod/v4/locales/pt.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -20408,7 +20408,7 @@ function ro_default() {
 var error39;
 var init_ro = __esm({
   "../node_modules/zod/v4/locales/ro.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -20555,7 +20555,7 @@ function ru_default() {
 var error40;
 var init_ru = __esm({
   "../node_modules/zod/v4/locales/ru.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -20710,7 +20710,7 @@ function sl_default() {
 var error41;
 var init_sl = __esm({
   "../node_modules/zod/v4/locales/sl.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -20832,7 +20832,7 @@ function sv_default() {
 var error42;
 var init_sv = __esm({
   "../node_modules/zod/v4/locales/sv.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -20955,7 +20955,7 @@ function ta_default() {
 var error43;
 var init_ta = __esm({
   "../node_modules/zod/v4/locales/ta.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -21078,7 +21078,7 @@ function th_default() {
 var error44;
 var init_th = __esm({
   "../node_modules/zod/v4/locales/th.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -21201,7 +21201,7 @@ function tr_default() {
 var error45;
 var init_tr = __esm({
   "../node_modules/zod/v4/locales/tr.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -21319,7 +21319,7 @@ function uk_default() {
 var error46;
 var init_uk = __esm({
   "../node_modules/zod/v4/locales/uk.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -21437,7 +21437,7 @@ function ua_default() {
 }
 var init_ua = __esm({
   "../node_modules/zod/v4/locales/ua.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -21455,7 +21455,7 @@ function ur_default() {
 var error47;
 var init_ur = __esm({
   "../node_modules/zod/v4/locales/ur.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -21578,7 +21578,7 @@ function uz_default() {
 var error48;
 var init_uz = __esm({
   "../node_modules/zod/v4/locales/uz.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -21701,7 +21701,7 @@ function vi_default() {
 var error49;
 var init_vi = __esm({
   "../node_modules/zod/v4/locales/vi.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -21822,7 +21822,7 @@ function zh_CN_default() {
 var error50;
 var init_zh_CN = __esm({
   "../node_modules/zod/v4/locales/zh-CN.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -21944,7 +21944,7 @@ function zh_TW_default() {
 var error51;
 var init_zh_TW = __esm({
   "../node_modules/zod/v4/locales/zh-TW.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -22064,7 +22064,7 @@ function yo_default() {
 var error52;
 var init_yo = __esm({
   "../node_modules/zod/v4/locales/yo.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -22233,7 +22233,7 @@ __export(locales_exports, {
 });
 var init_locales = __esm({
   "../node_modules/zod/v4/locales/index.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -22299,7 +22299,7 @@ function registry() {
 var _a2, $output, $input, $ZodRegistry, globalRegistry;
 var init_registries = __esm({
   "../node_modules/zod/v4/core/registries.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -23388,7 +23388,7 @@ function _stringFormat(Class2, format, fnOrRegex, _params = {}) {
 var TimePrecision;
 var init_api = __esm({
   "../node_modules/zod/v4/core/api.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -23868,7 +23868,7 @@ function isTransforming(_schema, _ctx) {
 var createToJSONSchemaMethod, createStandardJSONSchemaMethod;
 var init_to_json_schema = __esm({
   "../node_modules/zod/v4/core/to-json-schema.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -23932,7 +23932,7 @@ function toJSONSchema(input, params) {
 var formatMap, stringProcessor, numberProcessor, booleanProcessor, bigintProcessor, symbolProcessor, nullProcessor, undefinedProcessor, voidProcessor, neverProcessor, anyProcessor, unknownProcessor, dateProcessor, enumProcessor, literalProcessor, nanProcessor, templateLiteralProcessor, fileProcessor, successProcessor, customProcessor, functionProcessor, transformProcessor, mapProcessor, setProcessor, arrayProcessor, objectProcessor, unionProcessor, intersectionProcessor, tupleProcessor, recordProcessor, nullableProcessor, nonoptionalProcessor, defaultProcessor, prefaultProcessor, catchProcessor, pipeProcessor, readonlyProcessor, promiseProcessor, optionalProcessor, lazyProcessor, allProcessors;
 var init_json_schema_processors = __esm({
   "../node_modules/zod/v4/core/json-schema-processors.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -24454,7 +24454,7 @@ var init_json_schema_processors = __esm({
 var JSONSchemaGenerator;
 var init_json_schema_generator = __esm({
   "../node_modules/zod/v4/core/json-schema-generator.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -24543,7 +24543,7 @@ var init_json_schema_generator = __esm({
 var json_schema_exports = {};
 var init_json_schema = __esm({
   "../node_modules/zod/v4/core/json-schema.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -24830,7 +24830,7 @@ __export(core_exports2, {
 });
 var init_core2 = __esm({
   "../node_modules/zod/v4/core/index.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -24856,7 +24856,7 @@ var init_core2 = __esm({
 // ../node_modules/@modelcontextprotocol/sdk/dist/esm/server/zod-compat.js
 var init_zod_compat = __esm({
   "../node_modules/@modelcontextprotocol/sdk/dist/esm/server/zod-compat.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -24898,7 +24898,7 @@ __export(checks_exports2, {
 });
 var init_checks2 = __esm({
   "../node_modules/zod/v4/classic/checks.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -24933,7 +24933,7 @@ function duration2(params) {
 var ZodISODateTime, ZodISODate, ZodISOTime, ZodISODuration;
 var init_iso = __esm({
   "../node_modules/zod/v4/classic/iso.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -24966,7 +24966,7 @@ var init_iso = __esm({
 var initializer2, ZodError2, ZodRealError;
 var init_errors3 = __esm({
   "../node_modules/zod/v4/classic/errors.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -25018,7 +25018,7 @@ var init_errors3 = __esm({
 var parse2, parseAsync2, safeParse2, safeParseAsync2, encode2, decode2, encodeAsync2, decodeAsync2, safeEncode2, safeDecode2, safeEncodeAsync2, safeDecodeAsync2;
 var init_parse2 = __esm({
   "../node_modules/zod/v4/classic/parse.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -25724,7 +25724,7 @@ function preprocess(fn, schema) {
 var _installedGroups, ZodType2, _ZodString, ZodString2, ZodStringFormat, ZodEmail, ZodGUID, ZodUUID, ZodURL, ZodEmoji, ZodNanoID, ZodCUID, ZodCUID2, ZodULID, ZodXID, ZodKSUID, ZodIPv4, ZodMAC, ZodIPv6, ZodCIDRv4, ZodCIDRv6, ZodBase64, ZodBase64URL, ZodE164, ZodJWT, ZodCustomStringFormat, ZodNumber2, ZodNumberFormat, ZodBoolean2, ZodBigInt2, ZodBigIntFormat, ZodSymbol2, ZodUndefined2, ZodNull2, ZodAny2, ZodUnknown2, ZodNever2, ZodVoid2, ZodDate2, ZodArray2, ZodObject2, ZodUnion2, ZodXor, ZodDiscriminatedUnion2, ZodIntersection2, ZodTuple2, ZodRecord2, ZodMap2, ZodSet2, ZodEnum2, ZodLiteral2, ZodFile, ZodTransform, ZodOptional2, ZodExactOptional, ZodNullable2, ZodDefault2, ZodPrefault, ZodNonOptional, ZodSuccess, ZodCatch2, ZodNaN2, ZodPipe, ZodCodec, ZodPreprocess, ZodReadonly2, ZodTemplateLiteral, ZodLazy2, ZodPromise2, ZodFunction2, ZodCustom, describe2, meta2, stringbool;
 var init_schemas2 = __esm({
   "../node_modules/zod/v4/classic/schemas.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -26619,7 +26619,7 @@ function getErrorMap2() {
 var ZodIssueCode2, ZodFirstPartyTypeKind2;
 var init_compat = __esm({
   "../node_modules/zod/v4/classic/compat.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -27050,7 +27050,7 @@ function fromJSONSchema(schema, params) {
 var z, RECOGNIZED_KEYS;
 var init_from_json_schema = __esm({
   "../node_modules/zod/v4/classic/from-json-schema.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -27168,7 +27168,7 @@ function date4(params) {
 }
 var init_coerce = __esm({
   "../node_modules/zod/v4/classic/coerce.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -27426,7 +27426,7 @@ __export(external_exports, {
 });
 var init_external2 = __esm({
   "../node_modules/zod/v4/classic/external.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -27452,7 +27452,7 @@ var init_external2 = __esm({
 // ../node_modules/zod/v4/classic/index.js
 var init_classic = __esm({
   "../node_modules/zod/v4/classic/index.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -27463,7 +27463,7 @@ var init_classic = __esm({
 // ../node_modules/zod/v4/index.js
 var init_v4 = __esm({
   "../node_modules/zod/v4/index.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -27475,7 +27475,7 @@ var init_v4 = __esm({
 var RELATED_TASK_META_KEY, JSONRPC_VERSION, AssertObjectSchema, ProgressTokenSchema, CursorSchema, TaskCreationParamsSchema, TaskMetadataSchema, RelatedTaskMetadataSchema, RequestMetaSchema, BaseRequestParamsSchema, TaskAugmentedRequestParamsSchema, RequestSchema, NotificationsParamsSchema, NotificationSchema, ResultSchema, RequestIdSchema, JSONRPCRequestSchema, JSONRPCNotificationSchema, JSONRPCResultResponseSchema, ErrorCode, JSONRPCErrorResponseSchema, JSONRPCMessageSchema, JSONRPCResponseSchema, EmptyResultSchema, CancelledNotificationParamsSchema, CancelledNotificationSchema, IconSchema, IconsSchema, BaseMetadataSchema, ImplementationSchema, FormElicitationCapabilitySchema, ElicitationCapabilitySchema, ClientTasksCapabilitySchema, ServerTasksCapabilitySchema, ClientCapabilitiesSchema, InitializeRequestParamsSchema, InitializeRequestSchema, ServerCapabilitiesSchema, InitializeResultSchema, InitializedNotificationSchema, PingRequestSchema, ProgressSchema, ProgressNotificationParamsSchema, ProgressNotificationSchema, PaginatedRequestParamsSchema, PaginatedRequestSchema, PaginatedResultSchema, TaskStatusSchema, TaskSchema, CreateTaskResultSchema, TaskStatusNotificationParamsSchema, TaskStatusNotificationSchema, GetTaskRequestSchema, GetTaskResultSchema, GetTaskPayloadRequestSchema, GetTaskPayloadResultSchema, ListTasksRequestSchema, ListTasksResultSchema, CancelTaskRequestSchema, CancelTaskResultSchema, ResourceContentsSchema, TextResourceContentsSchema, Base64Schema, BlobResourceContentsSchema, RoleSchema, AnnotationsSchema, ResourceSchema, ResourceTemplateSchema, ListResourcesRequestSchema, ListResourcesResultSchema, ListResourceTemplatesRequestSchema, ListResourceTemplatesResultSchema, ResourceRequestParamsSchema, ReadResourceRequestParamsSchema, ReadResourceRequestSchema, ReadResourceResultSchema, ResourceListChangedNotificationSchema, SubscribeRequestParamsSchema, SubscribeRequestSchema, UnsubscribeRequestParamsSchema, UnsubscribeRequestSchema, ResourceUpdatedNotificationParamsSchema, ResourceUpdatedNotificationSchema, PromptArgumentSchema, PromptSchema, ListPromptsRequestSchema, ListPromptsResultSchema, GetPromptRequestParamsSchema, GetPromptRequestSchema, TextContentSchema, ImageContentSchema, AudioContentSchema, ToolUseContentSchema, EmbeddedResourceSchema, ResourceLinkSchema, ContentBlockSchema, PromptMessageSchema, GetPromptResultSchema, PromptListChangedNotificationSchema, ToolAnnotationsSchema, ToolExecutionSchema, ToolSchema, ListToolsRequestSchema, ListToolsResultSchema, CallToolResultSchema, CompatibilityCallToolResultSchema, CallToolRequestParamsSchema, CallToolRequestSchema, ToolListChangedNotificationSchema, ListChangedOptionsBaseSchema, LoggingLevelSchema, SetLevelRequestParamsSchema, SetLevelRequestSchema, LoggingMessageNotificationParamsSchema, LoggingMessageNotificationSchema, ModelHintSchema, ModelPreferencesSchema, ToolChoiceSchema, ToolResultContentSchema, SamplingContentSchema, SamplingMessageContentBlockSchema, SamplingMessageSchema, CreateMessageRequestParamsSchema, CreateMessageRequestSchema, CreateMessageResultSchema, CreateMessageResultWithToolsSchema, BooleanSchemaSchema, StringSchemaSchema, NumberSchemaSchema, UntitledSingleSelectEnumSchemaSchema, TitledSingleSelectEnumSchemaSchema, LegacyTitledEnumSchemaSchema, SingleSelectEnumSchemaSchema, UntitledMultiSelectEnumSchemaSchema, TitledMultiSelectEnumSchemaSchema, MultiSelectEnumSchemaSchema, EnumSchemaSchema, PrimitiveSchemaDefinitionSchema, ElicitRequestFormParamsSchema, ElicitRequestURLParamsSchema, ElicitRequestParamsSchema, ElicitRequestSchema, ElicitationCompleteNotificationParamsSchema, ElicitationCompleteNotificationSchema, ElicitResultSchema, ResourceTemplateReferenceSchema, PromptReferenceSchema, CompleteRequestParamsSchema, CompleteRequestSchema, CompleteResultSchema, RootSchema, ListRootsRequestSchema, ListRootsResultSchema, RootsListChangedNotificationSchema, ClientRequestSchema, ClientNotificationSchema, ClientResultSchema, ServerRequestSchema, ServerNotificationSchema, ServerResultSchema;
 var init_types2 = __esm({
   "../node_modules/@modelcontextprotocol/sdk/dist/esm/types.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -28965,7 +28965,7 @@ var init_types2 = __esm({
 // ../node_modules/@modelcontextprotocol/sdk/dist/esm/experimental/tasks/interfaces.js
 var init_interfaces = __esm({
   "../node_modules/@modelcontextprotocol/sdk/dist/esm/experimental/tasks/interfaces.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -28975,7 +28975,7 @@ var init_interfaces = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/Options.js
 var init_Options = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/Options.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -28985,7 +28985,7 @@ var init_Options = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/Refs.js
 var init_Refs = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/Refs.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -28996,7 +28996,7 @@ var init_Refs = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/errorMessages.js
 var init_errorMessages = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/errorMessages.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29006,7 +29006,7 @@ var init_errorMessages = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/getRelativePath.js
 var init_getRelativePath = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/getRelativePath.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29016,7 +29016,7 @@ var init_getRelativePath = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/parsers/any.js
 var init_any = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/parsers/any.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29027,7 +29027,7 @@ var init_any = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/parsers/array.js
 var init_array = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/parsers/array.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29039,7 +29039,7 @@ var init_array = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/parsers/bigint.js
 var init_bigint = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/parsers/bigint.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29050,7 +29050,7 @@ var init_bigint = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/parsers/boolean.js
 var init_boolean = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/parsers/boolean.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29060,7 +29060,7 @@ var init_boolean = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/parsers/branded.js
 var init_branded = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/parsers/branded.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29071,7 +29071,7 @@ var init_branded = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/parsers/catch.js
 var init_catch = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/parsers/catch.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29082,7 +29082,7 @@ var init_catch = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/parsers/date.js
 var init_date = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/parsers/date.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29093,7 +29093,7 @@ var init_date = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/parsers/default.js
 var init_default = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/parsers/default.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29104,7 +29104,7 @@ var init_default = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/parsers/effects.js
 var init_effects = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/parsers/effects.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29116,7 +29116,7 @@ var init_effects = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/parsers/enum.js
 var init_enum = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/parsers/enum.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29126,7 +29126,7 @@ var init_enum = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/parsers/intersection.js
 var init_intersection = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/parsers/intersection.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29137,7 +29137,7 @@ var init_intersection = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/parsers/literal.js
 var init_literal = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/parsers/literal.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29148,7 +29148,7 @@ var init_literal = __esm({
 var ALPHA_NUMERIC;
 var init_string = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/parsers/string.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29160,7 +29160,7 @@ var init_string = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/parsers/record.js
 var init_record = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/parsers/record.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29174,7 +29174,7 @@ var init_record = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/parsers/map.js
 var init_map = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/parsers/map.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29187,7 +29187,7 @@ var init_map = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/parsers/nativeEnum.js
 var init_nativeEnum = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/parsers/nativeEnum.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29197,7 +29197,7 @@ var init_nativeEnum = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/parsers/never.js
 var init_never = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/parsers/never.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29208,7 +29208,7 @@ var init_never = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/parsers/null.js
 var init_null = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/parsers/null.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29218,7 +29218,7 @@ var init_null = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/parsers/union.js
 var init_union = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/parsers/union.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29229,7 +29229,7 @@ var init_union = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/parsers/nullable.js
 var init_nullable = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/parsers/nullable.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29241,7 +29241,7 @@ var init_nullable = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/parsers/number.js
 var init_number = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/parsers/number.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29252,7 +29252,7 @@ var init_number = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/parsers/object.js
 var init_object = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/parsers/object.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29263,7 +29263,7 @@ var init_object = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/parsers/optional.js
 var init_optional = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/parsers/optional.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29275,7 +29275,7 @@ var init_optional = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/parsers/pipeline.js
 var init_pipeline = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/parsers/pipeline.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29286,7 +29286,7 @@ var init_pipeline = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/parsers/promise.js
 var init_promise = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/parsers/promise.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29297,7 +29297,7 @@ var init_promise = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/parsers/set.js
 var init_set = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/parsers/set.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29309,7 +29309,7 @@ var init_set = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/parsers/tuple.js
 var init_tuple = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/parsers/tuple.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29320,7 +29320,7 @@ var init_tuple = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/parsers/undefined.js
 var init_undefined = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/parsers/undefined.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29331,7 +29331,7 @@ var init_undefined = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/parsers/unknown.js
 var init_unknown = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/parsers/unknown.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29342,7 +29342,7 @@ var init_unknown = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/parsers/readonly.js
 var init_readonly = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/parsers/readonly.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29353,7 +29353,7 @@ var init_readonly = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/selectParser.js
 var init_selectParser = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/selectParser.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29393,7 +29393,7 @@ var init_selectParser = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/parseDef.js
 var init_parseDef = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/parseDef.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29407,7 +29407,7 @@ var init_parseDef = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/parseTypes.js
 var init_parseTypes = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/parseTypes.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29417,7 +29417,7 @@ var init_parseTypes = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/zodToJsonSchema.js
 var init_zodToJsonSchema = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/zodToJsonSchema.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29430,7 +29430,7 @@ var init_zodToJsonSchema = __esm({
 // ../node_modules/zod-to-json-schema/dist/esm/index.js
 var init_esm = __esm({
   "../node_modules/zod-to-json-schema/dist/esm/index.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29479,7 +29479,7 @@ var init_esm = __esm({
 // ../node_modules/@modelcontextprotocol/sdk/dist/esm/server/zod-json-schema-compat.js
 var init_zod_json_schema_compat = __esm({
   "../node_modules/@modelcontextprotocol/sdk/dist/esm/server/zod-json-schema-compat.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29491,7 +29491,7 @@ var init_zod_json_schema_compat = __esm({
 // ../node_modules/@modelcontextprotocol/sdk/dist/esm/shared/protocol.js
 var init_protocol = __esm({
   "../node_modules/@modelcontextprotocol/sdk/dist/esm/shared/protocol.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29505,7 +29505,7 @@ var init_protocol = __esm({
 // ../node_modules/ms/index.js
 var require_ms = __commonJS({
   "../node_modules/ms/index.js"(exports, module) {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29629,7 +29629,7 @@ var require_ms = __commonJS({
 // ../node_modules/debug/src/common.js
 var require_common = __commonJS({
   "../node_modules/debug/src/common.js"(exports, module) {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -29821,7 +29821,7 @@ var require_common = __commonJS({
 // ../node_modules/debug/src/browser.js
 var require_browser = __commonJS({
   "../node_modules/debug/src/browser.js"(exports, module) {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -30000,7 +30000,7 @@ var require_browser = __commonJS({
 // node-built-in-modules:tty
 var require_tty = __commonJS({
   "node-built-in-modules:tty"(exports, module) {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -30013,7 +30013,7 @@ var require_tty = __commonJS({
 import libDefault from "util";
 var require_util = __commonJS({
   "node-built-in-modules:util"(exports, module) {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -30029,7 +30029,7 @@ __export(browser_exports, {
 var level, colorSupport, supportsColor, browser_default;
 var init_browser = __esm({
   "../node_modules/supports-color/browser.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -30065,7 +30065,7 @@ var init_browser = __esm({
 // ../node_modules/debug/src/node.js
 var require_node = __commonJS({
   "../node_modules/debug/src/node.js"(exports, module) {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -30250,7 +30250,7 @@ var require_node = __commonJS({
 // ../node_modules/debug/src/index.js
 var require_src = __commonJS({
   "../node_modules/debug/src/index.js"(exports, module) {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -30265,7 +30265,7 @@ var require_src = __commonJS({
 // ../node_modules/zod/index.js
 var init_zod = __esm({
   "../node_modules/zod/index.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -30302,7 +30302,7 @@ function isEnabled(flagName) {
 var tracing, logging;
 var init_config = __esm({
   "../node_modules/@openai/agents-core/dist/config.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -30350,7 +30350,7 @@ function getLogger(namespace = "openai-agents") {
 var import_debug, logger, logger_default;
 var init_logger = __esm({
   "../node_modules/@openai/agents-core/dist/logger.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -30366,7 +30366,7 @@ var init_logger = __esm({
 var import_debug2, MCPTool;
 var init_mcpShared = __esm({
   "../node_modules/@openai/agents-core/dist/mcpShared.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -30390,7 +30390,7 @@ var init_mcpShared = __esm({
 var cachedMcpTools, cachedMcpToolKeysByServer;
 var init_mcpToolCache = __esm({
   "../node_modules/@openai/agents-core/dist/mcpToolCache.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -30402,7 +30402,7 @@ var init_mcpToolCache = __esm({
 // ../node_modules/@openai/agents-core/dist/shims/mcp-server/node.mjs
 var init_node = __esm({
   "../node_modules/@openai/agents-core/dist/shims/mcp-server/node.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -30428,7 +30428,7 @@ function supportsProcessLifecycleEvents() {
 var ReadableStream, ReadableStreamController, TransformStream, AsyncLocalStorage, NodeTimer, timer;
 var init_shims_workerd = __esm({
   "../node_modules/@openai/agents-core/dist/shims/shims-workerd.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -30542,7 +30542,7 @@ function decodeBase64ToUint8Array(value) {
 }
 var init_base64 = __esm({
   "../node_modules/@openai/agents-core/dist/utils/base64.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -30624,7 +30624,7 @@ function smartStringReplacer(_key, nestedValue) {
 var BYTE_PREVIEW_LIMIT;
 var init_smartString = __esm({
   "../node_modules/@openai/agents-core/dist/utils/smartString.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -30689,7 +30689,7 @@ function toUint8ArrayFromBinary(value) {
 }
 var init_binary = __esm({
   "../node_modules/@openai/agents-core/dist/utils/binary.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -30763,7 +30763,7 @@ function resolveToolSearchCallId(value, generateFallbackId) {
 }
 var init_tooling = __esm({
   "../node_modules/@openai/agents-core/dist/tooling.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -30895,7 +30895,7 @@ function getUnresolvedToolResultCorrelationsForResponse(items) {
 var SIMPLE_TOOL_RESULT_TYPE_BY_CALL_TYPE, SIMPLE_TOOL_RESULT_TYPES, TOOL_SEARCH_OUTPUT, HOSTED_MCP_APPROVAL_REQUEST, HOSTED_MCP_APPROVAL_RESPONSE;
 var init_toolResultCorrelation = __esm({
   "../node_modules/@openai/agents-core/dist/runner/toolResultCorrelation.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -31111,7 +31111,7 @@ function getTurnInput(originalInput, generatedItems, reasoningItemIdPolicy) {
 }
 var init_items = __esm({
   "../node_modules/@openai/agents-core/dist/runner/items.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -31141,7 +31141,7 @@ var init_items = __esm({
 var SharedBase, ItemBase, Refusal, OutputText, PromptCacheBreakpoint, InputText, ReasoningText, InputImage, InputFile, AudioContent, ImageContent, ToolOutputText, ImageDataObjectSchema, ImageUrlObjectSchema, ImageFileIdObjectSchema, ImageObjectSchema, FileDataObjectSchema, FileUrlObjectSchema, FileIdObjectSchema, FileReferenceSchema, zStringWithHints, ToolOutputImage, ToolOutputFileContent, ComputerToolOutput, computerActions, AssistantContent, MessageBase, AssistantMessageItem, UserContent, UserMessageItem, SystemMessageItem, MessageItem, HostedToolCallItem, FunctionCallItem, ToolReference, ToolSearchOutputTool, ToolSearchCallArguments, ToolSearchCallItem, ToolSearchOutputItem, ToolCallOutputContent, ToolCallStructuredOutput, FunctionCallResultItem, ComputerUseCallItem, ComputerCallResultItem, ShellAction, ShellCallItem, ShellCallOutcome, ShellCallOutputContent, ShellCallResultItem, ApplyPatchOperationCreateFile, ApplyPatchOperationUpdateFile, ApplyPatchOperationDeleteFile, ApplyPatchOperation, ApplyPatchCallItem, ApplyPatchCallResultItem, ToolCallItem, ReasoningItem, CompactionItem, UnknownItem, OutputModelItem, ModelItem, RequestUsageData, UsageData, StreamEventTextStream, StreamEventResponseStarted, StreamEventResponseCompleted, StreamEventGenericItem, StreamEvent;
 var init_protocol2 = __esm({
   "../node_modules/@openai/agents-core/dist/types/protocol.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -31821,7 +31821,7 @@ function combineAbortSignalsWithOptions(signals, options) {
 }
 var init_abortSignals = __esm({
   "../node_modules/@openai/agents-core/dist/utils/abortSignals.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -31841,7 +31841,7 @@ function createAbortHandlerRef() {
 var RunResultBase, RunResult, StreamedRunResult;
 var init_result = __esm({
   "../node_modules/@openai/agents-core/dist/result.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -32364,7 +32364,7 @@ function withNewSpanContext(fn) {
 var ALS_SYMBOL, localFallbackAls;
 var init_context = __esm({
   "../node_modules/@openai/agents-core/dist/tracing/context.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -32403,7 +32403,7 @@ function removePrivateFields(obj) {
 var NOOP_TRACE_OR_SPAN_ID, defaultTracingIdGenerator;
 var init_utils2 = __esm({
   "../node_modules/@openai/agents-core/dist/tracing/utils.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -32439,7 +32439,7 @@ function defaultProcessor2() {
 var ConsoleSpanExporter, BatchTraceProcessor, MultiTracingProcessor, _defaultExporter, _defaultProcessor;
 var init_processor = __esm({
   "../node_modules/@openai/agents-core/dist/tracing/processor.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -32738,7 +32738,7 @@ var init_processor = __esm({
 var Span, NoopSpan;
 var init_spans = __esm({
   "../node_modules/@openai/agents-core/dist/tracing/spans.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -32883,7 +32883,7 @@ var init_spans = __esm({
 var Trace, NoopTrace;
 var init_traces = __esm({
   "../node_modules/@openai/agents-core/dist/tracing/traces.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -33030,7 +33030,7 @@ function getModuleTraceProvider() {
 var TraceProvider, moduleTraceProvider;
 var init_provider = __esm({
   "../node_modules/@openai/agents-core/dist/tracing/provider.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -33441,7 +33441,7 @@ function createMCPListToolsSpan(options, parent) {
 var withResponseSpan, withAgentSpan, withFunctionSpan, withHandoffSpan, withGenerationSpan, withCustomSpan, withGuardrailSpan, withTranscriptionSpan, withSpeechSpan, withSpeechGroupSpan, withMCPListToolsSpan;
 var init_createSpans = __esm({
   "../node_modules/@openai/agents-core/dist/tracing/createSpans.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -33485,7 +33485,7 @@ function setTracingDisabled(disabled) {
 }
 var init_tracing = __esm({
   "../node_modules/@openai/agents-core/dist/tracing/index.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -33506,7 +33506,7 @@ var init_tracing = __esm({
 var EventEmitterDelegate, AgentHooks, RunHooks;
 var init_lifecycle = __esm({
   "../node_modules/@openai/agents-core/dist/lifecycle.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -33556,7 +33556,7 @@ async function safeExecute(fn) {
 }
 var init_safeExecute = __esm({
   "../node_modules/@openai/agents-core/dist/utils/safeExecute.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -33573,7 +33573,7 @@ function isAbortError(err) {
 var castToError;
 var init_errors4 = __esm({
   "../node_modules/openai/internal/errors.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -33609,7 +33609,7 @@ var init_errors4 = __esm({
 var OpenAIError, APIError, APIUserAbortError, APIConnectionError, APIConnectionTimeoutError, BadRequestError, AuthenticationError, PermissionDeniedError, NotFoundError, ConflictError, UnprocessableEntityError, RateLimitError, InternalServerError, LengthFinishReasonError, ContentFilterFinishReasonError, InvalidWebhookSignatureError, OAuthError, SubjectTokenProviderError;
 var init_error = __esm({
   "../node_modules/openai/core/error.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -33806,7 +33806,7 @@ var init_error = __esm({
 // ../node_modules/openai/error.mjs
 var init_error2 = __esm({
   "../node_modules/openai/error.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -33936,7 +33936,7 @@ function validateInputTools(tools) {
 }
 var init_parser = __esm({
   "../node_modules/openai/lib/parser.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -33960,7 +33960,7 @@ var init_parser = __esm({
 var ignoreOverride2, defaultOptions, getDefaultOptions2;
 var init_Options2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/Options.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -34012,7 +34012,7 @@ function isEmptyObj(obj) {
 var zodDef;
 var init_util3 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/util.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -34027,7 +34027,7 @@ var init_util3 = __esm({
 var getRefs2;
 var init_Refs2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/Refs.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -34072,7 +34072,7 @@ function setResponseValueAndErrors2(res, key, value, errorMessage, refs) {
 }
 var init_errorMessages2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/errorMessages.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -34087,7 +34087,7 @@ function parseAnyDef2() {
 }
 var init_any2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/parsers/any.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -34120,7 +34120,7 @@ function parseArrayDef2(def, refs) {
 }
 var init_array2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/parsers/array.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -34178,7 +34178,7 @@ function parseBigintDef2(def, refs) {
 }
 var init_bigint2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/parsers/bigint.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -34195,7 +34195,7 @@ function parseBooleanDef2() {
 }
 var init_boolean2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/parsers/boolean.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -34209,7 +34209,7 @@ function parseBrandedDef2(_def, refs, forceResolution) {
 }
 var init_branded2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/parsers/branded.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -34222,7 +34222,7 @@ var init_branded2 = __esm({
 var parseCatchDef2;
 var init_catch2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/parsers/catch.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -34260,7 +34260,7 @@ function parseDateDef2(def, refs, overrideDateStrategy) {
 var integerDateParser;
 var init_date2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/parsers/date.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -34312,7 +34312,7 @@ function parseDefaultDef2(_def, refs, forceResolution) {
 }
 var init_default2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/parsers/default.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -34327,7 +34327,7 @@ function parseEffectsDef2(_def, refs, forceResolution) {
 }
 var init_effects2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/parsers/effects.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -34345,7 +34345,7 @@ function parseEnumDef2(def) {
 }
 var init_enum2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/parsers/enum.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -34392,7 +34392,7 @@ function parseIntersectionDef2(def, refs) {
 var isJsonSchema7AllOfType;
 var init_intersection2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/parsers/intersection.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -34427,7 +34427,7 @@ function parseLiteralDef2(def, refs) {
 }
 var init_literal2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/parsers/literal.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -34558,7 +34558,7 @@ function parseStringDef2(def, refs) {
 var emojiRegex2, zodPatterns, escapeNonAlphaNumeric, addFormat, addPattern, processRegExp;
 var init_string2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/parsers/string.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -34788,7 +34788,7 @@ function parseRecordDef2(def, refs) {
 }
 var init_record2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/parsers/record.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -34825,7 +34825,7 @@ function parseMapDef2(def, refs) {
 }
 var init_map2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/parsers/map.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -34850,7 +34850,7 @@ function parseNativeEnumDef2(def) {
 }
 var init_nativeEnum2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/parsers/nativeEnum.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -34866,7 +34866,7 @@ function parseNeverDef2() {
 }
 var init_never2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/parsers/never.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -34885,7 +34885,7 @@ function parseNullDef2(refs) {
 }
 var init_null2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/parsers/null.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -34946,7 +34946,7 @@ function parseUnionDef2(def, refs) {
 var primitiveMappings2, asAnyOf;
 var init_union2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/parsers/union.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -34999,7 +34999,7 @@ function parseNullableDef2(def, refs, forceResolution) {
 }
 var init_nullable2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/parsers/nullable.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -35059,7 +35059,7 @@ function parseNumberDef2(def, refs) {
 }
 var init_number2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/parsers/number.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -35115,7 +35115,7 @@ function parseObjectDef2(def, refs) {
 }
 var init_object2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/parsers/object.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -35129,7 +35129,7 @@ var init_object2 = __esm({
 var parseOptionalDef2;
 var init_optional2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/parsers/optional.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -35158,7 +35158,7 @@ var init_optional2 = __esm({
 var parsePipelineDef2;
 var init_pipeline2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/parsers/pipeline.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -35190,7 +35190,7 @@ function parsePromiseDef2(def, refs, forceResolution) {
 }
 var init_promise2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/parsers/promise.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -35220,7 +35220,7 @@ function parseSetDef2(def, refs) {
 }
 var init_set2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/parsers/set.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -35259,7 +35259,7 @@ function parseTupleDef2(def, refs) {
 }
 var init_tuple2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/parsers/tuple.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -35276,7 +35276,7 @@ function parseUndefinedDef2() {
 }
 var init_undefined2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/parsers/undefined.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -35290,7 +35290,7 @@ function parseUnknownDef2() {
 }
 var init_unknown2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/parsers/unknown.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -35302,7 +35302,7 @@ var init_unknown2 = __esm({
 var parseReadonlyDef2;
 var init_readonly2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/parsers/readonly.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -35349,7 +35349,7 @@ function parseDef2(def, refs, forceResolution = false) {
 var get$ref, encodedDefinitionPathPartPrefix, encodeDefinitionPathPart, getRelativePath2, selectParser2, addMeta;
 var init_parseDef2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/parseDef.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -35525,7 +35525,7 @@ var init_parseDef2 = __esm({
 var zodToJsonSchema2;
 var init_zodToJsonSchema2 = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/zodToJsonSchema.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -35593,7 +35593,7 @@ var init_zodToJsonSchema2 = __esm({
 // ../node_modules/openai/_vendor/zod-to-json-schema/index.mjs
 var init_zod_to_json_schema = __esm({
   "../node_modules/openai/_vendor/zod-to-json-schema/index.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -35784,7 +35784,7 @@ function addOutputText(rsp) {
 }
 var init_ResponsesParser = __esm({
   "../node_modules/openai/lib/ResponsesParser.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -35939,7 +35939,7 @@ function hasMoreThanNKeys(obj, n) {
 }
 var init_transform = __esm({
   "../node_modules/openai/lib/transform.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -36013,7 +36013,7 @@ function zodResponsesFunction(options) {
 }
 var init_zod2 = __esm({
   "../node_modules/openai/helpers/zod.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -36035,7 +36035,7 @@ var init_zod2 = __esm({
 var AgentsError, SystemError, MaxTurnsExceededError, ModelRefusalError, ModelBehaviorError, InvalidToolInputError, UserError, GuardrailExecutionError, ToolCallError, ToolTimeoutError, InputGuardrailTripwireTriggered, OutputGuardrailTripwireTriggered, ToolInputGuardrailTripwireTriggered, ToolOutputGuardrailTripwireTriggered;
 var init_errors5 = __esm({
   "../node_modules/@openai/agents-core/dist/errors.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -36197,7 +36197,7 @@ function readZodType(input) {
 }
 var init_zodCompat = __esm({
   "../node_modules/@openai/agents-core/dist/utils/zodCompat.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -36221,7 +36221,7 @@ function isAgentToolInput(input) {
 }
 var init_typeGuards = __esm({
   "../node_modules/@openai/agents-core/dist/utils/typeGuards.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -36565,7 +36565,7 @@ function readShape(input) {
 var JSON_SCHEMA_DRAFT_07, OPTIONAL_WRAPPERS, DECORATOR_WRAPPERS, SIMPLE_TYPE_MAPPING;
 var init_zodJsonSchemaCompat = __esm({
   "../node_modules/@openai/agents-core/dist/utils/zodJsonSchemaCompat.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -36939,7 +36939,7 @@ function isRecord(value) {
 }
 var init_strictToolSchema = __esm({
   "../node_modules/@openai/agents-core/dist/utils/strictToolSchema.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -37060,7 +37060,7 @@ function convertAgentOutputTypeToSerializable(outputType) {
 var zodResponsesFunctionCompat, zodTextFormatCompat;
 var init_tools = __esm({
   "../node_modules/@openai/agents-core/dist/utils/tools.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -37170,7 +37170,7 @@ function normalizeHostedMcpRequireApproval(requireApproval) {
 var REQUIRE_APPROVAL_POLICY_KEYS, TOOL_NAMES_KEYS, READ_ONLY_KEYS, MCP_APPROVAL_FILTER_KEYS;
 var init_mcpApproval = __esm({
   "../node_modules/@openai/agents-core/dist/utils/mcpApproval.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -37259,7 +37259,7 @@ function getFunctionToolName(tool2) {
 var FUNCTION_TOOL_NAMESPACE, FUNCTION_TOOL_NAMESPACE_DESCRIPTION;
 var init_toolIdentity = __esm({
   "../node_modules/@openai/agents-core/dist/toolIdentity.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -37311,7 +37311,7 @@ function resolveToolOutputGuardrails(guardrails) {
 }
 var init_toolGuardrail = __esm({
   "../node_modules/@openai/agents-core/dist/toolGuardrail.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -37670,7 +37670,7 @@ function tool(options) {
 var FUNCTION_TOOL_PARSED_INPUT_CALLBACK, computerCache, computerInitializerMap, computersByRunContext, CLIENT_TOOL_SEARCH_EXECUTOR, FUNCTION_TOOL_TIMEOUT_BEHAVIORS, FUNCTION_TOOL_TIMEOUT_ALREADY_ENFORCED, MAX_FUNCTION_TOOL_TIMEOUT_MS;
 var init_tool = __esm({
   "../node_modules/@openai/agents-core/dist/tool.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -37775,7 +37775,7 @@ function assertJsonCompatible(value, path2) {
 }
 var init_customData = __esm({
   "../node_modules/@openai/agents-core/dist/utils/customData.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -38211,7 +38211,7 @@ function ensureStrictJsonSchema2(schema) {
 var MCP_FUNCTION_TOOL_NAME_MAX_LENGTH, MCP_FUNCTION_TOOL_HASH_LENGTH, defaultMCPToolCacheKey;
 var init_mcp = __esm({
   "../node_modules/@openai/agents-core/dist/mcp.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -38296,7 +38296,7 @@ function getDefaultModelSettings(model) {
 var OPENAI_DEFAULT_MODEL_ENV_VARIABLE_NAME, GPT_5_CHAT_MODEL_PATTERNS, DEFAULT_REASONING_EFFORT_PATTERNS;
 var init_defaultModel = __esm({
   "../node_modules/@openai/agents-core/dist/defaultModel.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -38337,7 +38337,7 @@ var init_defaultModel = __esm({
 var RequestUsage, Usage;
 var init_usage = __esm({
   "../node_modules/@openai/agents-core/dist/usage.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -38538,7 +38538,7 @@ function mergeApprovalRecords(current, incoming) {
 var COMPUTER_APPROVAL_TOOL_NAMES, RunContext;
 var init_runContext = __esm({
   "../node_modules/@openai/agents-core/dist/runContext.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -38877,7 +38877,7 @@ function getHandoff(agent) {
 var Handoff;
 var init_handoff = __esm({
   "../node_modules/@openai/agents-core/dist/handoff.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -39002,7 +39002,7 @@ function getRawModelEventSource(data) {
 var RunRawModelStreamEvent, RunItemStreamEvent, RunAgentUpdatedStreamEvent;
 var init_events = __esm({
   "../node_modules/@openai/agents-core/dist/events.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -39089,7 +39089,7 @@ function defineOutputGuardrail({ name, execute }) {
 }
 var init_guardrail = __esm({
   "../node_modules/@openai/agents-core/dist/guardrail.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -39111,7 +39111,7 @@ function getDefaultModelProvider() {
 var DEFAULT_PROVIDER;
 var init_providers = __esm({
   "../node_modules/@openai/agents-core/dist/providers.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -39133,7 +39133,7 @@ function getAgentToolSourceAgent(tool2) {
 var agentToolSourceRegistry;
 var init_agentToolSourceRegistry = __esm({
   "../node_modules/@openai/agents-core/dist/agentToolSourceRegistry.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -39297,7 +39297,7 @@ function stableStringify(value) {
 }
 var init_runStateIdentity = __esm({
   "../node_modules/@openai/agents-core/dist/runStateIdentity.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -39337,7 +39337,7 @@ function getStringProperty(item, key) {
 var RunItemBase, RunMessageOutputItem, RunToolCallItem, RunToolSearchCallItem, RunToolSearchOutputItem, RunToolCallOutputItem, RunReasoningItem, RunHandoffCallItem, RunHandoffOutputItem, RunToolApprovalItem;
 var init_items2 = __esm({
   "../node_modules/@openai/agents-core/dist/items.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -39580,7 +39580,7 @@ var init_items2 = __esm({
 var AgentToolUseTracker;
 var init_toolUseTracker = __esm({
   "../node_modules/@openai/agents-core/dist/runner/toolUseTracker.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -39621,7 +39621,7 @@ var init_toolUseTracker = __esm({
 var nextStepSchema, SingleStepResult;
 var init_steps = __esm({
   "../node_modules/@openai/agents-core/dist/runner/steps.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -39672,7 +39672,7 @@ var init_steps = __esm({
 var SANDBOX_SESSION_STATE_VERSION;
 var init_session = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/session.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -39684,7 +39684,7 @@ var init_session = __esm({
 // ../node_modules/@openai/agents-core/dist/utils/toolSearch.mjs
 var init_toolSearch = __esm({
   "../node_modules/@openai/agents-core/dist/utils/toolSearch.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -39763,7 +39763,7 @@ function serializeHandoff(h) {
 var REQUIRED_COMPUTER_METHODS;
 var init_serialize = __esm({
   "../node_modules/@openai/agents-core/dist/utils/serialize.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -40175,7 +40175,7 @@ function getClientToolSearchHelper(tools) {
 }
 var init_toolSearch2 = __esm({
   "../node_modules/@openai/agents-core/dist/runner/toolSearch.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -40219,7 +40219,7 @@ var init_toolSearch2 = __esm({
 var SANDBOX_AGENT_BRAND;
 var init_brand = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/brand.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -40291,7 +40291,7 @@ function getObjectId(value) {
 var sandboxConcurrencyGuards, objectIds, nextObjectId;
 var init_agentKeys = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/runtime/agentKeys.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -40478,7 +40478,7 @@ function getSerializedApplyPatchToolPlaceholder(args) {
 var SERIALIZED_EXECUTION_TOOL_PLACEHOLDER;
 var init_toolRehydration = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/runtime/toolRehydration.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -41125,7 +41125,7 @@ async function deserializeProcessedResponse(agentMap, state, serializedProcessed
 var CURRENT_SCHEMA_VERSION, SUPPORTED_SCHEMA_VERSIONS, $schemaVersion, serializedAgentSchema, serializedSpanBase, SerializedSpan, requestUsageSchema, usageSchema, modelResponseSchema, itemSchema, serializedTraceSchema, sandboxSessionStateEnvelopeSchema, sandboxSessionEntrySchema, sandboxStateSchema, serializedProcessedResponseSchema, guardrailFunctionOutputSchema, toolGuardrailBehaviorSchema, toolGuardrailFunctionOutputSchema, toolGuardrailMetadataSchema, inputGuardrailResultSchema, outputGuardrailResultSchema, toolInputGuardrailResultSchema, toolOutputGuardrailResultSchema, SerializedRunState, RunState;
 var init_runState = __esm({
   "../node_modules/@openai/agents-core/dist/runState.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -41920,7 +41920,7 @@ var init_runState = __esm({
 var DEFAULT_MAX_TURNS;
 var init_constants = __esm({
   "../node_modules/@openai/agents-core/dist/runner/constants.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -41978,7 +41978,7 @@ function mergeModelSettings(inheritedModelSettings, overrideModelSettings) {
 var NESTED_MODEL_SETTINGS_MERGE_KEYS;
 var init_modelSettingsMerge = __esm({
   "../node_modules/@openai/agents-core/dist/runner/modelSettingsMerge.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -42057,7 +42057,7 @@ function stripGpt5OnlySettings(modelSettings) {
 var hasGpt5OnlySettings;
 var init_modelSettings = __esm({
   "../node_modules/@openai/agents-core/dist/runner/modelSettings.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -42090,7 +42090,7 @@ function file2(args) {
 }
 var init_factories = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/entries/factories.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -42111,7 +42111,7 @@ function isMount(entry) {
 }
 var init_guards = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/entries/guards.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -42124,7 +42124,7 @@ var init_guards = __esm({
 // ../node_modules/@openai/agents-core/dist/sandbox/entries/index.mjs
 var init_entries = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/entries/index.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -42199,7 +42199,7 @@ function relativePosixPathWithinRoot(root, path2) {
 }
 var init_posixPath = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/shared/posixPath.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -42238,7 +42238,7 @@ function normalizePathGrant(grant) {
 }
 var init_pathGrants = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/pathGrants.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -42290,7 +42290,7 @@ function formatPermissionTriplet(value) {
 var FileMode, DEFAULT_SANDBOX_ENTRY_PERMISSIONS, Permissions;
 var init_permissions = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/permissions.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -42415,7 +42415,7 @@ function normalizeEntryGroup(group3) {
 }
 var init_users = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/users.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -42456,7 +42456,7 @@ function isPlainRecord(value) {
 }
 var init_stableJson = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/shared/stableJson.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -42476,7 +42476,7 @@ function jsonEqual(left, right) {
 }
 var init_compare = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/shared/compare.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -42496,7 +42496,7 @@ function hasCustomRemoteMountCommandAllowlist(allowlist) {
 var DEFAULT_REMOTE_MOUNT_COMMAND_ALLOWLIST;
 var init_remoteMountCommandAllowlist = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/shared/remoteMountCommandAllowlist.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -42532,7 +42532,7 @@ function isRecord4(value) {
 }
 var init_typeGuards2 = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/shared/typeGuards.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -42623,7 +42623,7 @@ function readStatus(details) {
 var SandboxError, SandboxConfigurationError, SandboxArtifactError, SandboxLifecycleError, SandboxInvalidManifestPathError, SandboxGitArtifactError, SandboxGitSubpathError;
 var init_errors6 = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/errors.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -43090,7 +43090,7 @@ function rejectKnownSnakeCaseKeys(value, keys, source) {
 var Environment, Manifest;
 var init_manifest = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/manifest.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -43315,7 +43315,7 @@ function normalizeSandboxPath(path2, originalPath) {
 var WorkspacePathPolicy;
 var init_workspacePaths = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/workspacePaths.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -43472,7 +43472,7 @@ function dedent(value) {
 var DEFAULT_SANDBOX_INSTRUCTIONS;
 var init_prompts = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/runtime/prompts.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -43563,7 +43563,7 @@ function manifestHasUser(manifest, name) {
 }
 var init_runAsManifest = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/runtime/runAsManifest.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -43724,7 +43724,7 @@ function isPlainRecord2(value) {
 }
 var init_agentPreparation = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/runtime/agentPreparation.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -43785,7 +43785,7 @@ function readErrorRetryability(error53) {
 var sandboxEventSinks;
 var init_events2 = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/events.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -43856,7 +43856,7 @@ function recordSandboxSpanError(span, error53) {
 }
 var init_spans2 = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/runtime/spans.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -43873,7 +43873,7 @@ function shellQuote(value) {
 }
 var init_shell = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/shared/shell.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -44038,7 +44038,7 @@ function renderTemplate(template, values) {
 var APPROX_BYTES_PER_TOKEN, MEMORY_SUMMARY_TOKEN_LIMIT, PHASE_ONE_ROLLOUT_TOKEN_LIMIT, TEXT_ENCODER, MEMORY_READ_PROMPT_TEMPLATE, ROLLOUT_EXTRACTION_PROMPT_TEMPLATE, ROLLOUT_EXTRACTION_USER_MESSAGE_TEMPLATE, MEMORY_CONSOLIDATION_PROMPT_TEMPLATE, EXTRA_PROMPT_SECTION_TEMPLATE, MEMORY_READ_ONLY_INSTRUCTIONS, MEMORY_LIVE_UPDATE_INSTRUCTIONS_TEMPLATE;
 var init_prompts2 = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/memory/prompts.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -45676,7 +45676,7 @@ function utcIsoTimestamp() {
 var MEMORY_TEXT_MAX_BYTES, MEMORY_READ_BEGIN_MARKER, MEMORY_READ_END_MARKER, MEMORY_READ_MISSING_MARKER, MEMORY_READ_STATUS_MARKER, SandboxMemoryStorage;
 var init_storage = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/memory/storage.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -46132,7 +46132,7 @@ function capitalize(value) {
 var Capability;
 var init_base = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/capabilities/base.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -46355,7 +46355,7 @@ function rejectKnownSnakeCaseConfigKeys(value, keys, source) {
 var MEMORY_SUMMARY_FILE, MEMORY_SUMMARY_MAX_BYTES, DEFAULT_PHASE_ONE_MODEL, DEFAULT_PHASE_TWO_MODEL, DEFAULT_MEMORY_MODEL_SETTINGS, MEMORY_BEGIN_MARKER, MEMORY_END_MARKER, MemoryCapability;
 var init_memory = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/capabilities/memory.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -46500,7 +46500,7 @@ function serializeManifestEnvironment(manifest) {
 }
 var init_environment = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/shared/environment.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -46715,7 +46715,7 @@ async function runManagedPreStopHooks(_session, state) {
 var managedHookStateBySession;
 var init_sessionLifecycle = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/runtime/sessionLifecycle.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -46907,7 +46907,7 @@ function sanitizeForMemoryJson(value) {
 var EXCLUDED_MEMORY_ITEM_TYPES, INCLUDED_MEMORY_ITEM_TYPES;
 var init_rollouts = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/memory/rollouts.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -46980,7 +46980,7 @@ function supportsStructuredToolOutputTransport(modelInstance) {
 }
 var init_transport = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/capabilities/transport.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -47007,7 +47007,7 @@ function getSandboxCompactionModelCandidates(model) {
 var CompactionPolicy, DynamicCompactionPolicy, CompactionModelInfo, CompactionCapability, SANDBOX_CONTEXT_WINDOWS_1M, SANDBOX_CONTEXT_WINDOWS_400K, SANDBOX_CONTEXT_WINDOWS_200K, SANDBOX_CONTEXT_WINDOWS_128K;
 var init_compaction = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/capabilities/compaction.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -47484,7 +47484,7 @@ function filesystem(args = {}) {
 var applyPatchFunctionParameters, BEGIN_PATCH, END_PATCH, ADD_FILE, DELETE_FILE, UPDATE_FILE, MOVE_TO, FilesystemCapability;
 var init_filesystem = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/capabilities/filesystem.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -47634,7 +47634,7 @@ function shell(args = {}) {
 var DEFAULT_EXEC_YIELD_TIME_MS, DEFAULT_WRITE_STDIN_YIELD_TIME_MS, SHELL_INSTRUCTIONS, ShellCapability;
 var init_shell2 = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/capabilities/shell.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -47734,7 +47734,7 @@ var init_shell2 = __esm({
 var SKILLS_SECTION_INTRO, HOW_TO_USE_SKILLS_SECTION, HOW_TO_USE_LAZY_SKILLS_SECTION;
 var init_skills = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/capabilities/skills.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -47795,7 +47795,7 @@ function defaultCapabilities() {
 var Capabilities;
 var init_capabilities = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/capabilities/index.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -47837,7 +47837,7 @@ function normalizeRunAs(runAs) {
 var SandboxAgent;
 var init_agent = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/agent.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -48028,7 +48028,7 @@ function objectId(value) {
 var RolloutExtractionArtifactsSchema, managersBySession, objectIds2, nextObjectId2, SandboxMemoryGenerationManager;
 var init_generation = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/memory/generation.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -48337,7 +48337,7 @@ function livePreservedOwnedSession(args) {
 var livePreservedOwnedSessionsByRunState;
 var init_livePreservedSessions = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/runtime/livePreservedSessions.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -48381,7 +48381,7 @@ function addedOrChangedPathKeyedObjects(current, target) {
 }
 var init_manifestCollections = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/shared/manifestCollections.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -48515,7 +48515,7 @@ function isSerializedFileContent(value) {
 }
 var init_manifestPersistence = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/sandboxes/shared/manifestPersistence.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -48691,7 +48691,7 @@ function isManifestDeltaEmpty(manifest) {
 }
 var init_providedSessionManifest = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/runtime/providedSessionManifest.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -48804,7 +48804,7 @@ function hasPreservedOwnedSessions(sandboxState) {
 }
 var init_sessionState = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/runtime/sessionState.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -48881,7 +48881,7 @@ function dropPreservedOwnedSessionEntries(sessionsByAgent) {
 }
 var init_sessionSerialization = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/runtime/sessionSerialization.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -48933,7 +48933,7 @@ function removeClosedPreservedOwnedSessions(sandboxState, agentKeys) {
 var SandboxRuntimeManager;
 var init_manager = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/runtime/manager.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -49567,7 +49567,7 @@ var init_manager = __esm({
 // ../node_modules/@openai/agents-core/dist/sandbox/runtime/index.mjs
 var init_runtime = __esm({
   "../node_modules/@openai/agents-core/dist/sandbox/runtime/index.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -49724,7 +49724,7 @@ function filterSupplementalGeneratedItems(supplementalGeneratedItems, preparedGe
 var ServerConversationTracker;
 var init_conversation = __esm({
   "../node_modules/@openai/agents-core/dist/runner/conversation.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -50052,7 +50052,7 @@ async function runOutputGuardrails(state, runnerOutputGuardrails, output) {
 var createGuardrailTracker;
 var init_guardrails = __esm({
   "../node_modules/@openai/agents-core/dist/runner/guardrails.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -50535,7 +50535,7 @@ async function* getStreamedResponseWithRetry(model, request) {
 var DEFAULT_INITIAL_DELAY_MS, DEFAULT_MAX_DELAY_MS, DEFAULT_BACKOFF_MULTIPLIER, DEFAULT_BACKOFF_JITTER, RETRY_AFTER_MS_HEADER, RETRY_AFTER_HEADER, replaySafeApprovalSymbol;
 var init_modelRetry = __esm({
   "../node_modules/@openai/agents-core/dist/runner/modelRetry.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -50580,7 +50580,7 @@ var init_modelRetry = __esm({
 // ../node_modules/@openai/agents-core/dist/utils/applyDiff.mjs
 var init_applyDiff = __esm({
   "../node_modules/@openai/agents-core/dist/utils/applyDiff.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -50590,7 +50590,7 @@ var init_applyDiff = __esm({
 // ../node_modules/@openai/agents-core/dist/utils/index.mjs
 var init_utils3 = __esm({
   "../node_modules/@openai/agents-core/dist/utils/index.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -51322,7 +51322,7 @@ async function processModelResponseAsync(modelResponse, agent, tools, handoffs, 
 }
 var init_modelOutputs = __esm({
   "../node_modules/@openai/agents-core/dist/runner/modelOutputs.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -51414,7 +51414,7 @@ function addStepToRunResult(result, step, options) {
 var isAbortError2;
 var init_streaming = __esm({
   "../node_modules/@openai/agents-core/dist/runner/streaming.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -51447,7 +51447,7 @@ function isOpenAIResponsesCompactionAwareSession(session) {
 }
 var init_session2 = __esm({
   "../node_modules/@openai/agents-core/dist/memory/session.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -51904,7 +51904,7 @@ function decrementCount(map2, key) {
 }
 var init_sessionPersistence = __esm({
   "../node_modules/@openai/agents-core/dist/runner/sessionPersistence.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -51989,7 +51989,7 @@ function getOutputText(output) {
 }
 var init_messages = __esm({
   "../node_modules/@openai/agents-core/dist/utils/messages.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -52158,7 +52158,7 @@ function mergeAgentToolRunConfig(inheritedRunConfig, toolRunConfigOverride) {
 var TRANSPORT_OVERRIDE_PROVIDER_DATA_ALIAS_KEYS, AGENT_TOOL_PARENT_RUN_CONFIG_SYMBOL;
 var init_agentToolRunConfig = __esm({
   "../node_modules/@openai/agents-core/dist/agentToolRunConfig.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -52200,7 +52200,7 @@ function consumeAgentToolRunResult(toolCall) {
 var agentToolRunResults;
 var init_agentToolRunResults = __esm({
   "../node_modules/@openai/agents-core/dist/agentToolRunResults.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -52227,7 +52227,7 @@ function assistant(content, options) {
 }
 var init_message = __esm({
   "../node_modules/@openai/agents-core/dist/helpers/message.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -52254,7 +52254,7 @@ function formatInlineData(data, mediaType) {
 }
 var init_inlineData = __esm({
   "../node_modules/@openai/agents-core/dist/utils/inlineData.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -52528,7 +52528,7 @@ function asDataUrl(base643, mediaType) {
 }
 var init_toolOutputNormalization = __esm({
   "../node_modules/@openai/agents-core/dist/runner/toolOutputNormalization.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -52601,7 +52601,7 @@ async function runToolOutputGuardrails({ guardrails, context: context2, agent, t
 }
 var init_toolGuardrails = __esm({
   "../node_modules/@openai/agents-core/dist/utils/toolGuardrails.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -52647,7 +52647,7 @@ async function resolveApprovalRejectionMessage({ runContext, toolType, toolName,
 var TOOL_APPROVAL_REJECTION_MESSAGE;
 var init_approvalRejection = __esm({
   "../node_modules/@openai/agents-core/dist/runner/approvalRejection.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -53652,7 +53652,7 @@ function isNonEmptyString4(value) {
 var REDACTED_TOOL_ERROR_MESSAGE, TOOL_APPROVAL_REJECTION_SCREENSHOT_DATA_URL, COMPUTER_TRACE_NAME, NOT_FINAL_OUTPUT;
 var init_toolExecution = __esm({
   "../node_modules/@openai/agents-core/dist/runner/toolExecution.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -53782,7 +53782,7 @@ async function handleHostedMcpApprovals({ requests, agent, state, functionResult
 }
 var init_mcpApprovals = __esm({
   "../node_modules/@openai/agents-core/dist/runner/mcpApprovals.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -53803,7 +53803,7 @@ function validateRunErrorFinalOutput(agent, outputText) {
 var buildRunData, formatFinalOutput, createFinalOutputItem, formatRunErrorFinalOutput, createRunErrorFinalOutputItem, validateRunErrorHandlerFinalOutput, resolveRunErrorHandler, tryHandleRunError;
 var init_errorHandlers = __esm({
   "../node_modules/@openai/agents-core/dist/runner/errorHandlers.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -54555,7 +54555,7 @@ async function maybeCompleteTurnFromToolResults({ agent, runner: _runner, state,
 var DEFAULT_TOOL_NOT_FOUND_MESSAGE, APPROVAL_ITEM_TYPES;
 var init_turnResolution = __esm({
   "../node_modules/@openai/agents-core/dist/runner/turnResolution.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -54681,7 +54681,7 @@ function ensureAgentSpan(params) {
 }
 var init_tracing2 = __esm({
   "../node_modules/@openai/agents-core/dist/runner/tracing.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -54780,7 +54780,7 @@ function beginTurn(state, options) {
 var IGNORED_HANDOFF_OUTPUT_MESSAGE, managedConversationSupplementalItemsCache;
 var init_turnPreparation = __esm({
   "../node_modules/@openai/agents-core/dist/runner/turnPreparation.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -54879,7 +54879,7 @@ async function initializeComputerTools(tools, state) {
 var computerInitPromisesByRunState;
 var init_modelPreparation = __esm({
   "../node_modules/@openai/agents-core/dist/runner/modelPreparation.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -54951,7 +54951,7 @@ function handleInterruptedOutcome(options) {
 }
 var init_runLoop = __esm({
   "../node_modules/@openai/agents-core/dist/runner/runLoop.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -55034,7 +55034,7 @@ function isSandboxRuntimeAgent(agent) {
 }
 var init_sandbox = __esm({
   "../node_modules/@openai/agents-core/dist/runner/sandbox.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -55119,7 +55119,7 @@ function isRecord8(value) {
 }
 var init_streamReconciliation = __esm({
   "../node_modules/@openai/agents-core/dist/runner/streamReconciliation.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -55159,7 +55159,7 @@ function validateToolExecutionConfig(config3) {
 }
 var init_runConfig = __esm({
   "../node_modules/@openai/agents-core/dist/runner/runConfig.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -55185,7 +55185,7 @@ function hasExplicitTopLevelReasoningEffort(settings) {
 var LazyDefaultModelProvider, Runner, defaultRunner, getDefaultRunner;
 var init_run = __esm({
   "../node_modules/@openai/agents-core/dist/run.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -56445,7 +56445,7 @@ function formatLiteralLabel(def) {
 var STRUCTURED_INPUT_PREAMBLE, SIMPLE_JSON_SCHEMA_TYPES, SIMPLE_ZOD_TYPE_LABELS, OPTIONAL_WRAPPERS2, NULLABLE_WRAPPERS, DECORATOR_WRAPPERS2, JSON_BIGINT_REPLACER, AgentAsToolInputSchema;
 var init_agentToolInput = __esm({
   "../node_modules/@openai/agents-core/dist/agentToolInput.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -56522,7 +56522,7 @@ function getInitialModelSettingsForAgentModel(model) {
 var Agent;
 var init_agent2 = __esm({
   "../node_modules/@openai/agents-core/dist/agent.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -57013,7 +57013,7 @@ function uniqueServers(servers) {
 var DEFAULT_CONNECT_TIMEOUT_MS, DEFAULT_CLOSE_TIMEOUT_MS, logger2, ServerWorker, MCPServers;
 var init_mcpServers = __esm({
   "../node_modules/@openai/agents-core/dist/mcpServers.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -57383,7 +57383,7 @@ var init_mcpServers = __esm({
 // ../node_modules/@openai/agents-core/dist/mcpUtil.mjs
 var init_mcpUtil = __esm({
   "../node_modules/@openai/agents-core/dist/mcpUtil.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -57418,7 +57418,7 @@ function applyReplaceFunctionCallMutation(items, mutation) {
 }
 var init_historyMutations = __esm({
   "../node_modules/@openai/agents-core/dist/memory/historyMutations.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -57434,7 +57434,7 @@ function cloneAgentItem(item) {
 var MemorySession;
 var init_memorySession = __esm({
   "../node_modules/@openai/agents-core/dist/memory/memorySession.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -57506,7 +57506,7 @@ var init_memorySession = __esm({
 // ../node_modules/@openai/agents-core/dist/index.mjs
 var init_dist = __esm({
   "../node_modules/@openai/agents-core/dist/index.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -57566,7 +57566,7 @@ function __classPrivateFieldGet(receiver, state, kind, f) {
 }
 var init_tslib = __esm({
   "../node_modules/openai/internal/tslib.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -57579,7 +57579,7 @@ var init_tslib = __esm({
 var uuid42;
 var init_uuid = __esm({
   "../node_modules/openai/internal/utils/uuid.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -57619,7 +57619,7 @@ function isObj(obj) {
 var startsWithSchemeRegexp, isAbsoluteURL, isArray, isReadonlyArray, validatePositiveInteger, safeJSON;
 var init_values = __esm({
   "../node_modules/openai/internal/utils/values.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -57657,7 +57657,7 @@ var init_values = __esm({
 var sleep;
 var init_sleep = __esm({
   "../node_modules/openai/internal/utils/sleep.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -57669,7 +57669,7 @@ var init_sleep = __esm({
 var VERSION;
 var init_version = __esm({
   "../node_modules/openai/version.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -57716,7 +57716,7 @@ function getBrowserInfo() {
 var isRunningInBrowser, getPlatformProperties, normalizeArch, normalizePlatform, _platformHeaders, getPlatformHeaders;
 var init_detect_platform = __esm({
   "../node_modules/openai/internal/detect-platform.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -57895,7 +57895,7 @@ async function CancelReadableStream(stream) {
 }
 var init_shims = __esm({
   "../node_modules/openai/internal/shims.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -57911,7 +57911,7 @@ var init_shims = __esm({
 var FallbackEncoder;
 var init_request_options = __esm({
   "../node_modules/openai/internal/request-options.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -57930,7 +57930,7 @@ var init_request_options = __esm({
 var default_format, default_formatter, formatters, RFC1738;
 var init_formats = __esm({
   "../node_modules/openai/internal/qs/formats.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -57964,7 +57964,7 @@ function maybe_map(val, fn) {
 var has, hex_table, limit, encode3;
 var init_utils4 = __esm({
   "../node_modules/openai/internal/qs/utils.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -58277,7 +58277,7 @@ function stringify(object2, opts = {}) {
 var array_prefix_generators, push_to_array, toISOString, defaults, sentinel;
 var init_stringify = __esm({
   "../node_modules/openai/internal/qs/stringify.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -58335,7 +58335,7 @@ function stringifyQuery(query) {
 }
 var init_query = __esm({
   "../node_modules/openai/internal/utils/query.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -58369,7 +58369,7 @@ function decodeUTF8(bytes) {
 var encodeUTF8_, decodeUTF8_;
 var init_bytes = __esm({
   "../node_modules/openai/internal/utils/bytes.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -58412,7 +58412,7 @@ function findDoubleNewlineIndex(buffer) {
 var _LineDecoder_buffer, _LineDecoder_carriageReturnIndex, LineDecoder;
 var init_line = __esm({
   "../node_modules/openai/internal/decoders/line.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -58502,7 +58502,7 @@ function loggerFor(client) {
 var levelNumbers, parseLogLevel, noopLogger, cachedLoggers, formatRequestDetails;
 var init_log = __esm({
   "../node_modules/openai/internal/utils/log.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -58612,7 +58612,7 @@ function partition(str2, delimiter) {
 var _Stream_client, Stream, SSEDecoder;
 var init_streaming2 = __esm({
   "../node_modules/openai/core/streaming.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -58926,7 +58926,7 @@ function addRequestID(value, response) {
 }
 var init_parse3 = __esm({
   "../node_modules/openai/internal/parse.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -58941,7 +58941,7 @@ var init_parse3 = __esm({
 var _APIPromise_client, APIPromise;
 var init_api_promise = __esm({
   "../node_modules/openai/core/api-promise.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -59017,7 +59017,7 @@ var init_api_promise = __esm({
 var _AbstractPage_client, AbstractPage, PagePromise, Page, CursorPage, ConversationCursorPage, NextCursorPage;
 var init_pagination = __esm({
   "../node_modules/openai/core/pagination.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -59209,7 +59209,7 @@ var init_pagination = __esm({
 var SUBJECT_TOKEN_TYPES, TOKEN_EXCHANGE_GRANT_TYPE, WorkloadIdentityAuth;
 var init_workload_identity_auth = __esm({
   "../node_modules/openai/auth/workload-identity-auth.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -59353,7 +59353,7 @@ function* iterateHeaders(headers) {
 var brand_privateNullableHeaders, httpTokenHeaderName, buildHeaders;
 var init_headers = __esm({
   "../node_modules/openai/internal/headers.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -59531,7 +59531,7 @@ function escapeHeaderValue(value) {
 var brand_privateStreamingFile, checkFileSupport, isAsyncIterable, maybeMultipartFormRequestOptions, multipartFormRequestOptions, supportsFormDataMap, createForm, isNamedBlob, isReadableStream, isStreamingFile, isUploadable, hasStreamingUploadableValue, hasUploadableValue, createStreamingFormRequestOptions, addFormValue;
 var init_uploads = __esm({
   "../node_modules/openai/internal/uploads.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -59697,7 +59697,7 @@ function propsForError(value) {
 var isBlobLike, isFileLike, isResponseLike;
 var init_to_file = __esm({
   "../node_modules/openai/internal/to-file.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -59715,7 +59715,7 @@ var init_to_file = __esm({
 // ../node_modules/openai/core/uploads.mjs
 var init_uploads2 = __esm({
   "../node_modules/openai/core/uploads.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -59728,7 +59728,7 @@ var init_uploads2 = __esm({
 var APIResource;
 var init_resource = __esm({
   "../node_modules/openai/core/resource.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -59750,7 +59750,7 @@ function encodeURIPath(str2) {
 var EMPTY, createPathTagFunction, path;
 var init_path = __esm({
   "../node_modules/openai/internal/utils/path.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -59813,7 +59813,7 @@ ${underline}`);
 var Messages;
 var init_messages2 = __esm({
   "../node_modules/openai/resources/chat/completions/messages.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -59849,7 +59849,7 @@ var init_messages2 = __esm({
 var isAssistantMessage, isToolMessage;
 var init_chatCompletionUtils = __esm({
   "../node_modules/openai/lib/chatCompletionUtils.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -59866,7 +59866,7 @@ var init_chatCompletionUtils = __esm({
 var _EventStream_instances, _EventStream_connectedPromise, _EventStream_resolveConnectedPromise, _EventStream_rejectConnectedPromise, _EventStream_endPromise, _EventStream_resolveEndPromise, _EventStream_rejectEndPromise, _EventStream_listeners, _EventStream_abortListeners, _EventStream_ended, _EventStream_errored, _EventStream_aborted, _EventStream_catchingPromiseCreated, _EventStream_removeAbortListeners, _EventStream_handleError, EventStream;
 var init_EventStream = __esm({
   "../node_modules/openai/lib/EventStream.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -60176,7 +60176,7 @@ function isRunnableFunctionWithParse(fn) {
 }
 var init_RunnableFunction = __esm({
   "../node_modules/openai/lib/RunnableFunction.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -60197,7 +60197,7 @@ function normalizeToolCallIds(chatCompletion) {
 var _AbstractChatCompletionRunner_instances, _AbstractChatCompletionRunner_getFinalContent, _AbstractChatCompletionRunner_getFinalMessage, _AbstractChatCompletionRunner_getFinalFunctionToolCall, _AbstractChatCompletionRunner_getFinalFunctionToolCallResult, _AbstractChatCompletionRunner_calculateTotalUsage, _AbstractChatCompletionRunner_validateParams, _AbstractChatCompletionRunner_stringifyFunctionCallResult, DEFAULT_MAX_CHAT_COMPLETIONS, AbstractChatCompletionRunner;
 var init_AbstractChatCompletionRunner = __esm({
   "../node_modules/openai/lib/AbstractChatCompletionRunner.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -60505,7 +60505,7 @@ var init_AbstractChatCompletionRunner = __esm({
 var ChatCompletionRunner;
 var init_ChatCompletionRunner = __esm({
   "../node_modules/openai/lib/ChatCompletionRunner.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -60547,7 +60547,7 @@ function parseJSON(jsonString, allowPartial = Allow.ALL) {
 var STR, NUM, ARR, OBJ, NULL, BOOL, NAN, INFINITY, MINUS_INFINITY, INF, SPECIAL, ATOM, COLLECTION, ALL, Allow, PartialJSON, MalformedJSON, _parseJSON, partialParse;
 var init_parser2 = __esm({
   "../node_modules/openai/_vendor/partial-json-parser/parser.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -60765,7 +60765,7 @@ var init_parser2 = __esm({
 // ../node_modules/openai/streaming.mjs
 var init_streaming3 = __esm({
   "../node_modules/openai/streaming.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -60894,7 +60894,7 @@ function assertNever2(_x) {
 var _ChatCompletionStream_instances, _ChatCompletionStream_params, _ChatCompletionStream_choiceEventStates, _ChatCompletionStream_currentChatCompletionSnapshot, _ChatCompletionStream_beginRequest, _ChatCompletionStream_getChoiceEventState, _ChatCompletionStream_addChunk, _ChatCompletionStream_emitToolCallDoneEvent, _ChatCompletionStream_emitContentDoneEvents, _ChatCompletionStream_endRequest, _ChatCompletionStream_getAutoParseableResponseFormat, _ChatCompletionStream_accumulateChatCompletion, CHAT_COMPLETION_READABLE_STREAM_MESSAGE_PREFIX, ChatCompletionStream;
 var init_ChatCompletionStream = __esm({
   "../node_modules/openai/lib/ChatCompletionStream.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -61312,7 +61312,7 @@ var init_ChatCompletionStream = __esm({
 var ChatCompletionStreamingRunner;
 var init_ChatCompletionStreamingRunner = __esm({
   "../node_modules/openai/lib/ChatCompletionStreamingRunner.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -61422,7 +61422,7 @@ var init_ChatCompletionStreamingRunner = __esm({
 var Completions;
 var init_completions = __esm({
   "../node_modules/openai/resources/chat/completions/completions.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -61557,7 +61557,7 @@ var init_completions = __esm({
 var Chat;
 var init_chat = __esm({
   "../node_modules/openai/resources/chat/chat.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -61580,7 +61580,7 @@ var init_chat = __esm({
 // ../node_modules/openai/resources/chat/completions/index.mjs
 var init_completions2 = __esm({
   "../node_modules/openai/resources/chat/completions/index.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -61593,7 +61593,7 @@ var init_completions2 = __esm({
 // ../node_modules/openai/resources/chat/index.mjs
 var init_chat2 = __esm({
   "../node_modules/openai/resources/chat/index.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -61605,7 +61605,7 @@ var init_chat2 = __esm({
 // ../node_modules/openai/resources/shared.mjs
 var init_shared = __esm({
   "../node_modules/openai/resources/shared.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -61616,7 +61616,7 @@ var init_shared = __esm({
 var AdminAPIKeys;
 var init_admin_api_keys = __esm({
   "../node_modules/openai/resources/admin/organization/admin-api-keys.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -61705,7 +61705,7 @@ var init_admin_api_keys = __esm({
 var AuditLogs;
 var init_audit_logs = __esm({
   "../node_modules/openai/resources/admin/organization/audit-logs.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -61741,7 +61741,7 @@ var init_audit_logs = __esm({
 var Certificates;
 var init_certificates = __esm({
   "../node_modules/openai/resources/admin/organization/certificates.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -61893,7 +61893,7 @@ var init_certificates = __esm({
 var DataRetention;
 var init_data_retention = __esm({
   "../node_modules/openai/resources/admin/organization/data-retention.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -61943,7 +61943,7 @@ var init_data_retention = __esm({
 var Invites;
 var init_invites = __esm({
   "../node_modules/openai/resources/admin/organization/invites.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -62034,7 +62034,7 @@ var init_invites = __esm({
 var Roles;
 var init_roles = __esm({
   "../node_modules/openai/resources/admin/organization/roles.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -62138,7 +62138,7 @@ var init_roles = __esm({
 var SpendAlerts;
 var init_spend_alerts = __esm({
   "../node_modules/openai/resources/admin/organization/spend-alerts.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -62256,7 +62256,7 @@ var init_spend_alerts = __esm({
 var Usage2;
 var init_usage2 = __esm({
   "../node_modules/openai/resources/admin/organization/usage.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -62471,7 +62471,7 @@ var init_usage2 = __esm({
 var Roles2;
 var init_roles2 = __esm({
   "../node_modules/openai/resources/admin/organization/groups/roles.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -62563,7 +62563,7 @@ var init_roles2 = __esm({
 var Users;
 var init_users2 = __esm({
   "../node_modules/openai/resources/admin/organization/groups/users.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -62655,7 +62655,7 @@ var init_users2 = __esm({
 var Groups;
 var init_groups = __esm({
   "../node_modules/openai/resources/admin/organization/groups/groups.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -62771,7 +62771,7 @@ var init_groups = __esm({
 var APIKeys;
 var init_api_keys = __esm({
   "../node_modules/openai/resources/admin/organization/projects/api-keys.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -62847,7 +62847,7 @@ var init_api_keys = __esm({
 var Certificates2;
 var init_certificates2 = __esm({
   "../node_modules/openai/resources/admin/organization/projects/certificates.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -62919,7 +62919,7 @@ var init_certificates2 = __esm({
 var DataRetention2;
 var init_data_retention2 = __esm({
   "../node_modules/openai/resources/admin/organization/projects/data-retention.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -62973,7 +62973,7 @@ var init_data_retention2 = __esm({
 var HostedToolPermissions;
 var init_hosted_tool_permissions = __esm({
   "../node_modules/openai/resources/admin/organization/projects/hosted-tool-permissions.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -63026,7 +63026,7 @@ var init_hosted_tool_permissions = __esm({
 var ModelPermissions;
 var init_model_permissions = __esm({
   "../node_modules/openai/resources/admin/organization/projects/model-permissions.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -63097,7 +63097,7 @@ var init_model_permissions = __esm({
 var RateLimits;
 var init_rate_limits = __esm({
   "../node_modules/openai/resources/admin/organization/projects/rate-limits.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -63152,7 +63152,7 @@ var init_rate_limits = __esm({
 var Roles3;
 var init_roles3 = __esm({
   "../node_modules/openai/resources/admin/organization/projects/roles.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -63268,7 +63268,7 @@ var init_roles3 = __esm({
 var SpendAlerts2;
 var init_spend_alerts2 = __esm({
   "../node_modules/openai/resources/admin/organization/projects/spend-alerts.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -63397,7 +63397,7 @@ var init_spend_alerts2 = __esm({
 var Roles4;
 var init_roles4 = __esm({
   "../node_modules/openai/resources/admin/organization/projects/groups/roles.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -63492,7 +63492,7 @@ var init_roles4 = __esm({
 var Groups2;
 var init_groups2 = __esm({
   "../node_modules/openai/resources/admin/organization/projects/groups/groups.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -63592,7 +63592,7 @@ var init_groups2 = __esm({
 var APIKeys2;
 var init_api_keys2 = __esm({
   "../node_modules/openai/resources/admin/organization/projects/service-accounts/api-keys.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -63626,7 +63626,7 @@ var init_api_keys2 = __esm({
 var ServiceAccounts;
 var init_service_accounts = __esm({
   "../node_modules/openai/resources/admin/organization/projects/service-accounts/service-accounts.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -63742,7 +63742,7 @@ var init_service_accounts = __esm({
 var Roles5;
 var init_roles5 = __esm({
   "../node_modules/openai/resources/admin/organization/projects/users/roles.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -63837,7 +63837,7 @@ var init_roles5 = __esm({
 var Users2;
 var init_users3 = __esm({
   "../node_modules/openai/resources/admin/organization/projects/users/users.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -63960,7 +63960,7 @@ var init_users3 = __esm({
 var Projects;
 var init_projects = __esm({
   "../node_modules/openai/resources/admin/organization/projects/projects.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -64116,7 +64116,7 @@ var init_projects = __esm({
 var Roles6;
 var init_roles6 = __esm({
   "../node_modules/openai/resources/admin/organization/users/roles.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -64208,7 +64208,7 @@ var init_roles6 = __esm({
 var Users3;
 var init_users4 = __esm({
   "../node_modules/openai/resources/admin/organization/users/users.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -64299,7 +64299,7 @@ var init_users4 = __esm({
 var Organization;
 var init_organization = __esm({
   "../node_modules/openai/resources/admin/organization/organization.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -64363,7 +64363,7 @@ var init_organization = __esm({
 var Admin;
 var init_admin = __esm({
   "../node_modules/openai/resources/admin/admin.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -64387,7 +64387,7 @@ var init_admin = __esm({
 var Speech;
 var init_speech = __esm({
   "../node_modules/openai/resources/audio/speech.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -64431,7 +64431,7 @@ var init_speech = __esm({
 var Transcriptions;
 var init_transcriptions = __esm({
   "../node_modules/openai/resources/audio/transcriptions.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -64458,7 +64458,7 @@ var init_transcriptions = __esm({
 var Translations;
 var init_translations = __esm({
   "../node_modules/openai/resources/audio/translations.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -64479,7 +64479,7 @@ var init_translations = __esm({
 var Audio;
 var init_audio = __esm({
   "../node_modules/openai/resources/audio/audio.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -64511,7 +64511,7 @@ var init_audio = __esm({
 var Batches;
 var init_batches = __esm({
   "../node_modules/openai/resources/batches.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -64563,7 +64563,7 @@ var init_batches = __esm({
 var Assistants;
 var init_assistants = __esm({
   "../node_modules/openai/resources/beta/assistants.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -64646,7 +64646,7 @@ var init_assistants = __esm({
 var Sessions;
 var init_sessions = __esm({
   "../node_modules/openai/resources/beta/realtime/sessions.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -64687,7 +64687,7 @@ var init_sessions = __esm({
 var TranscriptionSessions;
 var init_transcription_sessions = __esm({
   "../node_modules/openai/resources/beta/realtime/transcription-sessions.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -64728,7 +64728,7 @@ var init_transcription_sessions = __esm({
 var Realtime;
 var init_realtime = __esm({
   "../node_modules/openai/resources/beta/realtime/realtime.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -64756,7 +64756,7 @@ var init_realtime = __esm({
 var Sessions2;
 var init_sessions2 = __esm({
   "../node_modules/openai/resources/beta/chatkit/sessions.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -64813,7 +64813,7 @@ var init_sessions2 = __esm({
 var Threads;
 var init_threads = __esm({
   "../node_modules/openai/resources/beta/chatkit/threads.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -64906,7 +64906,7 @@ var init_threads = __esm({
 var ChatKit;
 var init_chatkit = __esm({
   "../node_modules/openai/resources/beta/chatkit/chatkit.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -64934,7 +64934,7 @@ var init_chatkit = __esm({
 var InputItems;
 var init_input_items = __esm({
   "../node_modules/openai/resources/beta/responses/input-items.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -64979,7 +64979,7 @@ var init_input_items = __esm({
 var InputTokens;
 var init_input_tokens = __esm({
   "../node_modules/openai/resources/beta/responses/input-tokens.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -65021,7 +65021,7 @@ var init_input_tokens = __esm({
 var Responses;
 var init_responses = __esm({
   "../node_modules/openai/resources/beta/responses/responses.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -65149,7 +65149,7 @@ var init_responses = __esm({
 var Messages2;
 var init_messages3 = __esm({
   "../node_modules/openai/resources/beta/threads/messages.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -65235,7 +65235,7 @@ var init_messages3 = __esm({
 var Steps;
 var init_steps2 = __esm({
   "../node_modules/openai/resources/beta/threads/runs/steps.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -65283,7 +65283,7 @@ var init_steps2 = __esm({
 var toFloat32Array;
 var init_base642 = __esm({
   "../node_modules/openai/internal/utils/base64.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -65310,7 +65310,7 @@ var init_base642 = __esm({
 var readEnv;
 var init_env = __esm({
   "../node_modules/openai/internal/utils/env.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -65329,7 +65329,7 @@ var init_env = __esm({
 // ../node_modules/openai/internal/utils.mjs
 var init_utils5 = __esm({
   "../node_modules/openai/internal/utils.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -65349,7 +65349,7 @@ function assertNever3(_x) {
 var _AssistantStream_instances, _a3, _AssistantStream_events, _AssistantStream_runStepSnapshots, _AssistantStream_messageSnapshots, _AssistantStream_messageSnapshot, _AssistantStream_finalRun, _AssistantStream_currentContentIndex, _AssistantStream_currentContent, _AssistantStream_currentToolCallIndex, _AssistantStream_currentToolCall, _AssistantStream_currentEvent, _AssistantStream_currentRunSnapshot, _AssistantStream_currentRunStepSnapshot, _AssistantStream_addEvent, _AssistantStream_endRequest, _AssistantStream_handleMessage, _AssistantStream_handleRunStep, _AssistantStream_handleEvent, _AssistantStream_accumulateRunStep, _AssistantStream_accumulateMessage, _AssistantStream_accumulateContent, _AssistantStream_handleRun, AssistantStream;
 var init_AssistantStream = __esm({
   "../node_modules/openai/lib/AssistantStream.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -65862,7 +65862,7 @@ var init_AssistantStream = __esm({
 var Runs;
 var init_runs = __esm({
   "../node_modules/openai/resources/beta/threads/runs/runs.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -66055,7 +66055,7 @@ var init_runs = __esm({
 var Threads2;
 var init_threads2 = __esm({
   "../node_modules/openai/resources/beta/threads/threads.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -66161,7 +66161,7 @@ var init_threads2 = __esm({
 var Beta;
 var init_beta = __esm({
   "../node_modules/openai/resources/beta/beta.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -66201,7 +66201,7 @@ var init_beta = __esm({
 var Completions2;
 var init_completions3 = __esm({
   "../node_modules/openai/resources/completions.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -66226,7 +66226,7 @@ var init_completions3 = __esm({
 var Content;
 var init_content = __esm({
   "../node_modules/openai/resources/containers/files/content.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -66257,7 +66257,7 @@ var init_content = __esm({
 var Files;
 var init_files = __esm({
   "../node_modules/openai/resources/containers/files/files.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -66325,7 +66325,7 @@ var init_files = __esm({
 var Containers;
 var init_containers = __esm({
   "../node_modules/openai/resources/containers/containers.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -66387,7 +66387,7 @@ var init_containers = __esm({
 var Items;
 var init_items3 = __esm({
   "../node_modules/openai/resources/conversations/items.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -66445,7 +66445,7 @@ var init_items3 = __esm({
 var Conversations;
 var init_conversations = __esm({
   "../node_modules/openai/resources/conversations/conversations.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -66504,7 +66504,7 @@ var init_conversations = __esm({
 var Embeddings;
 var init_embeddings = __esm({
   "../node_modules/openai/resources/embeddings.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -66562,7 +66562,7 @@ var init_embeddings = __esm({
 var OutputItems;
 var init_output_items = __esm({
   "../node_modules/openai/resources/evals/runs/output-items.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -66598,7 +66598,7 @@ var init_output_items = __esm({
 var Runs2;
 var init_runs2 = __esm({
   "../node_modules/openai/resources/evals/runs/runs.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -66676,7 +66676,7 @@ var init_runs2 = __esm({
 var Evals;
 var init_evals = __esm({
   "../node_modules/openai/resources/evals/evals.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -66741,7 +66741,7 @@ var init_evals = __esm({
 var Files2;
 var init_files2 = __esm({
   "../node_modules/openai/resources/files.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -66847,7 +66847,7 @@ var init_files2 = __esm({
 var Methods;
 var init_methods = __esm({
   "../node_modules/openai/resources/fine-tuning/methods.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -66864,7 +66864,7 @@ var init_methods = __esm({
 var Graders;
 var init_graders = __esm({
   "../node_modules/openai/resources/fine-tuning/alpha/graders.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -66929,7 +66929,7 @@ var init_graders = __esm({
 var Alpha;
 var init_alpha = __esm({
   "../node_modules/openai/resources/fine-tuning/alpha/alpha.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -66953,7 +66953,7 @@ var init_alpha = __esm({
 var Permissions2;
 var init_permissions2 = __esm({
   "../node_modules/openai/resources/fine-tuning/checkpoints/permissions.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -67048,7 +67048,7 @@ var init_permissions2 = __esm({
 var Checkpoints;
 var init_checkpoints = __esm({
   "../node_modules/openai/resources/fine-tuning/checkpoints/checkpoints.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -67072,7 +67072,7 @@ var init_checkpoints = __esm({
 var Checkpoints2;
 var init_checkpoints2 = __esm({
   "../node_modules/openai/resources/fine-tuning/jobs/checkpoints.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -67107,7 +67107,7 @@ var init_checkpoints2 = __esm({
 var Jobs;
 var init_jobs = __esm({
   "../node_modules/openai/resources/fine-tuning/jobs/jobs.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -67253,7 +67253,7 @@ var init_jobs = __esm({
 var FineTuning;
 var init_fine_tuning = __esm({
   "../node_modules/openai/resources/fine-tuning/fine-tuning.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -67289,7 +67289,7 @@ var init_fine_tuning = __esm({
 var GraderModels;
 var init_grader_models = __esm({
   "../node_modules/openai/resources/graders/grader-models.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -67306,7 +67306,7 @@ var init_grader_models = __esm({
 var Graders2;
 var init_graders2 = __esm({
   "../node_modules/openai/resources/graders/graders.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -67330,7 +67330,7 @@ var init_graders2 = __esm({
 var Images;
 var init_images = __esm({
   "../node_modules/openai/resources/images.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -67372,7 +67372,7 @@ var init_images = __esm({
 var Models;
 var init_models = __esm({
   "../node_modules/openai/resources/models.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -67412,7 +67412,7 @@ var init_models = __esm({
 var Moderations;
 var init_moderations = __esm({
   "../node_modules/openai/resources/moderations.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -67436,7 +67436,7 @@ var init_moderations = __esm({
 var Calls;
 var init_calls = __esm({
   "../node_modules/openai/resources/realtime/calls.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -67523,7 +67523,7 @@ var init_calls = __esm({
 var ClientSecrets;
 var init_client_secrets = __esm({
   "../node_modules/openai/resources/realtime/client-secrets.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -67570,7 +67570,7 @@ var init_client_secrets = __esm({
 var Realtime2;
 var init_realtime2 = __esm({
   "../node_modules/openai/resources/realtime/realtime.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -67984,7 +67984,7 @@ function assertNever4(value) {
 }
 var init_ResponseAccumulator = __esm({
   "../node_modules/openai/lib/responses/ResponseAccumulator.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -68005,7 +68005,7 @@ function finalizeResponse(snapshot, params) {
 var _ResponseStream_instances, _ResponseStream_params, _ResponseStream_currentResponseSnapshot, _ResponseStream_finalResponse, _ResponseStream_beginRequest, _ResponseStream_addEvent, _ResponseStream_endRequest, ResponseStream;
 var init_ResponseStream = __esm({
   "../node_modules/openai/lib/responses/ResponseStream.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -68208,7 +68208,7 @@ var init_ResponseStream = __esm({
 var InputItems2;
 var init_input_items2 = __esm({
   "../node_modules/openai/resources/responses/input-items.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -68243,7 +68243,7 @@ var init_input_items2 = __esm({
 var InputTokens2;
 var init_input_tokens2 = __esm({
   "../node_modules/openai/resources/responses/input-tokens.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -68278,7 +68278,7 @@ var init_input_tokens2 = __esm({
 var Responses2;
 var init_responses2 = __esm({
   "../node_modules/openai/resources/responses/responses.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -68398,7 +68398,7 @@ var init_responses2 = __esm({
 var Content2;
 var init_content2 = __esm({
   "../node_modules/openai/resources/skills/content.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -68428,7 +68428,7 @@ var init_content2 = __esm({
 var Content3;
 var init_content3 = __esm({
   "../node_modules/openai/resources/skills/versions/content.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -68459,7 +68459,7 @@ var init_content3 = __esm({
 var Versions;
 var init_versions2 = __esm({
   "../node_modules/openai/resources/skills/versions/versions.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -68522,7 +68522,7 @@ var init_versions2 = __esm({
 var Skills;
 var init_skills2 = __esm({
   "../node_modules/openai/resources/skills/skills.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -68591,7 +68591,7 @@ var init_skills2 = __esm({
 var Parts;
 var init_parts = __esm({
   "../node_modules/openai/resources/uploads/parts.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -68626,7 +68626,7 @@ var init_parts = __esm({
 var Uploads;
 var init_uploads3 = __esm({
   "../node_modules/openai/resources/uploads/uploads.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -68712,7 +68712,7 @@ var init_uploads3 = __esm({
 var allSettledWithThrow;
 var init_Util = __esm({
   "../node_modules/openai/lib/Util.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -68740,7 +68740,7 @@ var init_Util = __esm({
 var FileBatches;
 var init_file_batches = __esm({
   "../node_modules/openai/resources/vector-stores/file-batches.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -68884,7 +68884,7 @@ var init_file_batches = __esm({
 var Files3;
 var init_files3 = __esm({
   "../node_modules/openai/resources/vector-stores/files.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -69042,7 +69042,7 @@ var init_files3 = __esm({
 var VectorStores;
 var init_vector_stores = __esm({
   "../node_modules/openai/resources/vector-stores/vector-stores.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -69139,7 +69139,7 @@ var init_vector_stores = __esm({
 var Videos;
 var init_videos = __esm({
   "../node_modules/openai/resources/videos.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -69236,7 +69236,7 @@ var init_videos = __esm({
 var _Webhooks_instances, _Webhooks_validateSecret, _Webhooks_getRequiredHeader, Webhooks;
 var init_webhooks = __esm({
   "../node_modules/openai/resources/webhooks/webhooks.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -69327,7 +69327,7 @@ var init_webhooks = __esm({
 // ../node_modules/openai/resources/webhooks/index.mjs
 var init_webhooks2 = __esm({
   "../node_modules/openai/resources/webhooks/index.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -69338,7 +69338,7 @@ var init_webhooks2 = __esm({
 // ../node_modules/openai/resources/webhooks.mjs
 var init_webhooks3 = __esm({
   "../node_modules/openai/resources/webhooks.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -69349,7 +69349,7 @@ var init_webhooks3 = __esm({
 // ../node_modules/openai/resources/index.mjs
 var init_resources = __esm({
   "../node_modules/openai/resources/index.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -69391,7 +69391,7 @@ function configureProvider(provider) {
 var providerDefinitionsKey, providerGlobal, existingProviderDefinitions, providerDefinitions;
 var init_provider2 = __esm({
   "../node_modules/openai/internal/provider.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -69427,7 +69427,7 @@ function isUndiciDispatcherVersionMismatchError(error53) {
 var _OpenAI_instances, _a4, _OpenAI_encoder, _OpenAI_baseURLOverridden, WORKLOAD_IDENTITY_API_KEY_PLACEHOLDER, OpenAI;
 var init_client = __esm({
   "../node_modules/openai/client.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -70119,7 +70119,7 @@ var init_client = __esm({
 // ../node_modules/openai/azure.mjs
 var init_azure = __esm({
   "../node_modules/openai/azure.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -70133,7 +70133,7 @@ var init_azure = __esm({
 // ../node_modules/openai/bedrock.mjs
 var init_bedrock = __esm({
   "../node_modules/openai/bedrock.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -70149,7 +70149,7 @@ var init_bedrock = __esm({
 // ../node_modules/openai/index.mjs
 var init_openai = __esm({
   "../node_modules/openai/index.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -70168,7 +70168,7 @@ var init_openai = __esm({
 var METADATA, metadata_default;
 var init_metadata = __esm({
   "../node_modules/@openai/agents-openai/dist/metadata.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -70210,7 +70210,7 @@ function getDefaultOpenAIWebSocketBaseURL() {
 var DEFAULT_OPENAI_API, DEFAULT_OPENAI_MODEL, DEFAULT_OPENAI_RESPONSES_TRANSPORT, _defaultOpenAIAPI, _defaultOpenAIResponsesTransport, _defaultOpenAIClient, _defaultOpenAIKey, _defaultTracingApiKey, HEADERS;
 var init_defaults = __esm({
   "../node_modules/@openai/agents-openai/dist/defaults.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -70240,7 +70240,7 @@ var init_defaults = __esm({
 var logger3, logger_default2;
 var init_logger2 = __esm({
   "../node_modules/@openai/agents-openai/dist/logger.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -70254,7 +70254,7 @@ var init_logger2 = __esm({
 var OPENAI_RESPONSES_RAW_MODEL_EVENT_SOURCE, OPENAI_CHAT_COMPLETIONS_RAW_MODEL_EVENT_SOURCE;
 var init_rawModelEvents = __esm({
   "../node_modules/@openai/agents-openai/dist/rawModelEvents.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -70353,7 +70353,7 @@ function getOpenAIRetryAdvice(args) {
 }
 var init_retryAdvice = __esm({
   "../node_modules/@openai/agents-openai/dist/retryAdvice.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -70462,7 +70462,7 @@ function normalizeKeepAliveDurationMs(value, fieldName) {
 var RESPONSES_WEBSOCKET_ERROR_MESSAGES, ResponsesWebSocketInternalError, ResponsesWebSocketConnection;
 var init_responsesWebSocketConnection = __esm({
   "../node_modules/@openai/agents-openai/dist/responsesWebSocketConnection.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -70925,7 +70925,7 @@ function ensureResponsesWebSocketPath(pathname) {
 }
 var init_responsesTransportUtils = __esm({
   "../node_modules/@openai/agents-openai/dist/responsesTransportUtils.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -70949,7 +70949,7 @@ var init_responsesTransportUtils = __esm({
 var WebSearchStatus, FileSearchStatus, CodeInterpreterStatus, ImageGenerationStatus;
 var init_tools2 = __esm({
   "../node_modules/@openai/agents-openai/dist/tools.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -71004,7 +71004,7 @@ function getSnakeCasedProviderDataWithoutReservedKeys(value, reservedKeys) {
 }
 var init_providerData = __esm({
   "../node_modules/@openai/agents-openai/dist/utils/providerData.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -71023,7 +71023,7 @@ function normalizePromptCacheRetention(value) {
 }
 var init_modelSettings2 = __esm({
   "../node_modules/@openai/agents-openai/dist/utils/modelSettings.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -71066,7 +71066,7 @@ function toRequestUsageEntry(usage, endpoint) {
 }
 var init_responsesUtils = __esm({
   "../node_modules/@openai/agents-openai/dist/responsesUtils.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -71080,7 +71080,7 @@ var init_responsesUtils = __esm({
 // ../node_modules/@openai/agents-core/dist/utils/internal.mjs
 var init_internal = __esm({
   "../node_modules/@openai/agents-core/dist/utils/internal.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -72874,7 +72874,7 @@ function cloneResponsesWebSocketOptions(options) {
 var HostedToolChoice, DefaultToolChoice, BuiltinComputerToolChoice, TERMINAL_RESPONSES_STREAM_EVENT_TYPES, OpenAIResponsesModel, OpenAIResponsesWSModel;
 var init_openaiResponsesModel = __esm({
   "../node_modules/@openai/agents-openai/dist/openaiResponsesModel.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -73824,7 +73824,7 @@ function buildTraceChoice(state) {
 }
 var init_openaiChatCompletionsStreaming = __esm({
   "../node_modules/@openai/agents-openai/dist/openaiChatCompletionsStreaming.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -74239,7 +74239,7 @@ function convertHandoffTool(handoff2) {
 var CHAT_COMPLETIONS_FUNCTION_NAME_PATTERN, OMITTED_TOOL_OUTPUT_PLACEHOLDER;
 var init_openaiChatCompletionsConverter = __esm({
   "../node_modules/@openai/agents-openai/dist/openaiChatCompletionsConverter.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -74299,7 +74299,7 @@ function toResponseUsage(usage) {
 var FAKE_ID, GPT_56_MODEL_PATTERN, OpenAIChatCompletionsModel;
 var init_openaiChatCompletionsModel = __esm({
   "../node_modules/@openai/agents-openai/dist/openaiChatCompletionsModel.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -74663,7 +74663,7 @@ var init_openaiChatCompletionsModel = __esm({
 var OpenAIProvider;
 var init_openaiProvider = __esm({
   "../node_modules/@openai/agents-openai/dist/openaiProvider.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -74800,7 +74800,7 @@ var init_openaiProvider = __esm({
 // ../node_modules/@openai/agents-openai/dist/responsesWebSocketSession.mjs
 var init_responsesWebSocketSession = __esm({
   "../node_modules/@openai/agents-openai/dist/responsesWebSocketSession.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -75274,7 +75274,7 @@ function setDefaultOpenAITracingExporter() {
 var OPENAI_TRACING_MAX_FIELD_BYTES, OPENAI_TRACING_MAX_RECURSION_DEPTH, OPENAI_TRACING_STRING_TRUNCATION_SUFFIX, UNSERIALIZABLE, textEncoder, OpenAITracingExporter;
 var init_openaiTracingExporter = __esm({
   "../node_modules/@openai/agents-openai/dist/openaiTracingExporter.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -75397,7 +75397,7 @@ var init_openaiTracingExporter = __esm({
 var OPENAI_SESSION_API;
 var init_openaiSessionApi = __esm({
   "../node_modules/@openai/agents-openai/dist/memory/openaiSessionApi.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -75500,7 +75500,7 @@ function resolveClient(options) {
 var OpenAIConversationsSession, INPUT_CONTENT_TYPES;
 var init_openaiConversationsSession = __esm({
   "../node_modules/@openai/agents-openai/dist/memory/openaiConversationsSession.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -75842,7 +75842,7 @@ function areAgentItemsEqual(left, right) {
 var DEFAULT_COMPACTION_THRESHOLD, logger4, OpenAIResponsesCompactionSession;
 var init_openaiResponsesCompactionSession = __esm({
   "../node_modules/@openai/agents-openai/dist/memory/openaiResponsesCompactionSession.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -76094,7 +76094,7 @@ var init_openaiResponsesCompactionSession = __esm({
 // ../node_modules/@openai/agents-openai/dist/index.mjs
 var init_dist2 = __esm({
   "../node_modules/@openai/agents-openai/dist/index.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -76115,7 +76115,7 @@ var init_dist2 = __esm({
 var METADATA2, metadata_default2;
 var init_metadata2 = __esm({
   "../node_modules/@openai/agents-realtime/dist/metadata.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -76135,7 +76135,7 @@ var init_metadata2 = __esm({
 var HEADERS2, WEBSOCKET_META;
 var init_utils6 = __esm({
   "../node_modules/@openai/agents-realtime/dist/utils.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -76152,7 +76152,7 @@ var init_utils6 = __esm({
 // ../node_modules/@openai/agents-realtime/dist/realtimeAgent.mjs
 var init_realtimeAgent = __esm({
   "../node_modules/@openai/agents-realtime/dist/realtimeAgent.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -76163,7 +76163,7 @@ var init_realtimeAgent = __esm({
 // ../node_modules/@openai/agents-realtime/dist/guardrail.mjs
 var init_guardrail2 = __esm({
   "../node_modules/@openai/agents-realtime/dist/guardrail.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -76174,7 +76174,7 @@ var init_guardrail2 = __esm({
 // ../node_modules/@openai/agents-realtime/dist/clientMessages.mjs
 var init_clientMessages = __esm({
   "../node_modules/@openai/agents-realtime/dist/clientMessages.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -76185,7 +76185,7 @@ var init_clientMessages = __esm({
 var baseItemSchema, realtimeMessageItemSchema, realtimeToolCallItem, realtimeMcpCallItem, realtimeMcpCallApprovalRequestItem;
 var init_items4 = __esm({
   "../node_modules/@openai/agents-realtime/dist/items.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -76259,7 +76259,7 @@ var init_items4 = __esm({
 var logger5;
 var init_logger3 = __esm({
   "../node_modules/@openai/agents-realtime/dist/logger.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -76272,7 +76272,7 @@ var init_logger3 = __esm({
 var realtimeResponse, conversationItemContentSchema, conversationItemSchema, conversationCreatedEventSchema, conversationItemAddedEventSchema, conversationItemDoneEventSchema, conversationItemDeletedEventSchema, conversationItemInputAudioTranscriptionCompletedEventSchema, conversationItemInputAudioTranscriptionDeltaEventSchema, conversationItemInputAudioTranscriptionFailedEventSchema, conversationItemRetrievedEventSchema, conversationItemTruncatedEventSchema, conversationItemCreateEventSchema, conversationItemDeleteEventSchema, conversationItemRetrieveEventSchema, conversationItemTruncateEventSchema, errorEventSchema, inputAudioBufferClearedEventSchema, inputAudioBufferAppendEventSchema, inputAudioBufferClearEventSchema, inputAudioBufferCommitEventSchema, inputAudioBufferCommittedEventSchema, inputAudioBufferSpeechStartedEventSchema, inputAudioBufferSpeechStoppedEventSchema, outputAudioBufferStartedEventSchema, outputAudioBufferStoppedEventSchema, outputAudioBufferClearedEventSchema, rateLimitsUpdatedEventSchema, responseAudioDeltaEventSchema, responseAudioDoneEventSchema, responseAudioTranscriptDeltaEventSchema, responseAudioTranscriptDoneEventSchema, responseContentPartAddedEventSchema, responseContentPartDoneEventSchema, responseCreatedEventSchema, responseDoneEventSchema, responseFunctionCallArgumentsDeltaEventSchema, responseFunctionCallArgumentsDoneEventSchema, responseOutputItemAddedEventSchema, responseOutputItemDoneEventSchema, responseTextDeltaEventSchema, responseTextDoneEventSchema, sessionCreatedEventSchema, sessionUpdatedEventSchema, responseCancelEventSchema, responseCreateEventSchema, sessionUpdateEventSchema, mcpListToolsInProgressEventSchema, mcpListToolsCompletedEventSchema, responseMcpCallArgumentsDeltaEventSchema, responseMcpCallArgumentsDoneEventSchema, responseMcpCallInProgressEventSchema, responseMcpCallCompletedEventSchema, mcpListToolsFailedEventSchema, genericEventSchema, realtimeServerEventSchema, realtimeClientEventSchema;
 var init_openaiRealtimeEvents = __esm({
   "../node_modules/@openai/agents-realtime/dist/openaiRealtimeEvents.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -76765,7 +76765,7 @@ var init_openaiRealtimeEvents = __esm({
 // ../node_modules/@openai/agents-realtime/dist/openaiRealtimeBase.mjs
 var init_openaiRealtimeBase = __esm({
   "../node_modules/@openai/agents-realtime/dist/openaiRealtimeBase.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -76783,7 +76783,7 @@ var init_openaiRealtimeBase = __esm({
 // ../node_modules/@openai/agents-realtime/dist/responseCreateSequencer.mjs
 var init_responseCreateSequencer = __esm({
   "../node_modules/@openai/agents-realtime/dist/responseCreateSequencer.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -76793,7 +76793,7 @@ var init_responseCreateSequencer = __esm({
 // ../node_modules/@openai/agents-realtime/dist/openaiRealtimeWebRtc.mjs
 var init_openaiRealtimeWebRtc = __esm({
   "../node_modules/@openai/agents-realtime/dist/openaiRealtimeWebRtc.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -76811,7 +76811,7 @@ var init_openaiRealtimeWebRtc = __esm({
 var WebSocket;
 var init_shims_workerd2 = __esm({
   "../node_modules/@openai/agents-realtime/dist/shims/shims-workerd.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -76822,7 +76822,7 @@ var init_shims_workerd2 = __esm({
 // ../node_modules/@openai/agents-realtime/dist/openaiRealtimeWebsocket.mjs
 var init_openaiRealtimeWebsocket = __esm({
   "../node_modules/@openai/agents-realtime/dist/openaiRealtimeWebsocket.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -76838,7 +76838,7 @@ var init_openaiRealtimeWebsocket = __esm({
 // ../node_modules/@openai/agents-realtime/dist/tool.mjs
 var init_tool2 = __esm({
   "../node_modules/@openai/agents-realtime/dist/tool.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -76850,7 +76850,7 @@ var init_tool2 = __esm({
 // ../node_modules/@openai/agents-realtime/dist/realtimeSession.mjs
 var init_realtimeSession = __esm({
   "../node_modules/@openai/agents-realtime/dist/realtimeSession.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -76872,7 +76872,7 @@ var init_realtimeSession = __esm({
 // ../node_modules/@openai/agents-realtime/dist/openaiRealtimeSip.mjs
 var init_openaiRealtimeSip = __esm({
   "../node_modules/@openai/agents-realtime/dist/openaiRealtimeSip.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -76885,7 +76885,7 @@ var init_openaiRealtimeSip = __esm({
 // ../node_modules/@openai/agents-realtime/dist/index.mjs
 var init_dist3 = __esm({
   "../node_modules/@openai/agents-realtime/dist/index.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -76904,7 +76904,7 @@ var init_dist3 = __esm({
 // ../node_modules/@openai/agents/dist/index.mjs
 var init_dist4 = __esm({
   "../node_modules/@openai/agents/dist/index.mjs"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -77102,7 +77102,7 @@ function boundedNumber(value, min, max) {
 var MAX_LOADS;
 var init_dispatch = __esm({
   "lib/dispatch.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -77297,7 +77297,7 @@ function corsHeaders6() {
 var LOAD_STORE_KEY;
 var init_dispatch2 = __esm({
   "api/dispatch.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -77728,7 +77728,7 @@ function json8(payload, status = 200) {
 var DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE;
 var init_leaderboard = __esm({
   "api/leaderboard.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -77877,7 +77877,7 @@ function leadEmailIndexKey(email3) {
 }
 var init_leads = __esm({
   "api/leads.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -78513,7 +78513,8 @@ async function onRequestGet6(context2) {
         403
       );
     }
-    if (!postedScope && !decision.allowed) {
+    const mayBrowseWhileVerificationPending = decision.route === "carrier-verification";
+    if (!postedScope && !decision.allowed && !mayBrowseWhileVerificationPending) {
       return json10(
         {
           ok: false,
@@ -79310,7 +79311,7 @@ function corsHeaders8() {
 var MAX_LOAD_PHOTOS, LOAD_PHOTO_TYPES, LOAD_STORE_KEY2, LOAD_PHOTO_PREFIX, MAX_LOAD_PHOTO_DATA_URL_LENGTH, MAX_LOAD_PHOTO_TOTAL_LENGTH, MAX_STORED_LOADS;
 var init_loads = __esm({
   "api/loads.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -79588,7 +79589,7 @@ async function onRequestOptions9() {
 var LOAD_STORE_KEY3, KV_PAGE_LIMIT, MAX_ACCOUNTS_SCANNED, PLANS, PLAN_BY_KEY;
 var init_metrics = __esm({
   "api/metrics.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -79980,7 +79981,7 @@ function corsHeaders9() {
 var PAYMENT_BY_AMOUNT, HANDLED_EVENTS;
 var init_stripe_webhook = __esm({
   "api/stripe-webhook.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -80077,7 +80078,7 @@ function corsHeaders10() {
 var SUPPORTED;
 var init_translate = __esm({
   "api/translate.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -80175,7 +80176,7 @@ async function onRequest(context2) {
 var CONTENT_SECURITY_POLICY, PUBLIC_PATHS, PUBLIC_PATH_PREFIXES, KNOWN_API_PATHS;
 var init_middleware = __esm({
   "_middleware.js"() {
-    init_functionsRoutes_0_9201424317653203();
+    init_functionsRoutes_0_3519125919063828();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
     init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
     init_performance2();
@@ -80304,10 +80305,10 @@ var init_middleware = __esm({
   }
 });
 
-// ../.wrangler/tmp/pages-5RO3Zv/functionsRoutes-0.9201424317653203.mjs
+// ../.wrangler/tmp/pages-zTFuu4/functionsRoutes-0.3519125919063828.mjs
 var routes;
-var init_functionsRoutes_0_9201424317653203 = __esm({
-  "../.wrangler/tmp/pages-5RO3Zv/functionsRoutes-0.9201424317653203.mjs"() {
+var init_functionsRoutes_0_3519125919063828 = __esm({
+  "../.wrangler/tmp/pages-zTFuu4/functionsRoutes-0.3519125919063828.mjs"() {
     init_account();
     init_account();
     init_account();
@@ -80562,13 +80563,13 @@ var init_functionsRoutes_0_9201424317653203 = __esm({
 });
 
 // ../node_modules/wrangler/templates/pages-template-worker.ts
-init_functionsRoutes_0_9201424317653203();
+init_functionsRoutes_0_3519125919063828();
 init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
 init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
 init_performance2();
 
 // ../node_modules/wrangler/node_modules/path-to-regexp/dist.es2015/index.js
-init_functionsRoutes_0_9201424317653203();
+init_functionsRoutes_0_3519125919063828();
 init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
 init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
 init_performance2();

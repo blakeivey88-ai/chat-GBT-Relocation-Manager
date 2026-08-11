@@ -90,5 +90,5 @@ test("member startup renders before concurrent secondary data loading", async ()
 
 test("member page cache-busts the corrected startup script", async () => {
   const source = await readFile(new URL("../dist/member.html", import.meta.url), "utf8");
-  assert.match(source, /app\.js\?v=20260808-signin/);
+  assert.match(source, /app\.js\?v=20260810-member-theme-6/);
 });
