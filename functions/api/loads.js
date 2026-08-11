@@ -187,6 +187,17 @@ function normalizeLoadRecord(load = {}, index = 0) {
     notes: String(load.notes || "")
       .trim()
       .slice(0, 1000),
+    pricingMode: ["open_bids", "target"].includes(
+      String(load.pricingMode || "").trim().toLowerCase(),
+    )
+      ? String(load.pricingMode).trim().toLowerCase()
+      : "target",
+    jobType: String(load.jobType || "")
+      .trim()
+      .slice(0, 40),
+    rateIncludesHint: String(load.rateIncludesHint || "")
+      .trim()
+      .slice(0, 400),
     claimRequests: Array.isArray(load.claimRequests)
       ? load.claimRequests.slice(0, 50)
       : [],
@@ -608,6 +619,8 @@ function postedLoadFromBody(body, account, photos = []) {
   const deliveryDate = cleanString(body.deliveryDate || "", 20);
   const eq = cleanString(body.equipment || "", 120);
   const wt = cleanString(body.weight || "", 80);
+  const pricingModeRaw = cleanString(body.pricingMode || "target", 20).toLowerCase();
+  const pricingMode = pricingModeRaw === "open_bids" ? "open_bids" : "target";
   const rate = Number(body.rate || 0);
   const mi = Number(body.miles || 0);
   const commodity = cleanString(body.commodity || "", 160);
@@ -616,21 +629,27 @@ function postedLoadFromBody(body, account, photos = []) {
   const siteConditions = cleanString(body.siteConditions || "", 200);
   const contactName = cleanString(body.contactName || "", 120);
   const contactPhone = cleanString(body.contactPhone || "", 40);
+  const jobType = cleanString(body.jobType || "", 40);
+  const rateIncludesHint = cleanString(
+    body.rateIncludesHint || body.rate_terms || "",
+    400,
+  );
   const declaredValue = Number(body.declaredValue || 0) || 0;
-  if (
-    !from ||
-    !to ||
-    !pickupDate ||
-    !pickupTime ||
-    !eq ||
-    !wt ||
-    !Number.isFinite(rate) ||
-    rate <= 0
-  ) {
+  if (!from || !to || !pickupDate || !pickupTime || !eq || !wt) {
     return {
       error:
-        "Pickup, delivery, pickup date/time, equipment, weight, and a valid offered rate are required.",
+        "Pickup, delivery, pickup date/time, equipment, and weight are required.",
     };
+  }
+  if (pricingMode === "target") {
+    if (!Number.isFinite(rate) || rate <= 0) {
+      return {
+        error:
+          "Enter a valid target rate, or switch pricing to open for bids.",
+      };
+    }
+  } else if (!Number.isFinite(rate) || rate < 0) {
+    return { error: "Rate must be a valid number when provided." };
   }
   if (
     !commodity ||
@@ -677,7 +696,10 @@ function postedLoadFromBody(body, account, photos = []) {
         deliveryAt: deliveryTimestamp
           ? new Date(deliveryTimestamp).toISOString()
           : "",
-        rate,
+        rate: pricingMode === "open_bids" ? (Number.isFinite(rate) && rate > 0 ? rate : 0) : rate,
+        pricingMode,
+        jobType,
+        rateIncludesHint,
         mi: Number.isFinite(mi) && mi > 0 ? Math.round(mi) : 0,
         wt,
         eq,
@@ -700,7 +722,8 @@ function postedLoadFromBody(body, account, photos = []) {
         tags: [
           "Member posted",
           body.directLoad === false ? "Multi-stop" : "Direct load",
-        ],
+          pricingMode === "open_bids" ? "Open for bids" : "Target rate",
+        ].filter(Boolean),
         photos,
         autoMode: cleanString(body.autoMode || "", 80),
         status: "open",
@@ -1037,11 +1060,13 @@ export async function onRequestPost(context) {
         bodyLines: [
           `Lane: ${created.load.from} → ${created.load.to}`,
           `Pickup: ${created.load.pick}`,
-          `Equipment: ${created.load.eq} · Rate: $${created.load.rate}`,
+          created.load.pricingMode === "open_bids"
+            ? `Equipment: ${created.load.eq} · Open for bids`
+            : `Equipment: ${created.load.eq} · Target rate: $${created.load.rate}`,
           "Eligible carriers can now bid on this pickup. You will get a confirmation when a bid arrives, and your on-site contact phone stays hidden until you accept a carrier.",
         ],
-        ctaLabel: "Review your post",
-        ctaUrl: "https://relocationmanagerusa.com/member.html#workbench",
+        ctaLabel: "Open bid room",
+        ctaUrl: "https://relocationmanagerusa.com/member.html#bid-room",
         requestId: `posted-${created.load.id}`,
       });
       return json(
@@ -1049,7 +1074,7 @@ export async function onRequestPost(context) {
           ok: true,
           message: "Load posted.",
           load: created.load,
-          route: "post",
+          route: "bid-room",
         },
         201,
       );
@@ -1479,6 +1504,19 @@ export async function onRequestPost(context) {
     if (!load) return json({ ok: false, error: "Load not found." }, 404);
 
     if (action === "claim") {
+      const openForBids =
+        String(load.pricingMode || "").toLowerCase() === "open_bids" ||
+        !(Number(load.rate || 0) > 0);
+      if (openForBids) {
+        return json(
+          {
+            ok: false,
+            error:
+              "This pickup is open for bids. Submit an all-in bid and say what the price includes.",
+          },
+          400,
+        );
+      }
       const duplicate = (load.claimRequests || []).some(
         (request) => request.userId === access.account.userId,
       );
@@ -1586,6 +1624,16 @@ export async function onRequestPost(context) {
     if (!Number.isFinite(amount) || amount <= 0 || amount > 1_000_000) {
       return json({ ok: false, error: "Enter a valid all-in bid amount." }, 400);
     }
+    if (note.length < 12) {
+      return json(
+        {
+          ok: false,
+          error:
+            "Say what your all-in price includes (equipment, labor, wait time, tolls) — at least a short note.",
+        },
+        400,
+      );
+    }
     const now = new Date().toISOString();
     const existingBid = (load.claimRequests || []).find(
       (request) => request.userId === access.account.userId,
@@ -1647,10 +1695,10 @@ export async function onRequestPost(context) {
       bodyLines: [
         `${cleanString(access.account.company || access.account.name || "A carrier", 120)} offered $${amount} for ${load.from} → ${load.to}.`,
         note ? `Carrier note: ${note}` : "No additional bid note was supplied.",
-        "Review the carrier and bid, then accept or decline it from your workbench. Your on-site contact phone stays hidden until you accept.",
+        "Review the carrier and bid, then accept or decline it from your bid room. Your on-site contact phone stays hidden until you accept.",
       ],
-      ctaLabel: "Review the bid",
-      ctaUrl: "https://relocationmanagerusa.com/member.html#profile",
+      ctaLabel: "Open bid room",
+      ctaUrl: "https://relocationmanagerusa.com/member.html#bid-room",
       requestId: `bid-${load.id}-${access.account.userId}-${now}`,
     });
 

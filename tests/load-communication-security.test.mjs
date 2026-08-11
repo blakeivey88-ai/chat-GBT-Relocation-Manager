@@ -114,5 +114,5 @@ test('mobile menu meets the 44px touch target floor', async () => {
     readFile(new URL('../dist/member.html', import.meta.url), 'utf8'),
   ]);
   assert.match(css, /\.menu-btn\s*\{[^}]*min-height:\s*44px/s);
-  assert.match(member, /styles\.css\?v=20260810-load-workflow-1/);
+  assert.match(member, /styles\.css\?v=20260811-bid-room-mvp-1/);
 });

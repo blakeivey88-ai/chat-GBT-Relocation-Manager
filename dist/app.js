@@ -7722,6 +7722,11 @@ function workspaceFromProfile(profile) {
     return "provider";
   return "driver";
 }
+let bidRoomFocusLoadId = "";
+function openBidRoom(loadId) {
+  if (loadId) bidRoomFocusLoadId = String(loadId);
+  route("bid-room");
+}
 function route(id) {
   const profile = getProfile();
   const currentRoute = String(location.hash.slice(1) || "").trim();
@@ -7790,6 +7795,10 @@ function route(id) {
     const gate = serviceAccessState(profile, "post");
     if (!gate.allowed) id = gate.route || "signup";
   }
+  if (id === "bid-room") {
+    const gate = serviceAccessState(profile, "post");
+    if (!gate.allowed) id = gate.route || "signup";
+  }
   if (id === "request-form") {
     const gate = serviceAccessState(profile, "request");
     if (!gate.allowed) id = gate.route || "signup";
@@ -7818,6 +7827,7 @@ function route(id) {
   if (mainNav) mainNav.classList.remove("open");
   if (menuBtn) menuBtn.setAttribute("aria-expanded", "false");
   if (id === "loads") renderLoads();
+  if (id === "bid-room") renderBidRoom();
   if (id === "profile") renderProfile();
   if (id === "communication") {
     renderCommunicationHub();
@@ -8446,11 +8456,16 @@ function loadCard(
         `<span class="chip ${tag.includes("Quick") ? "warn" : tag.includes("Verified") ? "good" : tag.includes("Machinery") ? "risk" : ""}">${escapeHtml(tag)}</span>`,
     )
     .join("");
+  const openForBids =
+    String(l.pricingMode || "").toLowerCase() === "open_bids" ||
+    !(Number(l.rate || 0) > 0);
   const actionLabel = locked
     ? "Verification required"
     : l.myBid
       ? "Revise bid"
-      : "Bid on load";
+      : openForBids
+        ? "Submit bid"
+        : "Bid on load";
   const actionClass = locked ? "btn btn-outline" : "btn btn-primary";
   const autoChip = l.autoMode
     ? `<span class="chip good">${escapeHtml(autoTransportModeLabel(l.autoMode))}</span>`
@@ -8508,7 +8523,12 @@ function loadCard(
   const bidStatus = l.myBid
     ? `<div class="my-load-bid"><strong>Your bid: ${money(l.myBid.amount)}</strong><span>${escapeHtml(l.myBid.note || "No note supplied")}</span><small>Status: ${escapeHtml(l.myBid.status || "pending")}</small></div>`
     : "";
-  return `<article class="card load-card"><div class="load-top"><div class="load-media">${media}<div class="load-copy"><div class="route">${escapeHtml(l.from)} → ${escapeHtml(l.to)}</div><p class="muted load-poster-line">${posterIcon}<span>${escapeHtml(l.broker || "Member")} · ${escapeHtml(l.pick || "Pickup time pending")} · ${escapeHtml(l.eq)}</span></p></div></div><div class="rate">${money(l.rate)}<small>shipper target · ${rpmValue}</small></div></div>${photoGallery}<p>${summaryParts.join(" · ")}</p><div class="chips">${chips}${autoChip}<span class="chip">${escapeHtml(l.wt || "Weight pending")}</span><span class="chip good">${escapeHtml(l.status || "open")}</span></div><div class="load-detail-grid"><div><span>Last confirmed</span><strong>${escapeHtml(lastConfirmedLabel)}</strong></div><div><span>Expiration</span><strong>${escapeHtml(expirationLabel)}</strong></div><div><span>Payment</span><strong>${escapeHtml(paymentTermsLabel)}</strong></div><div><span>Site readiness</span><strong>${escapeHtml(siteReadinessLabel)}</strong></div><div><span>Verification</span><strong>${escapeHtml(verificationLabel)}</strong></div></div>${bidStatus}<form class="load-bid-form" data-bid-form="${escapeHtml(l.id)}" hidden><label>All-in bid<input name="bid_amount" type="number" min="1" max="1000000" step="1" required value="${l.myBid?.amount || l.rate || ""}" /></label><label>What your price includes<textarea name="bid_note" rows="2" maxlength="400" placeholder="Equipment, loading help, timing, tolls, or conditions">${escapeHtml(l.myBid?.note || "")}</textarea></label><div class="load-bid-actions"><button class="btn btn-primary" type="submit">${l.myBid ? "Update bid" : "Submit bid"}</button><button class="btn btn-soft" type="button" data-cancel-bid="${escapeHtml(l.id)}">Cancel</button></div></form><div class="load-actions"><span class="muted">${escapeHtml(hint)}</span><div class="load-action-buttons"><button class="btn btn-soft" type="button" data-report-load="${escapeHtml(l.id || "")}" title="Report this load to the review team">⚑ Report</button><button class="btn btn-soft favorite-btn ${isFavorite ? "active" : ""}" type="button" data-favorite-load="${escapeHtml(l.id)}" aria-pressed="${isFavorite}">${isFavorite ? "★ Saved" : "☆ Favorite"}</button><button class="${actionClass}" type="button" data-book="${escapeHtml(l.id || "")}" ${locked ? 'disabled aria-disabled="true"' : ""}>${actionLabel}</button></div></div></article>`;
+  const rateHeadline = openForBids
+    ? (Number(l.rate || 0) > 0
+        ? `${money(l.rate)}<small>open for bids · target hint</small>`
+        : `Open<small>for bids · no target</small>`)
+    : `${money(l.rate)}<small>shipper target · ${rpmValue}</small>`;
+  return `<article class="card load-card"><div class="load-top"><div class="load-media">${media}<div class="load-copy"><div class="route">${escapeHtml(l.from)} → ${escapeHtml(l.to)}</div><p class="muted load-poster-line">${posterIcon}<span>${escapeHtml(l.broker || "Member")} · ${escapeHtml(l.pick || "Pickup time pending")} · ${escapeHtml(l.eq)}</span></p></div></div><div class="rate">${rateHeadline}</div></div>${photoGallery}<p>${summaryParts.join(" · ")}</p><div class="chips">${chips}${autoChip}<span class="chip">${escapeHtml(l.wt || "Weight pending")}</span><span class="chip good">${escapeHtml(l.status || "open")}</span></div><div class="load-detail-grid"><div><span>Last confirmed</span><strong>${escapeHtml(lastConfirmedLabel)}</strong></div><div><span>Expiration</span><strong>${escapeHtml(expirationLabel)}</strong></div><div><span>Payment</span><strong>${escapeHtml(paymentTermsLabel)}</strong></div><div><span>Site readiness</span><strong>${escapeHtml(siteReadinessLabel)}</strong></div><div><span>Verification</span><strong>${escapeHtml(verificationLabel)}</strong></div></div>${bidStatus}<form class="load-bid-form" data-bid-form="${escapeHtml(l.id)}" hidden><label>All-in bid<input name="bid_amount" type="number" min="1" max="1000000" step="1" required value="${l.myBid?.amount || l.rate || ""}" /></label><label>What your price includes<textarea name="bid_note" rows="2" maxlength="400" placeholder="Equipment, loading help, timing, tolls, or conditions">${escapeHtml(l.myBid?.note || "")}</textarea></label><div class="load-bid-actions"><button class="btn btn-primary" type="submit">${l.myBid ? "Update bid" : "Submit bid"}</button><button class="btn btn-soft" type="button" data-cancel-bid="${escapeHtml(l.id)}">Cancel</button></div></form><div class="load-actions"><span class="muted">${escapeHtml(hint)}</span><div class="load-action-buttons"><button class="btn btn-soft" type="button" data-report-load="${escapeHtml(l.id || "")}" title="Report this load to the review team">⚑ Report</button><button class="btn btn-soft favorite-btn ${isFavorite ? "active" : ""}" type="button" data-favorite-load="${escapeHtml(l.id)}" aria-pressed="${isFavorite}">${isFavorite ? "★ Saved" : "☆ Favorite"}</button><button class="${actionClass}" type="button" data-book="${escapeHtml(l.id || "")}" ${locked ? 'disabled aria-disabled="true"' : ""}>${actionLabel}</button></div></div></article>`;
 }
 function renderLoads() {
   const profile = getProfile();
@@ -8664,6 +8684,10 @@ function renderLoads() {
       const note = String(form.querySelector('[name="bid_note"]')?.value || "").trim();
       if (!Number.isFinite(amount) || amount <= 0) {
         toast("Enter a valid all-in bid amount.");
+        return;
+      }
+      if (note.length < 12) {
+        toast("Say what your price includes (equipment, labor, wait, tolls) — short note required.");
         return;
       }
       const submit = form.querySelector('button[type="submit"]');
@@ -9169,6 +9193,194 @@ function renderPostedLoadResponses() {
     };
   });
 }
+function renderBidRoom() {
+  const list = $("#bidRoomLoadList");
+  const offers = $("#bidRoomOffers");
+  const countEl = $("#bidRoomLoadCount");
+  const offerCount = $("#bidRoomOfferCount");
+  if (!list || !offers) {
+    renderPostedLoadResponses();
+    return;
+  }
+  const loads = Array.isArray(postedLoadCatalog) ? postedLoadCatalog : [];
+  if (countEl) countEl.textContent = String(loads.length);
+  if (!loads.length) {
+    list.innerHTML =
+      '<div class="empty-state"><h4>No posted pickups yet</h4><p>Post a pickup to collect all-in bids with clear terms.</p><button class="btn btn-primary" type="button" data-route="post">Post a pickup</button></div>';
+    offers.innerHTML =
+      '<div class="empty-state"><h4>No offers yet</h4><p>When carriers bid, they will show here for accept or decline.</p></div>';
+    if ($("#bidRoomLane")) $("#bidRoomLane").textContent = "Select a pickup";
+    if ($("#bidRoomMeta"))
+      $("#bidRoomMeta").textContent =
+        "Posted pickups with carrier bids appear here.";
+    if ($("#bidRoomStatus")) $("#bidRoomStatus").textContent = "—";
+    if ($("#bidRoomMoney")) $("#bidRoomMoney").textContent = "";
+    if (offerCount) offerCount.textContent = "0";
+    list.querySelectorAll("[data-route]").forEach((el) => {
+      el.onclick = () => route(el.dataset.route);
+    });
+    return;
+  }
+  if (
+    !bidRoomFocusLoadId ||
+    !loads.some((load) => load.id === bidRoomFocusLoadId)
+  ) {
+    bidRoomFocusLoadId = loads[0].id;
+  }
+  list.innerHTML = loads
+    .map((load) => {
+      const bids = Array.isArray(load.claimRequests) ? load.claimRequests : [];
+      const pending = bids.filter(
+        (b) => !["accepted", "declined", "not_selected"].includes(b.status),
+      ).length;
+      const openForBids =
+        String(load.pricingMode || "").toLowerCase() === "open_bids" ||
+        !(Number(load.rate || 0) > 0);
+      const moneyLabel = openForBids
+        ? Number(load.rate || 0) > 0
+          ? `Open · hint ${money(load.rate)}`
+          : "Open for bids"
+        : `Target ${money(load.rate)}`;
+      const active = load.id === bidRoomFocusLoadId ? " active" : "";
+      return `<button type="button" class="bid-room-load-item${active}" data-bid-room-load="${escapeHtml(load.id)}"><strong>${escapeHtml(load.from || "")} → ${escapeHtml(load.to || "")}</strong><span>${escapeHtml(moneyLabel)} · ${pending} open offer${pending === 1 ? "" : "s"}</span></button>`;
+    })
+    .join("");
+  list.querySelectorAll("[data-bid-room-load]").forEach((button) => {
+    button.onclick = () => {
+      bidRoomFocusLoadId = button.dataset.bidRoomLoad;
+      renderBidRoom();
+    };
+  });
+  const load = loads.find((item) => item.id === bidRoomFocusLoadId) || loads[0];
+  const bids = Array.isArray(load.claimRequests) ? load.claimRequests : [];
+  const openForBids =
+    String(load.pricingMode || "").toLowerCase() === "open_bids" ||
+    !(Number(load.rate || 0) > 0);
+  if ($("#bidRoomLane"))
+    $("#bidRoomLane").textContent =
+      [load.from, load.to].filter(Boolean).join(" → ") || "Posted load";
+  if ($("#bidRoomMeta"))
+    $("#bidRoomMeta").textContent = [
+      load.eq,
+      load.pick,
+      load.commodity,
+      load.rateIncludesHint ? `Should cover: ${load.rateIncludesHint}` : "",
+    ]
+      .filter(Boolean)
+      .join(" · ");
+  if ($("#bidRoomStatus"))
+    $("#bidRoomStatus").textContent =
+      load.status === "accepted" || load.acceptedRequestId
+        ? "Awarded"
+        : load.status || "open";
+  if ($("#bidRoomMoney"))
+    $("#bidRoomMoney").textContent = openForBids
+      ? Number(load.rate || 0) > 0
+        ? `Open for bids · target hint ${money(load.rate)}`
+        : "Open for bids — no target rate"
+      : `Shipper target ${money(load.rate)} · counters welcome`;
+  if ($("#bidRoomHint"))
+    $("#bidRoomHint").textContent =
+      "We don’t add a booking commission. Choose terms that fit — not only the lowest number. Verify before freight moves.";
+  if (offerCount) offerCount.textContent = String(bids.length);
+  if (!bids.length) {
+    offers.innerHTML =
+      '<div class="empty-state"><h4>No offers yet</h4><p>Share complete site details. Open for bids often gets more serious trucks than a too-low target.</p></div>';
+  } else {
+    offers.innerHTML = bids
+      .map((request) => {
+        const accepted = request.status === "accepted";
+        const declined = request.status === "declined";
+        const unavailable = request.status === "not_selected";
+        const status = accepted
+          ? "Accepted"
+          : declined
+            ? "Declined"
+            : unavailable
+              ? "Not selected"
+              : "Bid pending";
+        const member =
+          request.company || request.name || "Verified requesting member";
+        const action =
+          accepted || unavailable || declined
+            ? `<span class="tag ${accepted ? "good" : ""}">${escapeHtml(status)}</span>`
+            : `<div class="bid-review-actions"><button class="btn btn-primary" type="button" data-accept-load="${escapeHtml(load.id)}" data-accept-request="${escapeHtml(request.id)}">Accept ${money(request.amount || load.rate)}</button><button class="btn btn-soft" type="button" data-decline-load="${escapeHtml(load.id)}" data-decline-request="${escapeHtml(request.id)}">Decline</button></div>`;
+        return `<article class="card bid-offer-card ${accepted ? "accepted" : ""}"><div class="section-head"><div><strong>${money(request.amount || load.rate)}</strong><span>${escapeHtml(member)}</span></div><span class="tag ${accepted ? "good" : ""}">${escapeHtml(status)}</span></div><p class="bid-offer-note">${escapeHtml(request.note || "No bid note supplied")}</p><small class="muted">Shipper target: ${openForBids ? "open for bids" : money(load.rate)}</small>${action}</article>`;
+      })
+      .join("");
+  }
+  const bindAccept = (button) => {
+    button.onclick = async () => {
+      const loadId = button.dataset.acceptLoad;
+      const relatedButtons = [
+        ...offers.querySelectorAll("[data-accept-load], [data-decline-load]"),
+      ].filter(
+        (candidate) =>
+          candidate.dataset.acceptLoad === loadId ||
+          candidate.dataset.declineLoad === loadId,
+      );
+      try {
+        relatedButtons.forEach((candidate) => {
+          candidate.disabled = true;
+        });
+        await apiRequest("/api/loads", {
+          method: "POST",
+          body: {
+            action: "accept",
+            loadId,
+            requestId: button.dataset.acceptRequest,
+          },
+        });
+        await Promise.all([
+          loadPostedLoadCatalog(true),
+          loadAccountState(),
+        ]);
+        renderBidRoom();
+        renderProfile();
+        toast("Bid accepted. The agreed rate is now locked to this carrier.");
+      } catch (error) {
+        relatedButtons.forEach((candidate) => {
+          candidate.disabled = false;
+        });
+        toast(
+          error?.data?.error ||
+            error?.message ||
+            "Request could not be accepted.",
+        );
+      }
+    };
+  };
+  const bindDecline = (button) => {
+    button.onclick = async () => {
+      try {
+        button.disabled = true;
+        await apiRequest("/api/loads", {
+          method: "POST",
+          body: {
+            action: "decline",
+            loadId: button.dataset.declineLoad,
+            requestId: button.dataset.declineRequest,
+          },
+        });
+        await loadPostedLoadCatalog(true);
+        renderBidRoom();
+        renderProfile();
+        toast("Bid declined. The load remains open for other offers.");
+      } catch (error) {
+        button.disabled = false;
+        toast(
+          error?.data?.error || error?.message || "Bid could not be declined.",
+        );
+      }
+    };
+  };
+  offers.querySelectorAll("[data-accept-load]").forEach(bindAccept);
+  offers.querySelectorAll("[data-decline-load]").forEach(bindDecline);
+  // Keep legacy profile hooks in sync when present
+  renderPostedLoadResponses();
+}
+
+
 function renderCancellationControl(profile) {
   const status = $("#cancellationStatus");
   const button = $("#cancelSubscriptionBtn");
@@ -10198,6 +10410,16 @@ function initForms() {
               autoMode: autoMode || undefined,
               directLoad,
             };
+            const pricingMode =
+              form.querySelector('[name="pricing_mode"]:checked')?.value ===
+              "open_bids"
+                ? "open_bids"
+                : "target";
+            const rateValue = parseMoney(field("rate_offered")?.value || "");
+            if (pricingMode === "target" && !(rateValue > 0)) {
+              toast("Enter a target rate, or choose open for bids.");
+              return;
+            }
             try {
               const posted = await apiRequest("/api/loads", {
                 method: "POST",
@@ -10210,7 +10432,10 @@ function initForms() {
                   deliveryDate: field("delivery_date")?.value || "",
                   equipment,
                   weight: field("weight")?.value || "",
-                  rate: parseMoney(field("rate_offered")?.value || ""),
+                  rate: pricingMode === "open_bids" ? rateValue || 0 : rateValue,
+                  pricingMode,
+                  jobType: field("job_type")?.value || "",
+                  rateIncludesHint: field("rate_includes_hint")?.value || "",
                   miles: Number(field("miles")?.value || 0),
                   notes: field("notes")?.value || "",
                   paymentTerms: field("payment_terms")?.value || "",
@@ -10230,6 +10455,7 @@ function initForms() {
               });
               data.id = posted?.load?.id || "";
               data.status = "Open";
+              bidRoomFocusLoadId = data.id || "";
             } catch (err) {
               toast(err?.data?.error || "The load could not be posted.");
               return;
@@ -10241,8 +10467,12 @@ function initForms() {
             postPhotoPayload = [];
             renderPostPhotoPreview();
             if (window.rmClearPostDraft) window.rmClearPostDraft();
-            await loadLoadCatalog(true).catch(() => {});
-            toast("Load posted. Eligible carriers can now request the pickup.");
+            await Promise.all([
+              loadLoadCatalog(true).catch(() => {}),
+              loadPostedLoadCatalog(true).catch(() => {}),
+            ]);
+            toast("Pickup live. Opening bid room for offers…");
+            openBidRoom(data.id);
             return;
           } else if (id === "ratingForm") {
             const review = buildVerifiedReviewEntry(profile, form);
@@ -11578,7 +11808,23 @@ function bind() {
     const el = form.querySelector(`[name="${name}"]`);
     return el ? String(el.value || "").trim() : "";
   };
+  const syncPricingMode = () => {
+    const mode =
+      form.querySelector('[name="pricing_mode"]:checked')?.value || "target";
+    const rateInput = form.querySelector('[name="rate_offered"]');
+    if (rateInput) {
+      if (mode === "open_bids") {
+        rateInput.required = false;
+        rateInput.placeholder = "Optional target hint";
+      } else {
+        rateInput.required = true;
+        rateInput.placeholder = "$1,250";
+      }
+    }
+    return mode;
+  };
   const update = () => {
+    const mode = syncPricingMode();
     const from = val("pickup_city");
     const to = val("delivery_city");
     setText("previewLane", from && to ? `${from} → ${to}` : from || to, "Not set");
@@ -11592,8 +11838,13 @@ function bind() {
     setText("previewFreight", freight, "Not set");
     const rate = val("rate_offered");
     const miles = Number(val("miles") || 0);
-    let rateLabel = rate;
-    if (rate && miles > 0) {
+    let rateLabel =
+      mode === "open_bids"
+        ? rate
+          ? `Open for bids · hint ${rate}`
+          : "Open for bids"
+        : rate;
+    if (mode === "target" && rate && miles > 0) {
       const rateNumber = Number(String(rate).replace(/[^0-9.]/g, "")) || 0;
       if (rateNumber > 0)
         rateLabel = `${rate} · $${(rateNumber / miles).toFixed(2)}/mi`;
@@ -11603,8 +11854,11 @@ function bind() {
 
     const required = Array.from(form.querySelectorAll("[required]"));
     const done = required.filter((el) =>
-      el.type === "checkbox" ? el.checked : String(el.value || "").trim(),
+      el.type === "checkbox" || el.type === "radio"
+        ? el.checked || el.type === "radio"
+        : String(el.value || "").trim(),
     ).length;
+    // Count radio groups as one required field once any is selected
     const percent = required.length
       ? Math.round((done / required.length) * 100)
       : 0;
