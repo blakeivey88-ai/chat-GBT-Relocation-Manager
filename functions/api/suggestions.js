@@ -3,7 +3,8 @@ import { buildBrandedEmail, sendTransactionalEmail } from '../lib/email.js';
 const CATEGORIES = new Set(['idea', 'problem', 'load-board', 'account', 'billing', 'safety', 'other']);
 const RATE_WINDOW_SECONDS = 15 * 60;
 const MAX_PER_WINDOW = 3;
-const SUGGESTION_INBOX = 'Diveyrelocation@gmail.com';
+const SUGGESTION_RETENTION_SECONDS = 180 * 24 * 60 * 60;
+const DEFAULT_SUGGESTION_INBOX = 'Diveyrelocation@gmail.com';
 
 export async function onRequestPost({ request, env, waitUntil }) {
   try {
@@ -43,7 +44,10 @@ export async function onRequestPost({ request, env, waitUntil }) {
       source: cleanText(input?.source || 'share-an-idea', 80),
       createdAt: now,
       updatedAt: now,
-    }), { metadata: { category, status: 'new', createdAt: now } });
+    }), {
+      expirationTtl: SUGGESTION_RETENTION_SECONDS,
+      metadata: { category, status: 'new', createdAt: now },
+    });
 
     const notification = notifySuggestionInbox(env, {
       category,
@@ -70,7 +74,7 @@ async function notifySuggestionInbox(env, suggestion) {
   ];
   const { text, html } = buildBrandedEmail({ headline: 'New website suggestion', bodyLines: lines });
   return sendTransactionalEmail(env, {
-    to: SUGGESTION_INBOX,
+    to: cleanEmail(env?.SUGGESTION_INBOX) || DEFAULT_SUGGESTION_INBOX,
     subject: `[Website suggestion] ${suggestion.category} · ${suggestion.reference}`,
     text,
     html,
@@ -96,10 +100,9 @@ function cleanEmail(value) { return cleanText(value, 254).toLowerCase(); }
 
 function containsSensitiveData(value) {
   const text = String(value || '');
-  const digits = text.replace(/\D/g, '');
   return /\b(?:password|passwd|verification token|reset token|api key|secret key|ssn|social security|policy number)\b\s*[:=#-]?\s*\S+/i.test(text)
     || /\b\d{3}-\d{2}-\d{4}\b/.test(text)
-    || digits.length >= 13 && digits.length <= 19;
+    || /(?:^|\D)(?:\d[ -]?){12}\d(?:[ -]?\d)*(?!\d)/.test(text);
 }
 
 async function rateLimitKey(request) {

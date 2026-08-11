@@ -5,9 +5,9 @@ import { readFile } from 'node:fs/promises';
 import { onRequestPost } from '../functions/api/suggestions.js';
 
 class MemoryKv {
-  constructor() { this.values = new Map(); }
+  constructor() { this.values = new Map(); this.options = new Map(); }
   async get(key) { return this.values.get(key) ?? null; }
-  async put(key, value) { this.values.set(key, String(value)); }
+  async put(key, value, options = {}) { this.values.set(key, String(value)); this.options.set(key, options); }
   async delete(key) { this.values.delete(key); }
   async list({ prefix = '' } = {}) { return { keys: [...this.values.keys()].filter((name) => name.startsWith(prefix)).map((name) => ({ name })) }; }
 }
@@ -31,6 +31,7 @@ test('saves bounded anonymous product feedback without creating a lead profile',
   assert.equal(saved.category, 'load-board');
   assert.equal(saved.email, '');
   assert.equal(saved.status, 'new');
+  assert.equal(kv.options.get(keys[0]).expirationTtl, 180 * 24 * 60 * 60);
   assert.equal([...kv.values.keys()].some((key) => key.startsWith('lead:email:')), false);
 });
 
@@ -61,6 +62,39 @@ test('requires contact consent for optional email and rejects sensitive data', a
   assert.equal(noConsent.status, 400);
   const sensitive = await onRequestPost({ request: request({ category: 'account', message: 'My password: SuperSecret123 should work.' }, { 'cf-connecting-ip': '192.0.2.11' }), env });
   assert.equal(sensitive.status, 400);
+});
+
+test('blocks long card-like sequences without rejecting ordinary load details', async () => {
+  const env = { RELOCATION_MANAGER_LEADS: new MemoryKv() };
+  const bypass = await onRequestPost({
+    request: request({ category: 'billing', message: 'My card is 4111 1111 1111 1111 and code 1234.' }, { 'cf-connecting-ip': '192.0.2.12' }),
+    env,
+  });
+  assert.equal(bypass.status, 400);
+
+  const realistic = await onRequestPost({
+    request: request({ category: 'load-board', message: 'Load 48291 picks up at 10:30 on 8/12/2026 and pays $725.' }, { 'cf-connecting-ip': '192.0.2.13' }),
+    env,
+  });
+  assert.equal(realistic.status, 200);
+});
+
+test('uses a configured suggestion inbox when supplied', async () => {
+  const sent = [];
+  const pending = [];
+  const env = {
+    RELOCATION_MANAGER_LEADS: new MemoryKv(),
+    SUGGESTION_INBOX: 'feedback@example.com',
+    EMAIL: { async send(message) { sent.push(message); } },
+  };
+  const response = await onRequestPost({
+    request: request({ message: 'Please make the load filters easier to scan.' }, { 'cf-connecting-ip': '192.0.2.14' }),
+    env,
+    waitUntil(promise) { pending.push(promise); },
+  });
+  await Promise.all(pending);
+  assert.equal(response.status, 200);
+  assert.equal(sent[0].to, 'feedback@example.com');
 });
 
 test('honeypot is accepted without storage and rate limit stops the fourth submission', async () => {
