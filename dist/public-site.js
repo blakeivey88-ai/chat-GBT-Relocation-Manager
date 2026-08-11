@@ -22,6 +22,12 @@
     node.textContent = String(new Date().getFullYear());
   });
 
+  document.querySelectorAll('.site-footer .footer-col').forEach((column) => {
+    if (!column.querySelector('a[href="/share-an-idea.html"]') && /support|trust|help/i.test(column.textContent || '')) {
+      column.insertAdjacentHTML('beforeend', '<a href="/share-an-idea.html">Share an idea</a>');
+    }
+  });
+
   fetch("/api/account", { credentials: "include" })
     .then((response) => (response.ok ? response.json() : null))
     .then((account) => {
