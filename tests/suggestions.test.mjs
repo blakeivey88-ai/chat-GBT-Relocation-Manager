@@ -34,6 +34,27 @@ test('saves bounded anonymous product feedback without creating a lead profile',
   assert.equal([...kv.values.keys()].some((key) => key.startsWith('lead:email:')), false);
 });
 
+test('notifies the confirmed website inbox without making delivery required for storage', async () => {
+  const kv = new MemoryKv();
+  const sent = [];
+  const pending = [];
+  const env = { RELOCATION_MANAGER_LEADS: kv, EMAIL: { async send(message) { sent.push(message); } } };
+  const response = await onRequestPost({
+    request: request({ category: 'idea', message: 'Please add a clearer saved-load indicator.', email: 'member@example.com', contactConsent: true }),
+    env,
+    waitUntil(promise) { pending.push(promise); },
+  });
+  await Promise.all(pending);
+  assert.equal(response.status, 200);
+  assert.equal(sent.length, 1);
+  assert.equal(sent[0].to, 'Diveyrelocation@gmail.com');
+  assert.match(sent[0].subject, /Website suggestion/);
+
+  env.EMAIL.send = async () => { throw new Error('Email unavailable'); };
+  const stored = await onRequestPost({ request: request({ category: 'idea', message: 'Please add another useful dashboard shortcut.' }, { 'cf-connecting-ip': '192.0.2.44' }), env });
+  assert.equal(stored.status, 200);
+});
+
 test('requires contact consent for optional email and rejects sensitive data', async () => {
   const env = { RELOCATION_MANAGER_LEADS: new MemoryKv() };
   const noConsent = await onRequestPost({ request: request({ category: 'idea', message: 'Please contact me about this useful idea.', email: 'member@example.com' }), env });
@@ -71,4 +92,5 @@ test('feedback page and entry points expose privacy guidance', async () => {
   assert.match(member, /Share an idea/);
   assert.match(publicScript, /share-an-idea\.html/);
   assert.match(middleware, /'\/api\/suggestions'/);
+  assert.match(support, /Diveyrelocation@gmail\.com/);
 });

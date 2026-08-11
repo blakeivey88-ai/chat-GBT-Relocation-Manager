@@ -1,8 +1,11 @@
+import { buildBrandedEmail, sendTransactionalEmail } from '../lib/email.js';
+
 const CATEGORIES = new Set(['idea', 'problem', 'load-board', 'account', 'billing', 'safety', 'other']);
 const RATE_WINDOW_SECONDS = 15 * 60;
 const MAX_PER_WINDOW = 3;
+const SUGGESTION_INBOX = 'Diveyrelocation@gmail.com';
 
-export async function onRequestPost({ request, env }) {
+export async function onRequestPost({ request, env, waitUntil }) {
   try {
     if (!env.RELOCATION_MANAGER_LEADS) return json({ ok: false, error: 'Feedback storage is unavailable.' }, 503);
     if (!sameOrigin(request)) return json({ ok: false, error: 'Request origin was not accepted.' }, 403);
@@ -41,10 +44,38 @@ export async function onRequestPost({ request, env }) {
       createdAt: now,
       updatedAt: now,
     }), { metadata: { category, status: 'new', createdAt: now } });
+
+    const notification = notifySuggestionInbox(env, {
+      category,
+      message,
+      email: consent ? email : '',
+      reference: id.split(':').at(-1).slice(0, 8),
+    }).catch(() => ({ accepted: false }));
+    if (typeof waitUntil === 'function') waitUntil(notification);
+    else await notification;
     return json({ ok: true, accepted: true, reference: id.split(':').at(-1).slice(0, 8) });
   } catch {
     return json({ ok: false, error: 'Your suggestion could not be saved.' }, 500);
   }
+}
+
+async function notifySuggestionInbox(env, suggestion) {
+  if (!env?.EMAIL?.send && !String(env?.RESEND_API_KEY || '').trim()) return { accepted: false };
+  const lines = [
+    `Category: ${suggestion.category}`,
+    `Reference: ${suggestion.reference}`,
+    `Follow-up email: ${suggestion.email || 'Not provided'}`,
+    '',
+    suggestion.message,
+  ];
+  const { text, html } = buildBrandedEmail({ headline: 'New website suggestion', bodyLines: lines });
+  return sendTransactionalEmail(env, {
+    to: SUGGESTION_INBOX,
+    subject: `[Website suggestion] ${suggestion.category} · ${suggestion.reference}`,
+    text,
+    html,
+    requestId: `suggestion-${suggestion.reference}`,
+  });
 }
 
 export async function onRequestOptions() {
@@ -82,4 +113,3 @@ async function rateLimitKey(request) {
 function json(payload, status = 200) {
   return new Response(JSON.stringify(payload), { status, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' } });
 }
-
