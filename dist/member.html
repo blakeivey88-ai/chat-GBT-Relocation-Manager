@@ -46,7 +46,7 @@
       Relocation Manager USA — Trucking Marketplace, Moving Resources &amp; Free
       Answers
     </title>
-    <link rel="stylesheet" href="styles.css?v=20260810-load-workflow-1" />
+    <link rel="stylesheet" href="styles.css?v=20260811-bid-room-mvp-1" />
     <link rel="stylesheet" href="/profile-edit-password-fix-20260810.css" />
     <link rel="stylesheet" href="/member-dark-foundation-20260810.css?v=6" />
     <script>
@@ -140,6 +140,7 @@
         <a href="#workbench" data-route="workbench">Workbench</a>
         <a href="#loads" data-route="loads">Find loads</a>
         <a href="#post" data-route="post">Post a load</a>
+        <a href="#bid-room" data-route="bid-room">Bid room</a>
         <a href="#dispatch" data-route="dispatch">AI Dispatch</a>
         <a href="#communication" data-route="communication">Messages</a>
         <a href="#dashboard" data-route="dashboard">Community</a>
@@ -1918,9 +1919,35 @@
                 >Delivery date<input name="delivery_date" type="date"
               /></label>
               <div class="post-section-head"><span>Section 02</span><h3>Freight details &amp; rate</h3></div>
-              <label
-                >Offered rate<input
+              <fieldset class="pricing-mode-fieldset">
+                <legend>How should trucks price this?</legend>
+                <p class="muted pricing-mode-help">
+                  Target a rate or leave it open for bids. Relocation Manager does
+                  not add a booking commission — the number you accept is between
+                  you and the truck.
+                </p>
+                <div class="pricing-mode-grid" role="radiogroup" aria-label="Pricing mode">
+                  <label class="pricing-mode-card">
+                    <input
+                      type="radio"
+                      name="pricing_mode"
+                      value="target"
+                      checked
+                    />
+                    <strong>Target rate</strong>
+                    <span>You suggest a price. Trucks accept or counter with terms.</span>
+                  </label>
+                  <label class="pricing-mode-card">
+                    <input type="radio" name="pricing_mode" value="open_bids" />
+                    <strong>Open for bids</strong>
+                    <span>Best when you’re unsure. Compare all-in offers and pick one.</span>
+                  </label>
+                </div>
+              </fieldset>
+              <label id="rateOfferedLabel"
+                >Target / offered rate<input
                   name="rate_offered"
+                  id="rateOfferedInput"
                   required
                   inputmode="decimal"
                   placeholder="$1,250"
@@ -1928,8 +1955,26 @@
                   >Not sure what to offer?
                   <a href="/rate-calculator.html" target="_blank" rel="noopener"
                     >Use the free rate calculator</a
-                  >.</small
+                  >. Very low targets often get fewer serious trucks — expect counters.</small
               ></label>
+              <label
+                >What the rate should cover (optional)<input
+                  name="rate_includes_hint"
+                  maxlength="400"
+                  placeholder="Liftgate, helper, tolls, wait time…"
+              /></label>
+              <label
+                >Job type (optional)
+                <select name="job_type">
+                  <option value="">Not specified</option>
+                  <option value="pallet">One pallet / few pieces</option>
+                  <option value="local_box">Local box / store freight</option>
+                  <option value="hotshot">Hotshot / materials</option>
+                  <option value="heavy">Machine / heavy equipment</option>
+                  <option value="highway">Highway / multi-state</option>
+                  <option value="other">Other</option>
+                </select>
+              </label>
               <label
                 >Estimated miles<input
                   name="miles"
@@ -2210,10 +2255,11 @@
                 Save as draft
               </button>
               <button class="btn btn-primary full" type="submit">
-                Post load
+                Post pickup · go live
               </button>
               <p class="muted" style="margin: 0">
-                Drafts save automatically on this device until you post. Your
+                Drafts save automatically on this device until you post. After
+                you post, you land in the bid room to review offers. Your
                 on-site contact phone is shared only with the carrier you
                 accept — never on the public board.
               </p>
@@ -2828,6 +2874,58 @@
             </div>
           </div>
           <div id="trustedPartnerResults"></div>
+        </div>
+      </section>
+
+
+      <section class="screen" id="bid-room">
+        <div class="container section-pad">
+          <div class="page-head">
+            <div>
+              <div class="eyebrow dark">Shipper bid room</div>
+              <h1>Compare offers. Lock clear terms.</h1>
+              <p class="muted">
+                All-in bids with what the price includes. Relocation Manager does
+                not add a booking commission. Still verify identity, insurance,
+                and pickup details before freight moves.
+              </p>
+            </div>
+            <button class="btn btn-soft" type="button" data-route="post">Post another pickup</button>
+          </div>
+          <div class="bid-room-layout">
+            <aside class="card bid-room-loads">
+              <div class="section-head">
+                <h2>Your open pickups</h2>
+                <span class="tag" id="bidRoomLoadCount">0</span>
+              </div>
+              <div id="bidRoomLoadList" class="bid-room-load-list"></div>
+            </aside>
+            <div class="bid-room-main">
+              <article class="card" id="bidRoomSummary">
+                <div class="section-head">
+                  <div>
+                    <h2 id="bidRoomLane">Select a pickup</h2>
+                    <p class="muted" id="bidRoomMeta">Posted pickups with carrier bids appear here.</p>
+                  </div>
+                  <span class="tag" id="bidRoomStatus">—</span>
+                </div>
+                <div class="bid-room-money" id="bidRoomMoney"></div>
+                <p class="muted" id="bidRoomHint">
+                  Choose a load on the left, or post a pickup to start receiving offers.
+                </p>
+              </article>
+              <div class="section-head" style="margin-top: 18px">
+                <h2>Offers</h2>
+                <span class="tag" id="bidRoomOfferCount">0</span>
+              </div>
+              <div id="bidRoomOffers" class="bid-room-offers"></div>
+              <!-- Compatibility hooks for existing accept/decline renderer -->
+              <div hidden>
+                <span id="profileResponseCount">0</span>
+                <div id="profilePostedResponses"></div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -3767,7 +3865,7 @@
       booking.
     </footer>
     <script type="module" src="leaderboard-paging.js?v=20260806-perf"></script>
-    <script data-source="app.js" src="app.js?v=20260810-member-theme-6"></script>
+    <script data-source="app.js" src="app.js?v=20260811-bid-room-mvp-1"></script>
 <script>
   fetch("/api/account", { credentials: "include" }).then(r => r.ok ? r.json() : null).then(account => {
     if (!account || !account.profile) return;

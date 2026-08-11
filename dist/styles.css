@@ -6075,3 +6075,124 @@ html body footer {
     scroll-behavior: auto;
   }
 }
+
+
+/* --- Shipper post pricing mode + bid room (MVP 2026-08-11) --- */
+.pricing-mode-fieldset {
+  grid-column: 1 / -1;
+  border: 1px solid var(--line, #1b2740);
+  border-radius: 16px;
+  padding: 14px 16px 16px;
+  margin: 0 0 8px;
+}
+.pricing-mode-fieldset legend {
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted, #93a7c9);
+  padding: 0 6px;
+}
+.pricing-mode-help {
+  margin: 0 0 12px;
+  font-size: 13px;
+}
+.pricing-mode-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+@media (max-width: 720px) {
+  .pricing-mode-grid { grid-template-columns: 1fr; }
+}
+.pricing-mode-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 2px solid var(--line, #1b2740);
+  background: rgba(255, 255, 255, 0.03);
+  cursor: pointer;
+  text-transform: none;
+  letter-spacing: 0;
+  color: inherit;
+  font-weight: 600;
+}
+.pricing-mode-card strong {
+  font-size: 14px;
+  font-weight: 900;
+}
+.pricing-mode-card span {
+  font-size: 12px;
+  color: var(--muted, #93a7c9);
+  font-weight: 600;
+}
+.pricing-mode-card:has(input:checked) {
+  border-color: var(--red, #ff3b2f);
+  box-shadow: 0 0 0 1px rgba(255, 59, 47, 0.35);
+  background: rgba(255, 59, 47, 0.08);
+}
+.pricing-mode-card input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.bid-room-layout {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.9fr) minmax(0, 1.4fr);
+  gap: 18px;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .bid-room-layout { grid-template-columns: 1fr; }
+}
+.bid-room-load-list {
+  display: grid;
+  gap: 8px;
+}
+.bid-room-load-item {
+  text-align: left;
+  width: 100%;
+  border: 1px solid var(--line, #1b2740);
+  background: rgba(255, 255, 255, 0.03);
+  color: inherit;
+  border-radius: 14px;
+  padding: 12px 14px;
+  cursor: pointer;
+  display: grid;
+  gap: 4px;
+}
+.bid-room-load-item strong { font-size: 14px; }
+.bid-room-load-item span {
+  font-size: 12px;
+  color: var(--muted, #93a7c9);
+}
+.bid-room-load-item.active {
+  border-color: var(--blue, #1e5eff);
+  background: rgba(30, 94, 255, 0.12);
+}
+.bid-room-money {
+  font-size: 1.15rem;
+  font-weight: 900;
+  margin: 8px 0;
+  color: var(--gold, #ffb627);
+}
+.bid-room-offers {
+  display: grid;
+  gap: 12px;
+}
+.bid-offer-card .bid-offer-note {
+  margin: 8px 0;
+  font-weight: 600;
+}
+.bid-offer-card.accepted {
+  border-color: rgba(61, 214, 140, 0.5);
+}
+.bid-review-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
