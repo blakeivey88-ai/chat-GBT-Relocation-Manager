@@ -1,0 +1,99 @@
+/* Display ad slots — public free-tool / education pages only.
+   Never include this file on member.html or checkout. */
+
+.rm-ad-slot {
+  display: block;
+  width: 100%;
+  margin: 20px 0;
+  padding: 10px 12px 12px;
+  border: 1px dashed #d5e0ec;
+  border-radius: 12px;
+  background: #f8fafc;
+  box-sizing: border-box;
+  text-align: center;
+  overflow: hidden;
+}
+
+.rm-ad-slot__label {
+  display: block;
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #8a97a8;
+}
+
+.rm-ad-slot__frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 90px;
+  margin: 0 auto;
+  background: #eef3f8;
+  border-radius: 8px;
+  color: #8a97a8;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* Size variants reserve space so layout does not jump when ads fill. */
+.rm-ad-slot--leaderboard .rm-ad-slot__frame {
+  min-height: 90px;
+  max-width: 728px;
+}
+
+.rm-ad-slot--rectangle .rm-ad-slot__frame {
+  min-height: 250px;
+  max-width: 336px;
+}
+
+.rm-ad-slot--in-article .rm-ad-slot__frame {
+  min-height: 120px;
+  max-width: 100%;
+}
+
+.rm-ad-slot--footer .rm-ad-slot__frame {
+  min-height: 90px;
+  max-width: 728px;
+}
+
+.rm-ad-slot.is-filled {
+  border-style: solid;
+  border-color: #e3ebf4;
+  background: #fff;
+}
+
+.rm-ad-slot.is-filled .rm-ad-slot__frame {
+  background: transparent;
+  min-height: 0;
+}
+
+.rm-ad-slot.is-empty .rm-ad-slot__frame::before {
+  content: "Advertisement space";
+}
+
+.rm-ad-slot.is-pending .rm-ad-slot__frame::before {
+  content: "Advertisement loads if you allow site cookies";
+}
+
+.rm-ad-slot.is-blocked .rm-ad-slot__frame::before {
+  content: "Advertisement not shown (cookies declined)";
+}
+
+/* Inside sticky results column: keep ads compact. */
+.calc-results .rm-ad-slot {
+  margin: 14px 0 0;
+}
+
+.calc-results .rm-ad-slot--rectangle .rm-ad-slot__frame {
+  min-height: 200px;
+}
+
+@media (max-width: 640px) {
+  .rm-ad-slot--leaderboard .rm-ad-slot__frame,
+  .rm-ad-slot--footer .rm-ad-slot__frame {
+    min-height: 100px;
+  }
+}

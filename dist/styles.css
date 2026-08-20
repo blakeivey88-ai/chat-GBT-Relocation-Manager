@@ -253,6 +253,91 @@ a {
 .js-ready .screen.active,
 .js-ready .screen:target {
   display: block;
+  animation: screen-in 0.28s ease;
+}
+@keyframes screen-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.truck-fit-stamp {
+  display: inline-flex;
+  margin-top: 6px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+.truck-fit-stamp.is-fit {
+  background: #d9f5e3;
+  color: #0f6b3b;
+}
+.truck-fit-stamp.is-maybe,
+.truck-fit-stamp.is-unknown {
+  background: #fff3d6;
+  color: #8a5a12;
+}
+.truck-fit-stamp.is-no {
+  background: #fde2e2;
+  color: #8a1f2a;
+}
+.empty-ping {
+  margin: 16px 0 8px;
+  padding: 18px 20px;
+}
+.empty-ping-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin: 12px 0 14px;
+}
+.empty-ping-days {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.empty-ping-days button {
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 14px;
+  background: #e8eef6;
+  color: #16325c;
+  font-weight: 800;
+  cursor: pointer;
+}
+.empty-ping-days button.active {
+  background: #16325c;
+  color: #fff;
+}
+.shipper-loads-handoff {
+  text-align: left;
+}
+.shipper-workspace #emptyPingCard,
+.shipper-workspace #profileSectionTruck,
+.shipper-workspace [data-profile-jump="profileSectionTruck"],
+.shipper-workspace #profileTruckMeta {
+  display: none !important;
+}
+.profile-truck-form {
+  display: grid;
+  gap: 12px;
+}
+.profile-truck-extras {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.profile-truck-extras .check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
 }
 .container {
   max-width: 1180px;
@@ -4916,6 +5001,20 @@ body {
   }
   .shipper-workspace .member-bottom-nav {
     grid-template-columns: repeat(4, 1fr);
+  }
+  .member-bottom-nav .member-bottom-post em {
+    font-style: normal;
+    font-size: 9px;
+    font-weight: 900;
+  }
+  .load-card .lane {
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+  .load-card .rate {
+    color: #0f6b3b;
+    font-weight: 800;
   }
 }
 

@@ -9,7 +9,24 @@ import {
   validateCsrfToken,
 } from "./_auth.js";
 import { recordLoadHistory } from "../lib/load-history.js";
+import {
+  isTerminalLoadStatus,
+  mergeLoadStatus,
+  normalizeLifecycleStatus,
+  syncMarketplaceLoadLifecycle,
+} from "../lib/load-status-sync.js";
 import { buildBrandedEmail, sendTransactionalEmail } from "../lib/email.js";
+import {
+  buildCapacityReport,
+  decoratePickupWithCapacity,
+  ensureTruckSeats,
+  estimateLoadDemand,
+  markPickupTerminal,
+  occupiedSeatCount,
+  pickSeatForLoad,
+  planSeatLimit,
+  upgradePlanHint,
+} from "../lib/truck-seats.js";
 
 // One place to record failures. Cloudflare captures console output in the
 // Workers log stream, so a swallowed error is still visible when something
@@ -68,36 +85,15 @@ function memberSuppliedVerificationStatus(value) {
   return neutralStatuses.has(text.toLowerCase()) ? text : "Member supplied";
 }
 
-// Plan truck count = how many pickups can run at once. A truck can only be in
-// one place at a time, so needing more concurrent loads means a bigger plan.
-// The limit comes from the PAID plan, never from self-reported truck counts.
+// Plan truck seats = how many trucks can run at once (paid plan, not self-report).
+// Multiple partials may share one seat when remaining length/weight/cube allows.
 function planConcurrencyLimit(account) {
-  const payment = String(account?.paymentStatus || "").toLowerCase();
-  const type = String(account?.type || "").toLowerCase();
-  if (payment === "paid_shipper" || /customer|pickup/.test(type)) return 0;
-  if (
-    payment === "paid_driver" ||
-    /independent driver|owner[- ]?operator|self[- ]?insured/.test(type)
-  )
-    return 1;
-  if (payment === "paid_fleet_starter" || /1[-–]3/.test(type)) return 3;
-  if (payment === "paid_fleet_growth" || /4[-–]7/.test(type)) return 7;
-  if (payment === "paid_fleet_pro" || /[78][-–]12/.test(type)) return 12;
-  if (payment === "paid_dispatcher_broker" || /dispatcher/.test(type))
-    return 12;
-  return 1; // unknown plans behave like one truck — safe default
+  return planSeatLimit(account);
 }
 
+/** @deprecated prefer occupiedSeatCount — kept name for call sites/tests */
 function activeAuthorizedPickupCount(account, excludeLoadId = "") {
-  return (Array.isArray(account?.activePickups) ? account.activePickups : [])
-    .filter(
-      (item) =>
-        item?.serverAuthorized === true &&
-        (!excludeLoadId || String(item?.loadId || item?.id || "") !== excludeLoadId) &&
-        !/completed|delivered|cancelled|canceled|declined|not[\s_-]?selected/i.test(
-          String(item?.status || ""),
-        ),
-    ).length;
+  return occupiedSeatCount(account, excludeLoadId);
 }
 
 // Priority placement: loads posted by Carrier & Broker Pro and Dispatcher &
@@ -205,6 +201,8 @@ function normalizeLoadRecord(load = {}, index = 0) {
     acceptedAt: String(load.acceptedAt || "").trim(),
     acceptedRequestId: String(load.acceptedRequestId || "").trim(),
     agreedRate: Number(load.agreedRate || 0) || 0,
+    completedAt: String(load.completedAt || "").trim(),
+    lifecycleUpdatedAt: String(load.lifecycleUpdatedAt || "").trim(),
   };
 }
 
@@ -299,10 +297,16 @@ async function readMarketplaceLoads(env) {
       for (let offset = 0; offset < ids.length; offset += 100) {
         const chunk = ids.slice(offset, offset + 100);
         const placeholders = chunk.map(() => "?").join(",");
+        // Include terminal statuses so acceptance metadata still hydrates
+        // after delivery without forcing status back to "accepted".
         const result = await env.RELOCATION_MANAGER_DB.prepare(
-          `SELECT load_id, route, rate, updated_at
+          `SELECT load_id, route, rate, updated_at, status
            FROM loads
-           WHERE status = 'accepted'
+           WHERE lower(status) IN (
+               'accepted','delivered','completed','empty',
+               'cancelled','canceled','closed','in_transit',
+               'arrived_pickup','loaded','arrived_delivery','delayed'
+             )
              AND load_id IN (${placeholders})`,
         )
           .bind(...chunk)
@@ -319,11 +323,26 @@ async function readMarketplaceLoads(env) {
         if (acceptance?.kind !== "marketplace_acceptance_v1") continue;
         const load = loads.find((item) => item.id === row.load_id);
         if (!load) continue;
-        load.status = "accepted";
-        load.acceptedByUserId = cleanString(acceptance.carrierUserId || "", 80);
-        load.acceptedRequestId = cleanString(acceptance.bidId || "", 120);
-        load.acceptedAt = cleanString(acceptance.acceptedAt || row.updated_at || "", 80);
-        load.agreedRate = Number(acceptance.agreedRate || row.rate || 0) || load.rate;
+        const d1Status = normalizeLifecycleStatus(row.status) || "accepted";
+        // Never demote a terminal KV status back to accepted (the sync bug).
+        load.status = mergeLoadStatus(load.status, d1Status);
+        load.acceptedByUserId = cleanString(
+          acceptance.carrierUserId || load.acceptedByUserId || "",
+          80,
+        );
+        load.acceptedRequestId = cleanString(
+          acceptance.bidId || load.acceptedRequestId || "",
+          120,
+        );
+        load.acceptedAt = cleanString(
+          acceptance.acceptedAt || load.acceptedAt || row.updated_at || "",
+          80,
+        );
+        load.agreedRate =
+          Number(acceptance.agreedRate || row.rate || 0) || load.rate;
+        if (isTerminalLoadStatus(load.status) && !load.completedAt) {
+          load.completedAt = cleanString(row.updated_at || "", 80);
+        }
         load.claimRequests = (load.claimRequests || []).map((item) => ({
           ...item,
           status: item.id === load.acceptedRequestId ? "accepted" : "not_selected",
@@ -410,7 +429,11 @@ async function commitLoadAcceptance(
       FROM accounts
       WHERE user_id = ?
         AND (
-          SELECT COUNT(*)
+          SELECT COUNT(DISTINCT COALESCE(
+            NULLIF(json_extract(value, '$.seatId'), ''),
+            json_extract(value, '$.loadId'),
+            json_extract(value, '$.id')
+          ))
           FROM json_each(
             CASE WHEN json_valid(accounts.active_pickups)
               THEN accounts.active_pickups ELSE '[]' END
@@ -419,7 +442,8 @@ async function commitLoadAcceptance(
             AND LOWER(COALESCE(json_extract(value, '$.status'), ''))
               NOT IN (
                 'completed', 'complete', 'delivered', 'declined',
-                'cancelled', 'canceled', 'not selected', 'not_selected'
+                'cancelled', 'canceled', 'not selected', 'not_selected',
+                'empty'
               )
             AND COALESCE(
               json_extract(value, '$.loadId'),
@@ -765,12 +789,37 @@ function postedLoadFromBody(body, account, photos = []) {
   };
 }
 
+function publicBrowseLoadRecord(load = {}) {
+  // Free-browse card: lane + equipment + rate only. No phones, bids, or private notes.
+  return {
+    id: cleanString(load.id, 120),
+    from: cleanString(load.from, 120),
+    to: cleanString(load.to, 120),
+    rate: Number(load.rate || 0) || 0,
+    mi: Number(load.mi || load.miles || 0) || 0,
+    pick: cleanString(load.pick || load.pickupWindow || "", 80),
+    wt: cleanString(load.wt || load.weight || "", 60),
+    eq: cleanString(load.eq || load.equipment || "", 80),
+    kind: cleanString(load.kind || "", 40),
+    quick: Boolean(load.quick),
+    lift: Boolean(load.lift),
+    ramp: Boolean(load.ramp),
+    pricingMode: cleanString(load.pricingMode || "target", 20),
+    status: "open",
+    tags: Array.isArray(load.tags)
+      ? load.tags
+          .map((tag) => cleanString(tag, 40))
+          .filter(Boolean)
+          .slice(0, 6)
+      : [],
+    equipment: cleanString(load.eq || load.equipment || "", 80),
+    weight: cleanString(load.wt || load.weight || "", 60),
+    browseOnly: true,
+  };
+}
+
 export async function onRequestGet(context) {
   try {
-    const access = await requireEntitledAccount(context.request, context.env);
-    if (!access.ok)
-      return json({ ok: false, error: access.error }, access.status || 401);
-
     const url = new URL(context.request.url);
     const loadId = cleanString(url.searchParams.get("loadId") || "", 120);
     const photoId = cleanString(url.searchParams.get("photoId") || "", 120);
@@ -778,6 +827,51 @@ export async function onRequestGet(context) {
       .trim()
       .toLowerCase();
     const postedScope = scope === "posted";
+    const publicBrowse =
+      scope === "public" ||
+      scope === "browse" ||
+      String(url.searchParams.get("public") || "") === "1";
+
+    // Free open-board browse (no subscription). Bid/claim still paid on POST.
+    if (publicBrowse && !postedScope && !photoId) {
+      const now = Date.now();
+      const limit = Math.max(
+        1,
+        Math.min(50, Number(url.searchParams.get("limit") || 25) || 25),
+      );
+      let loads = (await readMarketplaceLoads(context.env)).filter((item) => {
+        const expiresAt = Date.parse(item.expiresAt || "");
+        return (
+          item.status === "open" &&
+          (!Number.isFinite(expiresAt) || expiresAt > now)
+        );
+      });
+      loads.sort(
+        (a, b) =>
+          (Date.parse(b.createdAt || "") || 0) -
+          (Date.parse(a.createdAt || "") || 0),
+      );
+      if (loadId) loads = loads.filter((item) => item.id === loadId);
+      loads = loads.slice(0, limit).map((item) => publicBrowseLoadRecord(item));
+      return json({
+        ok: true,
+        loads,
+        count: loads.length,
+        browseMode: true,
+        bidRequiresPlan: true,
+        message:
+          "Browse is free. A $29.99+ carrier plan and verification are required to bid or claim.",
+      });
+    }
+
+    const access = await requireEntitledAccount(context.request, context.env);
+    if (!access.ok) {
+      return json(
+        { ok: false, error: access.error || "Not signed in." },
+        access.status || 401,
+      );
+    }
+
     const decision = carrierLoadBookingDecision(access.account);
     if (photoId) {
       if (!loadId) return json({ ok: false, error: "Load ID is required." }, 400);
@@ -804,9 +898,8 @@ export async function onRequestGet(context) {
         403,
       );
     }
-    // Paid carrier members may browse/search the board while identity or
-    // insurance review is still pending. Booking remains protected below in
-    // the POST bid/claim path by the full carrierLoadBookingDecision gate.
+    // Paid carriers may browse while verification is pending. Unpaid users hit
+    // free-browse above. Bid/claim stays gated by carrierLoadBookingDecision.
     const mayBrowseWhileVerificationPending =
       decision.route === "carrier-verification";
     if (
@@ -819,10 +912,9 @@ export async function onRequestGet(context) {
           ok: false,
           error:
             decision.message ||
-            decision.reason ||
-            "Load access is unavailable.",
+            "The $9.99 Shipper plan is post-only. To find or request loads, switch to a $29.99-or-higher carrier plan and complete carrier verification.",
+          reason: decision.reason || "Shipper plan is post-only.",
           route: decision.route || "pricing",
-          reason: decision.reason || "",
         },
         403,
       );
@@ -939,6 +1031,9 @@ export async function onRequestGet(context) {
       count: loads.length,
       loadCount,
       bookingAccess: decision,
+      truckCapacity: buildCapacityReport(access.account),
+      planLimit: planConcurrencyLimit(access.account),
+      activeSeatCount: occupiedSeatCount(access.account),
       route: "loads",
     });
   } catch (error) {
@@ -1078,6 +1173,85 @@ export async function onRequestPost(context) {
         },
         201,
       );
+    }
+
+    if (
+      action === "complete_pickup" ||
+      action === "mark_empty" ||
+      action === "mark_delivered"
+    ) {
+      const loadId = cleanString(body.loadId || body.id || "", 120);
+      if (!loadId) {
+        return json({ ok: false, error: "loadId is required." }, 400);
+      }
+      const statusLabel =
+        action === "mark_empty"
+          ? "Empty"
+          : action === "mark_delivered"
+            ? "Delivered"
+            : "Completed";
+      const nextAccount = markPickupTerminal(access.account, loadId, statusLabel);
+      const now = new Date().toISOString();
+      await upsertAccount(context.env, {
+        ...nextAccount,
+        truckSeats: ensureTruckSeats(nextAccount),
+        updatedAt: now,
+      });
+      // Keep board card + D1 status in lockstep with capacity release / history.
+      const mirrorStatus =
+        statusLabel === "Empty"
+          ? "delivered"
+          : normalizeLifecycleStatus(statusLabel) || "delivered";
+      try {
+        await syncMarketplaceLoadLifecycle(context.env, {
+          loadId,
+          status: mirrorStatus,
+          actorUserId: access.account.userId,
+          completedAt: now,
+          detail: `Seat capacity released (${statusLabel}). Load status synced to ${mirrorStatus}.`,
+          // capacity_released history is recorded below; avoid double lifecycle row.
+          recordHistory: false,
+        });
+      } catch (error) {
+        logFailure("loads.completePickupMirror", error, { loadId });
+      }
+      await recordLoadHistory(context.env, {
+        id: `${loadId}:capacity_released:${access.account.userId}:${now}`,
+        userId: access.account.userId,
+        loadId,
+        eventType: "capacity_released",
+        role: "carrier",
+        status: mirrorStatus,
+        title: "Truck capacity freed",
+        occurredAt: now,
+        verified: true,
+        detail: `Seat capacity released (${statusLabel}).`,
+      });
+      // Also write an explicit delivered/completed history when marking delivered
+      // so activity + board status use the same terminal event.
+      if (action === "mark_delivered" || action === "complete_pickup") {
+        await recordLoadHistory(context.env, {
+          id: `${loadId}:${mirrorStatus}:${access.account.userId}:${now}`,
+          userId: access.account.userId,
+          loadId,
+          eventType: mirrorStatus === "completed" ? "completed" : "delivered",
+          role: "carrier",
+          status: mirrorStatus,
+          title: `Load ${mirrorStatus}`,
+          occurredAt: now,
+          verified: true,
+          detail: `Load marked ${mirrorStatus}.`,
+        });
+      }
+      return json({
+        ok: true,
+        message:
+          statusLabel === "Empty"
+            ? "Seat marked empty. Capacity is free for the next load."
+            : "Pickup completed. Capacity on that seat is free for partials or the next job.",
+        truckCapacity: buildCapacityReport(nextAccount),
+        route: "profile",
+      });
     }
 
     if (action === "report") {
@@ -1270,18 +1444,34 @@ export async function onRequestPost(context) {
           409,
         );
       }
-      const planLimit = planConcurrencyLimit(carrier);
-      const activeCount = activeAuthorizedPickupCount(carrier, load.id);
-      if (planLimit <= 0 || activeCount >= planLimit) {
+      const preferredSeat =
+        cleanString(pickupRequest.seatId || body.seatId || "", 80) ||
+        cleanString(
+          (Array.isArray(carrier.activePickups)
+            ? carrier.activePickups.find(
+                (item) => String(item?.loadId || item?.id || "") === load.id,
+              )?.seatId
+            : "") || "",
+          80,
+        );
+      const seatPick = pickSeatForLoad(carrier, load, preferredSeat);
+      if (!seatPick.ok) {
         return json(
           {
             ok: false,
-            error: "This carrier no longer has an open truck slot for the pickup.",
-            reason: "plan_concurrency_limit",
+            error:
+              seatPick.error ||
+              "This carrier no longer has an open truck seat or remaining capacity for the pickup.",
+            reason: seatPick.reason || "plan_concurrency_limit",
+            route: seatPick.route || "pricing",
+            planLimit: seatPick.planLimit,
+            activePickups: seatPick.occupiedSeatCount,
+            demand: seatPick.demand,
           },
           409,
         );
       }
+      const planLimit = seatPick.planLimit;
 
       const acceptedAt = new Date().toISOString();
       const agreedRate = Number(pickupRequest.amount || load.rate || 0) || load.rate;
@@ -1292,31 +1482,35 @@ export async function onRequestPost(context) {
         (item) => String(item?.loadId || item?.id || "") === load.id,
       );
       const existingPickup = pickupIndex >= 0 ? activePickups[pickupIndex] : {};
-      const acceptedPickup = {
-        ...existingPickup,
-        id: load.id,
-        loadId: load.id,
-        title: `${load.from} → ${load.to}`,
-        origin: load.from,
-        destination: load.to,
-        equipment: load.eq,
-        broker: load.broker,
-        status: "Confirmed",
-        pickupWindow: load.pick,
-        detail: `${load.eq} · ${load.pick}`,
-        rate: agreedRate,
-        postedRate: load.rate,
-        statusHistory: [
-          ...(Array.isArray(existingPickup.statusHistory)
-            ? existingPickup.statusHistory
-            : []),
-          { status: "Confirmed", at: acceptedAt },
-        ],
-        savedAt:
-          existingPickup.savedAt || pickupRequest.requestedAt || acceptedAt,
-        acceptedAt,
-        serverAuthorized: true,
-      };
+      const acceptedPickup = decoratePickupWithCapacity(
+        {
+          ...existingPickup,
+          id: load.id,
+          loadId: load.id,
+          title: `${load.from} → ${load.to}`,
+          origin: load.from,
+          destination: load.to,
+          equipment: load.eq,
+          broker: load.broker,
+          status: "Confirmed",
+          pickupWindow: load.pick,
+          detail: `${load.eq} · ${load.pick}`,
+          rate: agreedRate,
+          postedRate: load.rate,
+          statusHistory: [
+            ...(Array.isArray(existingPickup.statusHistory)
+              ? existingPickup.statusHistory
+              : []),
+            { status: "Confirmed", at: acceptedAt },
+          ],
+          savedAt:
+            existingPickup.savedAt || pickupRequest.requestedAt || acceptedAt,
+          acceptedAt,
+          serverAuthorized: true,
+        },
+        seatPick.seat,
+        seatPick.demand,
+      );
       const acceptanceCommit = await commitLoadAcceptance(context.env, {
         load,
         bidId: pickupRequest.id,
@@ -1527,25 +1721,30 @@ export async function onRequestPost(context) {
               String(item?.loadId || item?.id || "") === load.id,
           ) || null
         : null;
+      let planLimit = planConcurrencyLimit(access.account);
+      let activeCount = occupiedSeatCount(access.account);
       if (!duplicate) {
-        const planLimit = planConcurrencyLimit(access.account);
-        const activeCount = activeAuthorizedPickupCount(access.account);
-        if (planLimit > 0 && activeCount >= planLimit) {
+        const preferredSeat = cleanString(body.seatId || "", 80);
+        const seatPick = pickSeatForLoad(access.account, load, preferredSeat);
+        if (!seatPick.ok) {
+          const upgrade = upgradePlanHint(seatPick.planLimit || 1);
           return json(
             {
               ok: false,
-              error:
-                planLimit === 1
-                  ? "Your plan covers 1 truck and it already has an active pickup. Complete or cancel it first — or upgrade your plan to run more than one load at a time."
-                  : `Your plan covers ${planLimit} trucks and all ${planLimit} are on active pickups. Complete one first, or upgrade your plan to run more loads at once.`,
-              route: "pricing",
-              reason: "plan_concurrency_limit",
-              activePickups: activeCount,
-              planLimit,
+              error: seatPick.error || upgrade.message,
+              route: seatPick.route || upgrade.route || "pricing",
+              reason: seatPick.reason || "plan_concurrency_limit",
+              activePickups: seatPick.occupiedSeatCount,
+              planLimit: seatPick.planLimit,
+              upgradePlan: seatPick.upgradePlan || upgrade.upgradePlan,
+              demand: seatPick.demand,
+              truckCapacity: buildCapacityReport(access.account),
             },
             403,
           );
         }
+        planLimit = seatPick.planLimit;
+        activeCount = seatPick.occupiedSeatCount;
         const requestedAt = new Date().toISOString();
         const request = {
           id: `claim_${crypto.randomUUID().replace(/-/g, "")}`,
@@ -1561,6 +1760,11 @@ export async function onRequestPost(context) {
           status: "pickup_requested",
           requestedAt,
           updatedAt: requestedAt,
+          seatId: seatPick.seat.seatId,
+          seatLabel: seatPick.seat.label,
+          lengthFtUsed: seatPick.demand.lengthFt,
+          weightLbUsed: seatPick.demand.weightLb,
+          cubeCuFtUsed: seatPick.demand.cubeCuFt,
         };
         load.claimRequests = [request, ...(load.claimRequests || [])].slice(0, 50);
         await writeMarketplaceLoads(context.env, loads);
@@ -1586,27 +1790,37 @@ export async function onRequestPost(context) {
               (item) => String(item?.loadId || item?.id || "") !== load.id,
             )
           : [];
-        activePickup = {
-          id: load.id,
-          loadId: load.id,
-          title: `${load.from} → ${load.to}`,
-          origin: load.from,
-          destination: load.to,
-          equipment: load.eq,
-          broker: load.broker,
-          status: "Pickup requested",
-          pickupWindow: load.pick,
-          detail: `${load.eq} · ${load.pick}`,
-          statusHistory: [{ status: "Pickup requested", at: requestedAt }],
-          savedAt: requestedAt,
-          serverAuthorized: true,
-        };
+        activePickup = decoratePickupWithCapacity(
+          {
+            id: load.id,
+            loadId: load.id,
+            title: `${load.from} → ${load.to}`,
+            origin: load.from,
+            destination: load.to,
+            equipment: load.eq,
+            broker: load.broker,
+            status: "Pickup requested",
+            pickupWindow: load.pick,
+            detail: `${load.eq} · ${load.pick}`,
+            statusHistory: [{ status: "Pickup requested", at: requestedAt }],
+            savedAt: requestedAt,
+            serverAuthorized: true,
+          },
+          seatPick.seat,
+          seatPick.demand,
+        );
         activePickups.unshift(activePickup);
         await upsertAccount(context.env, {
           ...access.account,
+          truckSeats: ensureTruckSeats(access.account),
           activePickups: activePickups.slice(0, 20),
           updatedAt: requestedAt,
         });
+        access.account = {
+          ...access.account,
+          truckSeats: ensureTruckSeats(access.account),
+          activePickups: activePickups.slice(0, 20),
+        };
       }
       return json({
         ok: true,
@@ -1614,7 +1828,10 @@ export async function onRequestPost(context) {
         load: visibleLoadRecord(load, access.account),
         claimedLoad: visibleLoadRecord(load, access.account),
         activePickup,
+        truckCapacity: buildCapacityReport(access.account),
         bookingAccess: decision,
+        planLimit,
+        activeSeatCount: activeCount,
         route: "loads",
       });
     }
@@ -1649,6 +1866,27 @@ export async function onRequestPost(context) {
       existingBid.updatedAt = now;
       bid = existingBid;
     } else {
+      // Soft capacity check on new bids (does not reserve the seat until accept).
+      const seatPreview = pickSeatForLoad(
+        access.account,
+        load,
+        cleanString(body.seatId || "", 80),
+      );
+      if (!seatPreview.ok && seatPreview.reason === "plan_concurrency_limit") {
+        return json(
+          {
+            ok: false,
+            error: seatPreview.error,
+            reason: seatPreview.reason,
+            route: seatPreview.route || "pricing",
+            planLimit: seatPreview.planLimit,
+            activePickups: seatPreview.occupiedSeatCount,
+            upgradePlan: seatPreview.upgradePlan,
+            truckCapacity: buildCapacityReport(access.account),
+          },
+          403,
+        );
+      }
       bid = {
         id: `bid_${crypto.randomUUID().replace(/-/g, "")}`,
         userId: access.account.userId,
@@ -1663,6 +1901,11 @@ export async function onRequestPost(context) {
         status: "pending",
         requestedAt: now,
         updatedAt: now,
+        seatId: seatPreview.ok ? seatPreview.seat.seatId : cleanString(body.seatId || "", 80),
+        seatLabel: seatPreview.ok ? seatPreview.seat.label : "",
+        lengthFtUsed: seatPreview.demand?.lengthFt,
+        weightLbUsed: seatPreview.demand?.weightLb,
+        cubeCuFtUsed: seatPreview.demand?.cubeCuFt,
       };
       load.claimRequests = [bid, ...(load.claimRequests || [])].slice(0, 50);
     }

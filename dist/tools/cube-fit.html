@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="index,follow" />
+    <meta name="google-adsense-account" content="ca-pub-9768509838353886" />
+    <meta
+      name="description"
+      content="Free box truck cube and weight fit checker for partials and small items. Estimate whether freight fits before you commit. No signup."
+    />
+    <link rel="canonical" href="https://relocationmanagerusa.com/tools/cube-fit" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Box Truck Cube &amp; Weight Fit Checker | Free Tool" />
+    <meta property="og:description" content="Free box truck cube and weight fit checker for partials and small items. Estimate whether freight fits before you commit. No signup." />
+    <meta property="og:url" content="https://relocationmanagerusa.com/tools/cube-fit" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Box Truck Cube &amp; Weight Fit Checker | Free Tool" />
+    <meta name="twitter:description" content="Free box truck cube and weight fit checker for partials and small items. Estimate whether freight fits before you commit. No signup." />
+    <title>Box Truck Cube &amp; Weight Fit Checker | Free Tool</title>
+    <link rel="stylesheet" href="/public-site.css?v=20260803-1" />
+    <link rel="stylesheet" href="/site-vibe.css?v=20260812-vibe-3" />
+    <link rel="stylesheet" href="/display-ads.css?v=20260811-ads-1" />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9768509838353886"
+      crossorigin="anonymous"
+    ></script>
+    <script src="/display-ads-config.js?v=20260811-ads-3"></script>
+    <script defer src="/analytics-loader.js"></script>
+    <script defer src="/display-ads.js?v=20260811-ads-2"></script>
+    <script defer src="/public-site.js?v=20260811-tools-nav-1"></script>
+    <style>
+      .calc-grid { display: grid; gap: 22px; align-items: start; }
+      @media (min-width: 960px) { .calc-grid { grid-template-columns: minmax(0, 1fr) 360px; } .calc-results { position: sticky; top: 90px; } }
+      .calc-results { padding: 24px; }
+      .calc-row { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px dashed #e3ebf4; }
+      .calc-row span { color: #607086; font-size: 14px; font-weight: 700; }
+      .item-block { border: 1px solid #e3ebf4; border-radius: 12px; padding: 12px; margin: 0 0 12px; background: #f8fafc; }
+      .item-block h3 { margin: 0 0 10px; font-size: 15px; }
+      .verdict { margin: 0 0 12px; padding: 12px; border-radius: 10px; font-weight: 800; }
+      .verdict.fits { background: #e8f7ef; color: #0c7a43; }
+      .verdict.tight { background: #fdf6ec; color: #7a5518; }
+      .verdict.no { background: #fdecea; color: #b3261e; }
+      .check-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 14px; }
+    </style>
+  </head>
+  <body>
+    <header class="site-header"><div class="header-inner"><a class="brand" href="/"><span class="brand-mark">🦅</span><span>Relocation <strong>Manager USA</strong></span></a><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="siteNav" data-nav-toggle>Menu</button><nav class="site-nav" id="siteNav" data-site-nav><a href="/">Home</a><a href="/tools/">Free tools</a><a href="/pricing">Pricing</a><a href="/safety">Safety</a><a class="nav-cta" href="/signin">Member sign in</a></nav></div></header>
+    <main>
+      <section class="page-hero"><div class="container">
+        <div class="breadcrumbs"><a href="/">Home</a><span>›</span><a href="/tools/">Free tools</a><span>›</span><span>Cube fit</span></div>
+        <div class="kicker">Free tool · Box trucks &amp; small items</div>
+        <h1>Will it fit the box before you say yes?</h1>
+        <p>Estimate volume and weight for partials and small items. Built for cargo vans and box trucks — not a full 3D packer, just honest numbers so you waste fewer trips.</p>
+      </div></section>
+
+      <section class="section" style="padding-top:0;padding-bottom:0"><div class="container">
+        <aside class="rm-ad-slot rm-ad-slot--leaderboard" data-rm-ad-slot="cube_fit_top" data-rm-ad-format="horizontal" aria-label="Advertisement"></aside>
+      </div></section>
+
+      <section class="section"><div class="container calc-grid">
+        <form class="card form-card" id="cubeForm">
+          <div class="form-grid">
+            <label>Truck preset
+              <select id="truckPreset" name="truckPreset"></select>
+              <small class="muted">Presets are averages — replace with your real inside dimensions.</small>
+            </label>
+            <label>Inside length (ft)<input name="lengthFt" type="number" min="0" step="0.1" inputmode="decimal" required /></label>
+            <label>Inside width (ft)<input name="widthFt" type="number" min="0" step="0.1" inputmode="decimal" required /></label>
+            <label>Inside height (ft)<input name="heightFt" type="number" min="0" step="0.1" inputmode="decimal" required /></label>
+            <label>Max payload (lb)<input name="maxLb" type="number" min="0" step="1" inputmode="numeric" required /></label>
+          </div>
+          <h2 style="margin:18px 0 10px;font-size:18px">Items / stops (up to 5)</h2>
+          <div id="itemsHost"></div>
+          <button class="btn btn-light" type="button" id="addItem" style="margin-bottom:12px">Add another item</button>
+          <button class="btn btn-primary btn-block" type="submit">Check fit</button>
+          <p class="muted" style="margin:10px 0 0;font-size:13px">Uses a 75% packing factor for real-world gaps. Always measure door height and awkward shapes yourself.</p>
+        </form>
+        <aside class="card calc-results" id="results" aria-live="polite">
+          <h2>Your estimate</h2>
+          <p class="verdict tight" id="verdict">Enter truck and items, then check fit.</p>
+          <div class="calc-row"><span>Items counted</span><strong id="outItems">—</strong></div>
+          <div class="calc-row"><span>Item volume</span><strong id="outVol">—</strong></div>
+          <div class="calc-row"><span>Usable box volume</span><strong id="outUseVol">—</strong></div>
+          <div class="calc-row"><span>Volume used</span><strong id="outVolPct">—</strong></div>
+          <div class="calc-row"><span>Total weight</span><strong id="outLb">—</strong></div>
+          <div class="calc-row"><span>Payload used</span><strong id="outLbPct">—</strong></div>
+          <div class="calc-row"><span>Floor estimate used</span><strong id="outFloor">—</strong></div>
+          <p class="muted" id="reasons" style="margin-top:12px;font-size:13px;line-height:1.5"></p>
+          <aside class="rm-ad-slot rm-ad-slot--rectangle" data-rm-ad-slot="cube_fit_sidebar" data-rm-ad-format="rectangle" aria-label="Advertisement"></aside>
+          <div style="display:grid;gap:8px;margin-top:14px">
+            <a class="btn btn-primary" href="/rate-calculator">Price the trip next</a>
+            <a class="btn btn-light" href="/tools/">All free tools</a>
+          </div>
+        </aside>
+      </div></section>
+
+      <section class="section" style="padding-top:0"><div class="container">
+        <aside class="rm-ad-slot rm-ad-slot--in-article" data-rm-ad-slot="cube_fit_mid" data-rm-ad-format="auto" aria-label="Advertisement"></aside>
+      </div></section>
+
+      <section class="section"><div class="container content-narrow prose">
+        <article class="card">
+          <h2>How this helps</h2>
+          <p>Partials and “small items” jobs die on bad cube math: you accept three stops, show up, and the box is full after two. This tool totals volume and weight with a realistic packing factor so you can say no before you burn half a day.</p>
+          <p>It is an estimate, not warehouse software. Door height, couches, and pallet overhang still matter.</p>
+        </article>
+        <article class="card">
+          <h2>Common questions about cube fit</h2>
+          <h3>Is this a full 3D packer?</h3>
+          <p>No. It estimates total volume and weight against your box and payload, then applies a packing factor for real-world gaps. Awkward shapes, door height, and load order still need your judgment.</p>
+          <h3>Why use a packing factor?</h3>
+          <p>Items never fill every cubic inch. A packing factor (this tool uses 75% of raw box volume as usable) keeps estimates honest so three “easy” stops do not overflow the box after two.</p>
+          <h3>Does weight matter as much as cube?</h3>
+          <p>Yes. A light, bulky load can max volume first; dense freight can hit payload first. Check both before you commit — especially on cargo vans and smaller boxes.</p>
+          <h3>Is the cube fit checker free?</h3>
+          <p>Yes — no signup, no card. It runs in your browser. Pair it with the free <a href="/rate-calculator">rate calculator</a> once you know the freight fits.</p>
+        </article>
+        <article class="card">
+          <h2>Related free tools &amp; guides</h2>
+          <p><a href="/rate-calculator">Rate calculator</a> · <a href="/tools/wait-cost">Wait cost</a> · <a href="/tools/before-you-call">Before you call</a> · <a href="/knowledge/how-big-of-a-moving-truck-do-i-need">What size truck do I need?</a> · <a href="/knowledge/moving-truck-size-guide">Moving truck sizes</a></p>
+        </article>
+      </div></section>
+
+      <section class="section" style="padding-top:0"><div class="container">
+        <aside class="rm-ad-slot rm-ad-slot--footer" data-rm-ad-slot="cube_fit_footer" data-rm-ad-format="horizontal" aria-label="Advertisement"></aside>
+      </div></section>
+    </main>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebApplication",
+          "name": "Box Truck Cube & Weight Fit Checker",
+          "url": "https://relocationmanagerusa.com/tools/cube-fit",
+          "applicationCategory": "BusinessApplication",
+          "operatingSystem": "Any",
+          "description": "Free box truck and cargo van cube and weight fit checker for partials and small items. Estimate volume and payload before you commit. No signup.",
+          "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+          "publisher": { "@type": "Organization", "name": "Relocation Manager USA", "url": "https://relocationmanagerusa.com" }
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Is this a full 3D packer?",
+              "acceptedAnswer": { "@type": "Answer", "text": "No. It estimates total volume and weight against your box and payload, then applies a packing factor for real-world gaps. Awkward shapes, door height, and load order still need your judgment." }
+            },
+            {
+              "@type": "Question",
+              "name": "Why use a packing factor?",
+              "acceptedAnswer": { "@type": "Answer", "text": "Items never fill every cubic inch. A packing factor (this tool uses 75% of raw box volume as usable) keeps estimates honest so partials do not overflow the box on paper." }
+            },
+            {
+              "@type": "Question",
+              "name": "Does weight matter as much as cube?",
+              "acceptedAnswer": { "@type": "Answer", "text": "Yes. Bulky freight can max volume first; dense freight can hit payload first. Check both before you commit." }
+            },
+            {
+              "@type": "Question",
+              "name": "Is the cube fit checker free?",
+              "acceptedAnswer": { "@type": "Answer", "text": "Yes — no signup, no card. It runs in your browser and does not store the numbers you enter." }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+    <footer class="site-footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><a class="brand" href="/" style="color:#fff"><span class="brand-mark">🦅</span><span>Relocation <strong>Manager USA</strong></span></a></div><nav class="footer-col"><strong>Tools</strong><a href="/tools/">Free tools</a><a href="/rate-calculator">Rate calculator</a><a href="/tools/cube-fit">Cube fit</a><a href="/tools/wait-cost">Wait cost</a><a href="/tools/before-you-call">Before you call</a></nav><nav class="footer-col"><strong>Marketplace</strong><a href="/pricing">Pricing</a><a href="/signup.html?plan=driver">Find loads</a></nav><nav class="footer-col"><strong>Legal</strong><a href="/privacy">Privacy</a><a href="/terms">Terms</a></nav></div><div class="footer-bottom"><span>© <span data-year>2026</span> Relocation Manager USA</span></div></div></footer>
+    <script type="module">
+      import { TRUCK_PRESETS, estimateCubeFit } from "/tools/cube-fit-core.js?v=20260811-1";
+
+      const form = document.getElementById("cubeForm");
+      const presetSelect = document.getElementById("truckPreset");
+      const itemsHost = document.getElementById("itemsHost");
+      let itemCount = 0;
+
+      for (const preset of TRUCK_PRESETS) {
+        const opt = document.createElement("option");
+        opt.value = preset.id;
+        opt.textContent = preset.label;
+        presetSelect.appendChild(opt);
+      }
+
+      function applyPreset() {
+        const preset = TRUCK_PRESETS.find((p) => p.id === presetSelect.value);
+        if (!preset || preset.id === "custom") return;
+        form.elements.lengthFt.value = preset.lengthFt;
+        form.elements.widthFt.value = preset.widthFt;
+        form.elements.heightFt.value = preset.heightFt;
+        form.elements.maxLb.value = preset.maxLb;
+      }
+      presetSelect.addEventListener("change", applyPreset);
+      presetSelect.value = "box-26";
+      applyPreset();
+
+      function addItem() {
+        if (itemCount >= 5) return;
+        itemCount += 1;
+        const n = itemCount;
+        const block = document.createElement("div");
+        block.className = "item-block";
+        block.dataset.item = String(n);
+        block.innerHTML =
+          `<h3>Item ${n}</h3>` +
+          `<div class="form-grid">` +
+          `<label>Length (in)<input name="l${n}" type="number" min="0" step="0.1" inputmode="decimal" placeholder="48" /></label>` +
+          `<label>Width (in)<input name="w${n}" type="number" min="0" step="0.1" inputmode="decimal" placeholder="40" /></label>` +
+          `<label>Height (in)<input name="h${n}" type="number" min="0" step="0.1" inputmode="decimal" placeholder="48" /></label>` +
+          `<label>Weight each (lb)<input name="wt${n}" type="number" min="0" step="1" inputmode="numeric" placeholder="120" /></label>` +
+          `<label>Quantity<input name="q${n}" type="number" min="1" max="50" step="1" value="1" inputmode="numeric" /></label>` +
+          `</div>` +
+          `<label class="check-row"><input name="s${n}" type="checkbox" checked /> Stackable</label>`;
+        itemsHost.appendChild(block);
+      }
+      document.getElementById("addItem").addEventListener("click", addItem);
+      addItem();
+      addItem();
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const items = [];
+        for (let n = 1; n <= itemCount; n += 1) {
+          const l = form.elements[`l${n}`]?.value;
+          const w = form.elements[`w${n}`]?.value;
+          const h = form.elements[`h${n}`]?.value;
+          const wt = form.elements[`wt${n}`]?.value;
+          if (!l && !w && !h && !wt) continue;
+          items.push({
+            lengthIn: l,
+            widthIn: w,
+            heightIn: h,
+            weightLb: wt,
+            qty: form.elements[`q${n}`]?.value,
+            stackable: Boolean(form.elements[`s${n}`]?.checked),
+          });
+        }
+        const result = estimateCubeFit(
+          {
+            lengthFt: form.elements.lengthFt.value,
+            widthFt: form.elements.widthFt.value,
+            heightFt: form.elements.heightFt.value,
+            maxLb: form.elements.maxLb.value,
+          },
+          items,
+        );
+        const verdict = document.getElementById("verdict");
+        if (!result.ok) {
+          verdict.className = "verdict tight";
+          verdict.textContent = result.error;
+          return;
+        }
+        verdict.className = "verdict " + result.verdict;
+        verdict.textContent = result.label;
+        document.getElementById("outItems").textContent = String(result.itemCount);
+        document.getElementById("outVol").textContent = result.totalCuFt + " cu ft";
+        document.getElementById("outUseVol").textContent = result.usableCuFt + " cu ft";
+        document.getElementById("outVolPct").textContent = result.volumePct + "%";
+        document.getElementById("outLb").textContent = result.totalLb.toLocaleString() + " lb";
+        document.getElementById("outLbPct").textContent = result.weightPct + "%";
+        document.getElementById("outFloor").textContent = result.floorPct + "%";
+        document.getElementById("reasons").textContent = [...result.reasons, result.disclaimer].join(" ");
+        if (typeof window.rmTrack === "function") window.rmTrack("tool_cube_fit", { verdict: result.verdict });
+      });
+    </script>
+  </body>
+</html>

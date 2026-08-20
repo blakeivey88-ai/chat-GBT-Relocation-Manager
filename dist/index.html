@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#071d3b" />
     <meta name="robots" content="index,follow" />
+    <meta name="google-adsense-account" content="ca-pub-9768509838353886" />
     <meta
       name="description"
       content="A direct freight marketplace where shippers and transportation providers compare clear offers, equipment fit, and pickup details before agreeing to a move."
     />
     <link rel="canonical" href="https://relocationmanagerusa.com/" />
+    <!-- No AdSense units on the paid-product homepage (meta kept for verification only). -->
     <link rel="preload" as="image" href="/assets/hero-background.jpg" fetchpriority="high" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Relocation Manager USA | Clear offers. Verified transportation providers." />
@@ -22,6 +24,7 @@
     <meta name="twitter:card" content="summary_large_image" />
     <title>Relocation Manager USA | Freight &amp; Relocation Load Marketplace</title>
     <link rel="stylesheet" href="/public-site.css?v=20260803-1" />
+    <link rel="stylesheet" href="/site-vibe.css?v=20260812-vibe-3" />
     <script
       defer
       src="https://static.cloudflareinsights.com/beacon.min.js"
@@ -36,7 +39,7 @@
       };
     </script>
     <script defer src="/analytics-loader.js"></script>
-    <script defer src="/public-site.js?v=20260810-auth-nav-1"></script>
+    <script defer src="/public-site.js?v=20260811-tools-nav-1"></script>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -44,7 +47,17 @@
         "name": "Relocation Manager USA",
         "url": "https://relocationmanagerusa.com/",
         "logo": "https://relocationmanagerusa.com/assets/hero-eagle.jpg",
-        "description": "A freight and relocation marketplace for shippers, independent drivers, carriers, and brokers."
+        "email": "hello@relocationmanagerusa.com",
+        "description": "A freight and relocation marketplace for shippers, independent drivers, carriers, and brokers.",
+        "founder": { "@type": "Person", "name": "Dan Ivey" },
+        "telephone": "+1-951-615-8194",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Dallas–Fort Worth",
+          "addressRegion": "TX",
+          "addressCountry": "US"
+        },
+        "sameAs": ["https://www.instagram.com/relocationmanagerusa"]
       }
     </script>
     <script type="application/ld+json">
@@ -55,7 +68,7 @@
         "url": "https://relocationmanagerusa.com/"
       }
     </script>
-    <!-- PUBLIC_FRONT_DOOR_V1 -->
+    <!-- PUBLIC_FRONT_DOOR_V1 · contact-dan-20260811 -->
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to main content</a>
@@ -76,17 +89,18 @@
         </button>
         <nav class="site-nav" id="siteNav" aria-label="Main navigation" data-site-nav>
           <a href="#paths">Choose your path</a>
-          <a href="/safety.html">Safety</a>
-          <a href="/pricing.html">Pricing</a>
-          <a href="/about.html">About</a>
-          <a href="/support.html">Support</a>
+          <a href="/tools/">Free tools</a>
+          <a href="/safety">Safety</a>
+          <a href="/pricing">Pricing</a>
+          <a href="/about">About</a>
+          <a href="/support">Support</a>
           <a class="nav-cta" href="/signin">Member sign in</a>
         </nav>
       </div>
     </header>
 
     <main id="main">
-      <section class="hero" aria-labelledby="hero-title">
+      <section class="hero vibe-orbs" aria-labelledby="hero-title">
         <div class="hero-grid">
           <div class="hero-copy">
             <div class="kicker">A practical freight marketplace for working trucks</div>
@@ -98,10 +112,13 @@
             </p>
             <div class="hero-paths" aria-label="Choose how you use Relocation Manager">
               <a class="btn btn-gold" href="/signup?plan=shipper">Post a load</a>
-              <a class="btn btn-light" href="/signup?plan=driver">Find loads</a>
+              <a class="btn btn-light" href="/signup?plan=driver">Browse loads free</a>
+              <a class="btn btn-light" href="/tools/">Free tools</a>
             </div>
             <div class="hero-note">
-              Built for shippers, truckers, carriers, and dispatchers. No booking commission added by Relocation Manager.
+              <strong>Browse open loads free.</strong> Pay only when you bid or claim ($29.99+ carrier plans).
+              No booking commission from us — the rate you agree stays between you and the other party.
+              Free rate, cube, and wait tools — no signup required.
             </div>
           </div>
           <div
@@ -115,21 +132,187 @@
       <section class="proof-strip" aria-label="Platform focus">
         <div class="container">
           <div class="proof-item">
-            <strong>Equipment that fits</strong>
-            <span>Box trucks, cargo vans, hotshots, trailers, and more</span>
+            <strong>Browse free · pay to bid</strong>
+            <span>See open loads without paying. Bid on a $29.99+ plan</span>
+          </div>
+          <div class="proof-item">
+            <strong>One load can cover access</strong>
+            <span>Example math only — one avoided markup may exceed a year of fees</span>
           </div>
           <div class="proof-item">
             <strong>Rate details up front</strong>
             <span>Target rate, counteroffers, site needs, and timing</span>
           </div>
           <div class="proof-item">
-            <strong>Know who you’re dealing with</strong>
-            <span>Profiles distinguish shippers, carriers, fleets, and brokers</span>
-          </div>
-          <div class="proof-item">
             <strong>Direct relationships</strong>
             <span>No commission added by us to an agreed booking</span>
           </div>
+        </div>
+      </section>
+
+      <section class="section section-soft" id="money-story" aria-labelledby="money-story-title">
+        <div class="container">
+          <div class="section-head center">
+            <div class="eyebrow">Why people join</div>
+            <h2 id="money-story-title">Skip stacked markups. Keep more of the haul.</h2>
+            <p style="max-width:42rem;margin:0 auto">
+              When a load goes through multiple middle hands, each layer can take a cut.
+              On Relocation Manager USA you pay a <strong>clear monthly access fee</strong> — not a booking commission from us on the rate you agree.
+              On a good direct deal, the difference can be larger than a whole year of platform access.
+              That is <strong>example economics</strong>, not a guarantee: every lane and counterparty is different.
+            </p>
+          </div>
+          <div class="role-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:12px">
+            <article class="card" style="padding:20px">
+              <h3 style="margin:0 0 8px">Shippers</h3>
+              <p class="muted" style="margin:0">
+                <strong>$9.99/mo</strong> to post pickups with real details. Compare offers.
+                You still choose who you work with and verify authority and insurance before freight moves.
+              </p>
+            </article>
+            <article class="card" style="padding:20px">
+              <h3 style="margin:0 0 8px">Drivers &amp; carriers</h3>
+              <p class="muted" style="margin:0">
+                <strong>Browse free.</strong> Pay when you bid ($29.99+). No platform cut of the agreed rate —
+                so a cleaner direct job can matter more than another layered broker board.
+              </p>
+            </article>
+            <article class="card" style="padding:20px">
+              <h3 style="margin:0 0 8px">Still your job to verify</h3>
+              <p class="muted" style="margin:0">
+                Subscription is not a free pass. Use the free
+                <a href="/safety">Safety Center</a>, official DOT records, and your own eyes before you roll or release freight.
+              </p>
+            </article>
+          </div>
+          <div class="cta-row" style="margin-top:18px;justify-content:center;display:flex;flex-wrap:wrap;gap:10px">
+            <a class="btn btn-gold" href="/signup?plan=shipper">Post a load · $9.99/mo</a>
+            <a class="btn btn-primary" href="/signup?plan=driver">Browse free · bid when ready</a>
+            <a class="btn btn-light" href="/knowledge/ghost-loads-and-direct-freight">Why ghost loads hurt everyone</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="why-paid-access" aria-labelledby="why-paid-title">
+        <div class="container">
+          <div class="section-head center">
+            <div class="eyebrow">Quality over noise</div>
+            <h2 id="why-paid-title">Why posting and bidding cost money</h2>
+            <p>
+              Free boards fill up with ghost loads because junk costs nothing to post.
+              We charge where it cuts spam — and we still do <strong>not</strong> take a booking commission on the rate you agree.
+            </p>
+          </div>
+          <div class="role-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:8px">
+            <article class="card" style="padding:20px">
+              <h3 style="margin:0 0 8px">Shippers pay to post</h3>
+              <p class="muted" style="margin:0">
+                <strong>$9.99/month</strong> keeps throwaway accounts and fake freight from flooding the board.
+                Describe equipment, site needs, timing, and a target rate — or open for bids so trucks can counter with real terms.
+              </p>
+            </article>
+            <article class="card" style="padding:20px">
+              <h3 style="margin:0 0 8px">Drivers browse free · pay to bid</h3>
+              <p class="muted" style="margin:0">
+                Look at open loads without paying. A <strong>$29.99+</strong> plan is for bidding, claiming, and tools —
+                so capacity on the board is people building history, not endless scrapers.
+              </p>
+            </article>
+            <article class="card" style="padding:20px">
+              <h3 style="margin:0 0 8px">No booking commission from us</h3>
+              <p class="muted" style="margin:0">
+                You pay for access and clearer terms — not a cut of the haul after you already agreed on a rate.
+                The number you lock stays between you and the other party.
+              </p>
+            </article>
+          </div>
+          <p class="muted" style="margin:18px auto 0;max-width:46rem;text-align:center;font-size:0.95rem">
+            A subscription is not a free pass. Always verify identity, authority, insurance, and pickup details before freight moves.
+            Start with the free <a href="/safety">Safety Center</a>.
+          </p>
+          <div class="cta-row" style="margin-top:18px;justify-content:center;display:flex;flex-wrap:wrap;gap:10px">
+            <a class="btn btn-gold" href="/signup?plan=shipper">Post a pickup · $9.99/mo</a>
+            <a class="btn btn-primary" href="/signup?plan=driver">Bid on loads · $29.99/mo</a>
+            <a class="btn btn-light" href="/pricing">Compare all plans</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-soft" id="who-we-are" aria-labelledby="who-title">
+        <div class="container">
+          <div class="offer-layout" style="align-items: center">
+            <div class="section-head">
+              <div class="eyebrow">Who runs this</div>
+              <h2 id="who-title">A real operator-built company — not a faceless board.</h2>
+              <p>
+                Relocation Manager USA is built and operated by <strong>Dan Ivey</strong>
+                out of the Dallas–Fort Worth area. We publish only activity we can stand behind,
+                and we answer the phone and support mail ourselves.
+              </p>
+              <div class="cta-row" style="margin-top: 16px">
+                <a class="btn btn-primary" href="tel:+19516158194">951-615-8194</a>
+                <a class="btn btn-light" href="mailto:hello@relocationmanagerusa.com">hello@relocationmanagerusa.com</a>
+                <a class="btn btn-light" href="https://www.instagram.com/relocationmanagerusa" target="_blank" rel="noopener">@relocationmanagerusa</a>
+                <a class="btn btn-light" href="/about">About the company</a>
+              </div>
+              <p class="muted" style="margin-top: 12px; font-size: 0.9rem">
+                Prefer a real person over mystery chatbots. For fraud or crime, use the Safety Center and official channels — we are a marketplace, not the carrier.
+              </p>
+            </div>
+            <article class="card" style="padding: 22px">
+              <div class="eyebrow">Contact</div>
+              <h3 style="margin: 0 0 8px">Talk to a human</h3>
+              <ul style="margin: 0; padding-left: 1.1rem; color: var(--muted, #93a7c9); line-height: 1.55">
+                <li><strong style="color: inherit">Operator:</strong> Dan Ivey</li>
+                <li><strong style="color: inherit">Base:</strong> Dallas–Fort Worth, Texas, USA</li>
+                <li><strong style="color: inherit">Phone:</strong> <a href="tel:+19516158194">951-615-8194</a></li>
+                <li><strong style="color: inherit">Email:</strong> <a href="mailto:hello@relocationmanagerusa.com">hello@relocationmanagerusa.com</a></li>
+                <li><strong style="color: inherit">Support:</strong> <a href="/support">relocationmanagerusa.com/support</a></li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-soft" id="free-tools" aria-labelledby="free-tools-title">
+        <div class="container">
+          <div class="section-head center">
+            <div class="eyebrow">Free · No signup</div>
+            <h2 id="free-tools-title">Tools that save miles and phone time.</h2>
+            <p>
+              Built for box trucks, hotshot, and owner-operators. Use them before you quote, take a board load, or burn a call.
+              When you are ready, the marketplace is here for clear posts and bids.
+            </p>
+          </div>
+          <div class="role-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+            <article class="card role-card">
+              <span class="role-label">Trip math</span>
+              <h3>Rate calculator</h3>
+              <p>Break-even and target rate with fuel, deadhead, reefer, and idle.</p>
+              <a class="btn btn-primary" href="/rate-calculator">Open calculator</a>
+            </article>
+            <article class="card role-card">
+              <span class="role-label">Box / partials</span>
+              <h3>Cube &amp; weight fit</h3>
+              <p>Estimate whether small items and partials fit before you say yes.</p>
+              <a class="btn btn-primary" href="/tools/cube-fit">Check fit</a>
+            </article>
+            <article class="card role-card">
+              <span class="role-label">Time</span>
+              <h3>Wait-time cost</h3>
+              <p>Price dock and residential wait so thin rates do not steal your evening.</p>
+              <a class="btn btn-primary" href="/tools/wait-cost">Price the wait</a>
+            </article>
+            <article class="card role-card">
+              <span class="role-label">Load boards</span>
+              <h3>Before you call</h3>
+              <p>Checklist and phone script to skip ghost posts and incomplete rates.</p>
+              <a class="btn btn-primary" href="/tools/before-you-call">Open checklist</a>
+            </article>
+          </div>
+          <p class="center" style="margin: 22px 0 0;">
+            <a class="btn btn-light" href="/tools/">See all free tools</a>
+          </p>
         </div>
       </section>
 
@@ -229,34 +412,57 @@
         <div class="container">
           <div class="offer-layout">
             <div class="section-head">
-              <div class="eyebrow">Transparent pricing without a race to the bottom</div>
+              <div class="eyebrow">How offers should work</div>
               <h2>Every offer should explain the real cost of the move.</h2>
               <p>
                 A low number without the right truck, loading plan, or appointment window is not a useful quote. Relocation Manager is designed to keep the rate and its terms together.
               </p>
             </div>
-            <div class="offer-board" aria-label="Example offer comparison">
+            <div class="offer-board" aria-label="Illustrated example of an offer comparison — not a live load">
               <div class="offer-board-head">
                 <span>Atlanta, GA <b>→</b> Charlotte, NC</span>
-                <span class="status-pill">Offers open</span>
+                <span class="status-pill">Example only</span>
               </div>
+              <p class="offer-footnote" style="margin: 0 0 10px; font-weight: 800; color: #fde68a">
+                Illustrated example — not a live marketplace load or real carrier bids.
+              </p>
               <div class="offer-request">
-                <strong>Shipper target: $950</strong>
-                <span>26 ft box truck · Tomorrow · Liftgate needed</span>
+                <strong>Example shipper target: $950</strong>
+                <span>26 ft box truck · Sample timing · Liftgate needed</span>
               </div>
               <article class="offer-card accepted">
-                <div><span class="profile-dot">JR</span><strong>J.R. Transport <small>Carrier · Profile checks complete</small></strong></div>
-                <div class="offer-price">$1,080 <small>Counteroffer</small></div>
-                <p>Includes liftgate, driver assist, and a 9–11 AM pickup window.</p>
-                <span class="offer-agreed">✓ Rate and terms agreed</span>
+                <div><span class="profile-dot">EX</span><strong>Example Carrier A <small>Sample profile · not a live bid</small></strong></div>
+                <div class="offer-price">$1,080 <small>Sample counter</small></div>
+                <p>Shows how liftgate, assist, and a pickup window stay attached to the number.</p>
+                <span class="offer-agreed">✓ Example of agreed rate + terms</span>
               </article>
               <article class="offer-card">
-                <div><span class="profile-dot alt">AM</span><strong>AM Box Trucking <small>Independent operator</small></strong></div>
-                <div class="offer-price">$1,025 <small>Counteroffer</small></div>
-                <p>Liftgate included. Driver assist available; confirm pallet count.</p>
+                <div><span class="profile-dot alt">EX</span><strong>Example Carrier B <small>Sample independent · not a live bid</small></strong></div>
+                <div class="offer-price">$1,025 <small>Sample counter</small></div>
+                <p>Shows a second counter so the shipper compares terms, not only price.</p>
               </article>
-              <p class="offer-footnote">Choose the provider and terms that fit—not simply the lowest number.</p>
+              <p class="offer-footnote">When real loads post, they appear on the live board — labeled as live, never mixed with this demo.</p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-soft" id="live-board" aria-labelledby="live-board-title">
+        <div class="container">
+          <div class="section-head center">
+            <div class="eyebrow">Live board · free to look</div>
+            <h2 id="live-board-title">Open loads right now.</h2>
+            <p>
+              No paywall to peek. If the board is thin, we say so — we will not invent freight to look busy.
+              Bidding still requires a paid carrier plan and verification.
+            </p>
+          </div>
+          <div id="publicLiveBoard" class="role-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
+            <article class="card"><p class="muted">Loading open loads…</p></article>
+          </div>
+          <div class="cta-row" style="margin-top: 22px; justify-content: center">
+            <a class="btn btn-primary" href="/signup?plan=driver">Create free account to browse</a>
+            <a class="btn btn-light" href="/pricing">Plans to bid ($29.99+)</a>
           </div>
         </div>
       </section>
@@ -304,7 +510,7 @@
             </article>
           </div>
           <div class="cta-row" style="margin-top: 28px">
-            <a class="btn btn-dark" href="/safety.html">Open the Public Safety Center</a>
+            <a class="btn btn-dark" href="/safety">Open the Public Safety Center</a>
           </div>
         </div>
       </section>
@@ -354,7 +560,7 @@
                 <li>Company coordination tools</li>
                 <li>Profiles, alerts, and messaging</li>
               </ul>
-              <a class="btn btn-light" href="/pricing.html">Compare Fleet Plans</a>
+              <a class="btn btn-light" href="/pricing">Compare Fleet Plans</a>
             </article>
           </div>
         </div>
@@ -377,8 +583,8 @@
                 <span>Carrier checks, freight fraud guidance, and practical trucking resources are open without a subscription.</span>
               </article>
               <article>
-                <strong>Clear role permissions</strong>
-                <span>The $9.99 shipper plan posts only; $29.99 and higher plans can post and find loads.</span>
+                <strong>Browse free · pay to bid</strong>
+                <span>Anyone can look at open loads. Bidding and claiming need a $29.99+ carrier plan. The $9.99 shipper plan posts only.</span>
               </article>
               <article>
                 <strong>Secure account and billing paths</strong>
@@ -399,6 +605,10 @@
             <details>
               <summary>Can a $9.99 shipper claim a load?</summary>
               <p>No. The shipper plan can post a pickup and review responses, but it cannot browse or claim other loads.</p>
+            </details>
+            <details open>
+              <summary>Do I have to pay just to look at loads?</summary>
+              <p><strong>No.</strong> Open loads are free to browse. You pay for a $29.99+ carrier plan when you are ready to bid or claim. Free tools (rate, cube, wait) stay free with no account.</p>
             </details>
             <details>
               <summary>Can driver and fleet plans post loads too?</summary>
@@ -424,7 +634,7 @@
             <p>Start with your role. Build a profile, share the details, and get to a clear agreement faster.</p>
             <div class="cta-row">
               <a class="btn btn-gold" href="/signup?plan=shipper">I need something moved</a>
-              <a class="btn btn-primary" href="/signup?plan=driver">I’m looking for loads</a>
+              <a class="btn btn-primary" href="/signup?plan=driver">Browse loads free</a>
               <a class="btn btn-light" href="/signup?plan=fleet-starter">Manage my trucks</a>
             </div>
           </div>
@@ -441,34 +651,102 @@
               <span>Relocation <strong>Manager USA</strong></span>
             </a>
             <p>Freight and relocation tools built around clear pickup details, equipment fit, and accountable work history.</p>
+            <p style="margin-top: 10px; font-size: 0.9rem">
+              Operator: Dan Ivey · DFW ·
+              <a href="tel:+19516158194">951-615-8194</a> ·
+              <a href="mailto:hello@relocationmanagerusa.com">hello@relocationmanagerusa.com</a>
+            </p>
           </div>
           <nav class="footer-col" aria-label="Marketplace links">
             <strong>Marketplace</strong>
             <a href="/pricing">Pricing</a>
             <a href="/signup?plan=shipper">Post a Pickup</a>
-            <a href="/signup?plan=driver">Find Loads</a><a href="/rate-calculator">Rate Calculator</a>
+            <a href="/signup?plan=driver">Browse loads free</a>
             <a href="/signin">Member sign in</a>
+          </nav>
+          <nav class="footer-col" aria-label="Free tools links">
+            <strong>Free tools</strong>
+            <a href="/tools/">All free tools</a>
+            <a href="/rate-calculator">Rate calculator</a>
+            <a href="/tools/cube-fit">Cube fit</a>
+            <a href="/tools/wait-cost">Wait cost</a>
+            <a href="/tools/before-you-call">Before you call</a>
           </nav>
           <nav class="footer-col" aria-label="Trust and learning links">
             <strong>Trust &amp; learning</strong>
-            <a href="/safety.html">Safety Center</a>
-            <a href="/knowledge/index.html">Knowledge Center</a>
-            <a href="/blog/index.html">Trucking Guides</a>
+            <a href="/safety">Safety Center</a>
+            <a href="/knowledge/">Knowledge Center</a>
+            <a href="/blog/">Trucking Guides</a>
             <a href="/support">Support</a>
           </nav>
           <nav class="footer-col" aria-label="Company and legal links">
             <strong>Company</strong>
-            <a href="/about.html">About</a>
-            <a href="/privacy.html">Privacy</a>
-            <a href="/terms.html">Terms</a>
-            <a href="/cancellation.html">Cancellation</a>
+            <a href="/about">About</a>
+            <a href="/privacy">Privacy</a>
+            <a href="/terms">Terms</a>
+            <a href="/cancellation">Cancellation</a>
           </nav>
         </div>
         <div class="footer-bottom">
-          <span>© <span data-year>2026</span> Relocation Manager USA</span>
+          <span>© <span data-year>2026</span> Relocation Manager USA · Dan Ivey</span>
           <span>Marketplace participants must independently verify every load, company, and transaction.</span>
         </div>
       </div>
     </footer>
+    <script>
+      (function () {
+        var host = document.getElementById("publicLiveBoard");
+        if (!host) return;
+        function esc(s) {
+          return String(s || "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;");
+        }
+        function money(n) {
+          var v = Number(n) || 0;
+          return v > 0 ? "$" + v.toLocaleString() : "Open bid";
+        }
+        fetch("/api/loads?scope=public&limit=6", {
+          credentials: "omit",
+          headers: { accept: "application/json" },
+        })
+          .then(function (r) {
+            return r.json();
+          })
+          .then(function (data) {
+            var loads = (data && data.loads) || [];
+            if (!loads.length) {
+              host.innerHTML =
+                '<article class="card" style="grid-column:1/-1"><h3>No open loads posted yet</h3><p class="muted">We will not invent freight to fill this space. Post a real pickup or check free tools while the board grows.</p><a class="btn btn-primary" href="/signup?plan=shipper">Post a real load</a></article>';
+              return;
+            }
+            host.innerHTML = loads
+              .map(function (l) {
+                return (
+                  '<article class="card role-card"><span class="role-label">Live open load</span><h3>' +
+                  esc(l.from) +
+                  " → " +
+                  esc(l.to) +
+                  "</h3><p>" +
+                  esc(l.eq || "Equipment TBD") +
+                  " · " +
+                  esc(l.wt || "") +
+                  "</p><p><strong>" +
+                  money(l.rate) +
+                  "</strong> · " +
+                  esc(l.pick || "Timing TBD") +
+                  '</p><a class="btn btn-soft" href="/signup?plan=driver">Sign in to bid</a></article>'
+                );
+              })
+              .join("");
+          })
+          .catch(function () {
+            host.innerHTML =
+              '<article class="card" style="grid-column:1/-1"><p class="muted">Could not load the live board right now. Try free tools or sign in later.</p></article>';
+          });
+      })();
+    </script>
   </body>
 </html>

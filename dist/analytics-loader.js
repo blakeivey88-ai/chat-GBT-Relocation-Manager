@@ -111,20 +111,22 @@
     banner.style.cssText = 'position:fixed;left:0;right:0;bottom:0;z-index:9999;background:#14335c;color:#fff;padding:16px;box-shadow:0 -4px 20px rgba(0,0,0,.25);font-size:16px;line-height:1.5';
     banner.innerHTML =
       '<div style="max-width:960px;margin:0 auto;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between">' +
-      '<span style="flex:1 1 320px">We use optional analytics cookies to understand how the site is used. No analytics run unless you allow them. <a href="/privacy.html" style="color:#9ec5ff">Privacy Policy</a></span>' +
+      '<span style="flex:1 1 320px">We use optional analytics cookies to understand how the site is used, and may show advertising on free tool pages. Neither runs unless you allow them. <a href="/privacy.html" style="color:#9ec5ff">Privacy Policy</a></span>' +
       '<span style="display:flex;gap:10px">' +
       '<button type="button" id="rmConsentDecline" style="background:transparent;border:2px solid #9ec5ff;color:#fff;border-radius:10px;padding:10px 18px;font-size:16px;font-weight:700;cursor:pointer">Decline</button>' +
-      '<button type="button" id="rmConsentAccept" style="background:#2f7ef7;border:2px solid #2f7ef7;color:#fff;border-radius:10px;padding:10px 18px;font-size:16px;font-weight:700;cursor:pointer">Allow analytics</button>' +
+      '<button type="button" id="rmConsentAccept" style="background:#2f7ef7;border:2px solid #2f7ef7;color:#fff;border-radius:10px;padding:10px 18px;font-size:16px;font-weight:700;cursor:pointer">Allow analytics &amp; ads</button>' +
       '</span></div>';
     document.body.appendChild(banner);
     document.getElementById('rmConsentAccept').addEventListener('click', function () {
       saveConsent('granted');
       removeBanner();
       loadAnalytics();
+      try { window.dispatchEvent(new Event('rm-consent-granted')); } catch (e) { /* noop */ }
     });
     document.getElementById('rmConsentDecline').addEventListener('click', function () {
       saveConsent('denied');
       removeBanner();
+      try { window.dispatchEvent(new Event('rm-consent-denied')); } catch (e) { /* noop */ }
     });
   }
 

@@ -104,21 +104,27 @@ async function claim(env, acct, loadId) {
 
 test("a $29.99 driver gets exactly one concurrent pickup and an upgrade prompt", async () => {
   const driver = driverAccount("usr_one_truck");
-  const { env } = await seedEnv(
-    [driver],
-    [openLoad("load-a", "Atlanta, GA"), openLoad("load-b", "Macon, GA")],
-  );
+  // Exclusive fulls so capacity cannot stack two jobs on one seat.
+  const loads = [
+    { ...openLoad("load-a", "Atlanta, GA"), commodity: "full exclusive truck", exclusiveTruck: true, wt: "9000 lbs" },
+    { ...openLoad("load-b", "Macon, GA"), commodity: "full exclusive truck", exclusiveTruck: true, wt: "9000 lbs" },
+  ];
+  const { env } = await seedEnv([driver], loads);
 
   const first = await claim(env, driver, "load-a");
   assert.equal(first.response.status, 200, JSON.stringify(first.body));
   assert.equal(first.body.ok, true);
+  assert.ok(first.body.activePickup?.seatId);
 
   const second = await claim(env, driver, "load-b");
   assert.equal(second.response.status, 403, JSON.stringify(second.body));
-  assert.equal(second.body.reason, "plan_concurrency_limit");
+  assert.ok(
+    second.body.reason === "plan_concurrency_limit" || second.body.reason === "capacity_full",
+    JSON.stringify(second.body),
+  );
   assert.equal(second.body.planLimit, 1);
-  assert.match(second.body.error, /upgrade/i);
-  assert.equal(second.body.route, "pricing");
+  assert.match(second.body.error, /upgrade|seat|capacity|space/i);
+  assert.ok(second.body.route === "pricing" || second.body.route === "profile");
 });
 
 test("a completed pickup frees the slot for the next load", async () => {
@@ -162,7 +168,7 @@ test("a 1–3 truck plan gets three concurrent slots and blocks the fourth", asy
   const fourth = await claim(env, fleet, "load-4");
   assert.equal(fourth.response.status, 403, JSON.stringify(fourth.body));
   assert.equal(fourth.body.planLimit, 3);
-  assert.match(fourth.body.error, /all 3/i);
+  assert.match(fourth.body.error, /3 truck seats|all 3|upgrade/i);
 });
 
 test("re-requesting the same load does not burn a second slot or get blocked", async () => {

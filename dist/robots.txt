@@ -15,3 +15,5 @@ Disallow: /member.html
 Disallow: /forgot-password
 Disallow: /reset-password
 Sitemap: https://relocationmanagerusa.com/sitemap.xml
+# LLM / agent site summary
+# https://relocationmanagerusa.com/llms.txt

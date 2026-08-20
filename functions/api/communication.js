@@ -12,6 +12,10 @@ import {
   upsertAccount,
   validateCsrfToken,
 } from './_auth.js';
+import {
+  normalizeLifecycleStatus,
+  syncMarketplaceLoadLifecycle,
+} from '../lib/load-status-sync.js';
 
 const HUB_KEY = 'communication:hub';
 const DEFAULT_CHANNELS = [
@@ -100,10 +104,8 @@ export async function onRequestPost(context) {
     }
 
     if (action === 'ensure-load-thread') {
-      const bookingDecision = carrierLoadBookingDecision(account);
-      if (!bookingDecision.allowed) {
-        return json({ ok: false, error: bookingDecision.message || 'Load booking is available only to verified carrier accounts with an active $29.99-or-higher subscription.' }, 403);
-      }
+      // Shipper + accepted carrier may open the thread. secureLoadConversationBody
+      // already restricts to accepted-load participants (no freeloading).
       const securedBody = await secureLoadConversationBody(context.env, account, { ...body, type: 'load' });
       if (securedBody.error) return json({ ok: false, error: securedBody.error }, 403);
       const thread = ensureLoadThread(hub, account, securedBody.body);
@@ -141,8 +143,28 @@ export async function onRequestPost(context) {
       thread.updatedAt = isoNow();
       thread.lastMessageAt = thread.updatedAt;
       thread.lastMessage = `${event.label}${event.note ? ` · ${event.note}` : ''}`;
+      // Sync board/D1 load.status with activity (fixes history=delivered, card=accepted).
+      const lifecycleStatus = normalizeLifecycleStatus(event.status || event.label || '');
+      let loadSync = null;
+      if (lifecycleStatus && thread.loadId) {
+        try {
+          loadSync = await syncMarketplaceLoadLifecycle(context.env, {
+            loadId: thread.loadId,
+            status: lifecycleStatus,
+            actorUserId: account.userId,
+            completedAt: event.timestamp,
+            detail: cleanString(event.note || event.label || '', 300),
+            recordHistory: true,
+          });
+          if (loadSync?.status) {
+            thread.loadStatus = loadSync.status;
+          }
+        } catch {
+          loadSync = { ok: false };
+        }
+      }
       await saveHub(context.env, hub);
-      return json({ ok: true, thread, event });
+      return json({ ok: true, thread, event, loadSync });
     }
 
     if (action === 'company-admin') {
@@ -264,10 +286,17 @@ async function sendMessage(env, hub, account, body) {
     if (violation) return { error: violation };
   }
   if (type === 'load') {
+    // Keyword gate blocks shippers from acting like bookers on the board.
+    // Once both sides are on an *accepted* load thread, normal ops language
+    // ("pickup window", "delivery", etc.) must be allowed for both parties.
     const bookingDecision = carrierLoadBookingDecision(account);
     const bookingText = [body.kind, body.label, body.status, body.note, body.action, body.body, body.message].join(' ');
     if (/\b(accept|accepted|assign|assigned|book|booked|reserve|reserved|claim|claimed|pickup|picked up|deliv|dispatch|cover|covered)\b/i.test(bookingText) && !bookingDecision.allowed) {
-      return { error: bookingDecision.message || 'Load booking is available only to verified carrier accounts with an active $29.99-or-higher subscription.' };
+      const loadId = cleanString(body.loadId || '', 120);
+      const participants = loadId ? await acceptedLoadParticipants(env, loadId) : [];
+      if (!participants.includes(account.userId)) {
+        return { error: bookingDecision.message || 'Load booking is available only to verified carrier accounts with an active $29.99-or-higher subscription.' };
+      }
     }
   }
   const threadId = cleanString(body.threadId || body.id || makeThreadId(type, body), 120);
@@ -350,7 +379,11 @@ async function sendMessage(env, hub, account, body) {
       const bookingDecision = carrierLoadBookingDecision(account);
       const bookingText = [body.kind, body.label, body.status, body.note].join(' ');
       if (/\b(accept|accepted|assign|assigned|book|booked|reserve|reserved|claim|claimed|pickup|picked up|deliv|dispatch|cover|covered)\b/i.test(bookingText) && !bookingDecision.allowed) {
-        return { thread, message: null, notifications: [], error: bookingDecision.message || 'Load booking is available only to verified carrier accounts with an active $29.99-or-higher subscription.' };
+        const loadId = cleanString(body.loadId || thread.loadId || '', 120);
+        const participants = loadId ? await acceptedLoadParticipants(env, loadId) : [];
+        if (!participants.includes(account.userId)) {
+          return { thread, message: null, notifications: [], error: bookingDecision.message || 'Load booking is available only to verified carrier accounts with an active $29.99-or-higher subscription.' };
+        }
       }
       thread.loadActivity.unshift({
         id: `event_${crypto.randomUUID().replace(/-/g, '')}`,

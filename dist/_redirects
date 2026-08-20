@@ -1,11 +1,14 @@
+# Cloudflare Pages already serves clean URLs from *.html (pretty URLs).
+# Do NOT add /page → /page.html 200 rewrites alongside .html → /page 301s (redirect loops).
+
 /sign-in /signin 301
 /login /signin 301
-/signup.html /signup 301
-/pricing.html /pricing 301
-/checkout-success.html /checkout-success 301
-/support.html /support 301
 /subscribe /pricing 302
 /launch/* /signin?redirect=/launch/:splat 302
 /workspace /member.html 200
-/rate-calculator.html /rate-calculator 301
-/carrier-profile.html /carrier-profile 301
+
+# Aliases only
+/terms-of-service /terms 301
+/tos /terms 301
+
+/tools /tools/ 301

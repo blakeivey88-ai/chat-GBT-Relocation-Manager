@@ -1,0 +1,682 @@
+/* =========================================================
+   Site Vibe — fun, operable polish site-wide
+   Matches profile Road Points + IG messaging energy:
+   deep navy, electric blue, soft gold, soft cards, easy CTAs
+   Layer on top of public-site.css / tool pages
+   ========================================================= */
+
+:root {
+  --vibe-navy-0: #050b18;
+  --vibe-navy-1: #0a1428;
+  --vibe-navy-2: #0d1c38;
+  --vibe-blue: #3b82f6;
+  --vibe-blue-bright: #60a5fa;
+  --vibe-cyan: #22d3ee;
+  --vibe-gold: #fbbf24;
+  --vibe-ink: #f1f5ff;
+  --vibe-muted: #93a7c9;
+  --vibe-line: rgba(148, 183, 255, 0.18);
+  --vibe-glow: 0 18px 42px rgba(0, 0, 0, 0.35);
+  --vibe-radius: 22px;
+}
+
+/* ---------- Page foundation (public dark pages) ---------- */
+body {
+  background:
+    radial-gradient(120% 80% at 10% -10%, rgba(59, 130, 246, 0.16), transparent 45%),
+    radial-gradient(90% 60% at 100% 0%, rgba(251, 191, 36, 0.08), transparent 40%),
+    var(--surface, var(--vibe-navy-0));
+}
+
+/* Sticky header: glass navy instead of flat white */
+.site-header {
+  border-bottom: 1px solid var(--vibe-line) !important;
+  background: rgba(8, 16, 34, 0.88) !important;
+  backdrop-filter: blur(16px) saturate(1.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+}
+
+.site-header .brand {
+  color: var(--vibe-ink) !important;
+}
+
+.site-header .brand strong {
+  color: var(--vibe-blue-bright) !important;
+}
+
+.site-header .brand-mark {
+  background: linear-gradient(145deg, #2563eb, #1d4ed8) !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.site-header .site-nav a {
+  color: #b6c8e6 !important;
+  font-weight: 800;
+  transition: color 0.15s ease;
+}
+
+.site-header .site-nav a:hover {
+  color: #eff6ff !important;
+}
+
+.site-header .nav-toggle {
+  background: rgba(15, 28, 56, 0.9) !important;
+  border-color: var(--vibe-line) !important;
+  color: var(--vibe-ink) !important;
+}
+
+.site-header .site-nav .nav-cta {
+  background: linear-gradient(145deg, #2563eb, #1d4ed8) !important;
+  color: #fff !important;
+  border-radius: 999px !important;
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.site-header .site-nav .nav-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 28px rgba(37, 99, 235, 0.45);
+}
+
+/* ---------- Heroes ---------- */
+.page-hero,
+.hero,
+.section.hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.page-hero::before,
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: -20% -10% auto;
+  height: 70%;
+  background:
+    radial-gradient(circle at 20% 40%, rgba(59, 130, 246, 0.28), transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(34, 211, 238, 0.14), transparent 45%),
+    radial-gradient(circle at 70% 80%, rgba(251, 191, 36, 0.1), transparent 40%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.page-hero > *,
+.hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+.page-hero .kicker,
+.hero .kicker,
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  background: rgba(251, 191, 36, 0.12);
+  color: #fde68a !important;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.page-hero h1,
+.hero h1 {
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.page-hero p,
+.hero p {
+  color: var(--vibe-muted);
+  max-width: 62ch;
+}
+
+.breadcrumbs {
+  opacity: 0.85;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.breadcrumbs a {
+  color: var(--vibe-blue-bright);
+  text-decoration: none;
+}
+
+/* ---------- Cards & grids ---------- */
+.card,
+.price-card,
+.tool-card,
+.feature-card,
+.resource-card,
+.panel,
+.mini-card {
+  border-radius: var(--vibe-radius) !important;
+  border: 1px solid var(--vibe-line) !important;
+  background:
+    radial-gradient(120% 90% at 0% 0%, rgba(56, 132, 255, 0.14), transparent 50%),
+    linear-gradient(165deg, rgba(12, 24, 48, 0.96), rgba(8, 16, 34, 0.98)) !important;
+  box-shadow: var(--vibe-glow);
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.card:hover,
+.price-card:hover,
+.tool-card:hover,
+.feature-card:hover,
+.resource-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(96, 165, 250, 0.4) !important;
+  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(59, 130, 246, 0.12);
+}
+
+.price-card.featured,
+.card.featured,
+.price-card.is-featured {
+  border-color: rgba(96, 165, 250, 0.55) !important;
+  background:
+    radial-gradient(100% 80% at 50% 0%, rgba(59, 130, 246, 0.28), transparent 55%),
+    linear-gradient(165deg, #0f2448, #0a1730) !important;
+  box-shadow: 0 24px 50px rgba(37, 99, 235, 0.28), var(--vibe-glow);
+}
+
+.price-card .price,
+.card .price {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.price-card ul,
+.card ul {
+  color: #c7d7f0;
+}
+
+.price-card li::marker {
+  color: var(--vibe-cyan);
+}
+
+/* ---------- Pills / tags ---------- */
+.pill,
+.tag,
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(148, 183, 255, 0.22);
+  background: rgba(59, 130, 246, 0.14) !important;
+  color: #bfdbfe !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.pill.gold,
+.tag.gold {
+  border-color: rgba(251, 191, 36, 0.35);
+  background: rgba(251, 191, 36, 0.14) !important;
+  color: #fde68a !important;
+}
+
+/* ---------- Buttons ---------- */
+.btn,
+a.btn,
+button.btn {
+  border-radius: 14px !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.01em;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+
+.btn:hover,
+a.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn-primary,
+.btn.btn-primary {
+  background: linear-gradient(145deg, #3b82f6, #1d4ed8) !important;
+  color: #fff !important;
+  border: 0 !important;
+  box-shadow: 0 12px 28px rgba(37, 99, 235, 0.35) !important;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.06);
+  box-shadow: 0 16px 34px rgba(37, 99, 235, 0.45) !important;
+}
+
+.btn-dark,
+.btn.btn-dark {
+  background: linear-gradient(145deg, #1e293b, #0f172a) !important;
+  color: #f8fafc !important;
+  border: 1px solid rgba(148, 183, 255, 0.16) !important;
+}
+
+.btn-light,
+.btn.btn-light {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #eef4ff !important;
+  border: 1px solid rgba(148, 183, 255, 0.22) !important;
+}
+
+.btn-soft,
+.btn.btn-soft {
+  background: rgba(59, 130, 246, 0.12) !important;
+  color: #dbeafe !important;
+  border: 1px solid rgba(148, 183, 255, 0.2) !important;
+}
+
+/* ---------- Forms (signup / tools / support) ---------- */
+input,
+select,
+textarea {
+  border-radius: 14px !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: rgba(96, 165, 250, 0.55) !important;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.18) !important;
+}
+
+label {
+  font-weight: 700;
+}
+
+/* Form shells */
+.form-card,
+.auth-card,
+.signup-card,
+.tool-form,
+.calculator-panel {
+  border-radius: var(--vibe-radius);
+  border: 1px solid var(--vibe-line);
+  background:
+    radial-gradient(100% 80% at 0% 0%, rgba(56, 132, 255, 0.12), transparent 55%),
+    rgba(8, 16, 34, 0.92);
+  box-shadow: var(--vibe-glow);
+  padding: clamp(16px, 3vw, 28px);
+}
+
+/* ---------- Sections ---------- */
+.section {
+  position: relative;
+}
+
+.section-head h2,
+.section h2 {
+  letter-spacing: -0.02em;
+}
+
+.section .muted,
+.muted,
+.fine-print {
+  color: var(--vibe-muted);
+}
+
+/* Feature / steps grids feel like app tiles */
+.feature-grid,
+.steps,
+.tools-grid,
+.resource-grid,
+.price-grid {
+  gap: clamp(12px, 2vw, 18px);
+}
+
+/* ---------- Footer ---------- */
+footer,
+.site-footer {
+  border-top: 1px solid var(--vibe-line);
+  background: linear-gradient(180deg, transparent, rgba(5, 11, 24, 0.9));
+  color: #9eb4d4;
+}
+
+footer a,
+.site-footer a {
+  color: #bfdbfe;
+  text-decoration: none;
+}
+
+footer a:hover,
+.site-footer a:hover {
+  color: #fff;
+}
+
+/* ---------- Tools / rate calculator extras ---------- */
+.tool-result,
+.result-panel,
+.output-card {
+  border-radius: 18px;
+  border: 1px solid rgba(34, 211, 238, 0.25);
+  background:
+    radial-gradient(80% 80% at 100% 0%, rgba(34, 211, 238, 0.12), transparent 50%),
+    rgba(8, 22, 40, 0.95);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.28);
+}
+
+/* Big easy action strip on marketing pages */
+.cta-band,
+.action-band {
+  border-radius: var(--vibe-radius);
+  border: 1px solid rgba(96, 165, 250, 0.35);
+  background:
+    radial-gradient(100% 120% at 0% 50%, rgba(59, 130, 246, 0.28), transparent 50%),
+    radial-gradient(80% 100% at 100% 50%, rgba(251, 191, 36, 0.12), transparent 45%),
+    linear-gradient(120deg, #0c1c3a, #0a1530);
+  box-shadow: var(--vibe-glow);
+  padding: clamp(20px, 4vw, 36px);
+}
+
+/* ---------- Knowledge / blog readability ---------- */
+.prose,
+.article,
+.knowledge-article,
+main.article {
+  color: #dbe7ff;
+}
+
+.prose a,
+.article a,
+.knowledge-article a {
+  color: #93c5fd;
+}
+
+.prose h2,
+.article h2,
+.knowledge-article h2 {
+  color: #f8fafc;
+}
+
+/* ---------- Mobile comfort ---------- */
+@media (max-width: 720px) {
+  .site-header .site-nav {
+    background: rgba(8, 16, 34, 0.98);
+    border: 1px solid var(--vibe-line);
+    border-radius: 16px;
+    padding: 10px;
+  }
+
+  .card,
+  .price-card,
+  .tool-card {
+    border-radius: 18px !important;
+  }
+}
+
+/* Decorative “orb” utility for pages that opt in */
+.vibe-orbs {
+  position: relative;
+  overflow: hidden;
+}
+
+.vibe-orbs::after {
+  content: "";
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  right: -80px;
+  top: -80px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.35), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.vibe-orbs > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Soft focus for interactive lists */
+.list-item,
+.mini-item {
+  border-radius: 16px;
+  border: 1px solid rgba(148, 183, 255, 0.1);
+  background: rgba(8, 18, 38, 0.55);
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.list-item:hover,
+.mini-item:hover {
+  border-color: rgba(96, 165, 250, 0.3);
+  background: rgba(30, 58, 110, 0.35);
+}
+
+/* =========================================================
+   Site-wide lock — 2026-08-12
+   Make resource / city / state / blog / directory / knowledge
+   pages match the approved homepage + profile vibe.
+   Higher specificity beats leftover light rules in styles.css.
+   ========================================================= */
+
+html body {
+  font-family: "Archivo", "Liberation Sans", system-ui, sans-serif !important;
+  background:
+    radial-gradient(120% 80% at 10% -10%, rgba(59, 130, 246, 0.16), transparent 45%),
+    radial-gradient(90% 60% at 100% 0%, rgba(251, 191, 36, 0.08), transparent 40%),
+    #050b18 !important;
+  color: var(--vibe-ink) !important;
+}
+
+html body h1,
+html body h2,
+html body h3,
+html body .page-head h1 {
+  font-family: "Archivo", "Liberation Sans", system-ui, sans-serif !important;
+  color: #f8fafc !important;
+  letter-spacing: -0.03em;
+}
+
+html body p {
+  color: #dbe7ff;
+}
+
+html body .muted,
+html body small,
+html body .fine-print {
+  color: var(--vibe-muted) !important;
+}
+
+/* Resource-page header uses .topbar, not .site-header */
+html body .topbar {
+  border-bottom: 1px solid var(--vibe-line) !important;
+  background: rgba(8, 16, 34, 0.88) !important;
+  backdrop-filter: blur(16px) saturate(1.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+  color: var(--vibe-ink) !important;
+}
+
+html body .topbar .brand,
+html body .brand {
+  color: var(--vibe-ink) !important;
+}
+
+html body .topbar .brand b,
+html body .topbar .brand strong,
+html body .brand b,
+html body .brand strong {
+  color: var(--vibe-blue-bright) !important;
+}
+
+html body .brand-mark {
+  background: linear-gradient(145deg, #2563eb, #1d4ed8) !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  border-color: transparent !important;
+}
+
+html body .nav a,
+html body .topbar .nav a {
+  color: #b6c8e6 !important;
+  font-weight: 800;
+}
+
+html body .nav a:hover,
+html body .nav a.active,
+html body .topbar .nav a:hover {
+  color: #eff6ff !important;
+  background: rgba(59, 130, 246, 0.16) !important;
+}
+
+html body .topbar .btn,
+html body .topbar .btn-outline,
+html body .btn-outline {
+  border-radius: 999px !important;
+  border: 1px solid rgba(148, 183, 255, 0.28) !important;
+  background: rgba(59, 130, 246, 0.14) !important;
+  color: #dbeafe !important;
+  font-weight: 800 !important;
+}
+
+html body .topbar .btn:hover,
+html body .btn-outline:hover {
+  background: rgba(59, 130, 246, 0.26) !important;
+  color: #fff !important;
+}
+
+html body .crumbs {
+  color: var(--vibe-muted) !important;
+}
+
+html body .crumbs a {
+  color: var(--vibe-blue-bright) !important;
+  text-decoration: none;
+}
+
+html body .eyebrow,
+html body .eyebrow.dark {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(251, 191, 36, 0.35) !important;
+  background: rgba(251, 191, 36, 0.12) !important;
+  color: #fde68a !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+html body .page-head {
+  align-items: flex-end;
+}
+
+html body .grid-3,
+html body .grid-2,
+html body .resource-grid {
+  gap: clamp(12px, 2vw, 18px);
+}
+
+html body .grid-3 > .card,
+html body .grid-3 > a.card,
+html body main .card {
+  color: inherit;
+  text-decoration: none;
+}
+
+html body .grid-3 > a.card h3,
+html body main .card h3 {
+  color: #f8fafc !important;
+  margin: 0 0 8px;
+}
+
+html body .searchbar,
+html body .filter-bar {
+  background:
+    radial-gradient(120% 90% at 0% 0%, rgba(56, 132, 255, 0.14), transparent 50%),
+    linear-gradient(165deg, rgba(12, 24, 48, 0.96), rgba(8, 16, 34, 0.98)) !important;
+  border: 1px solid var(--vibe-line) !important;
+  box-shadow: var(--vibe-glow) !important;
+  color: var(--vibe-ink);
+}
+
+html body .section-pad,
+html body .container {
+  color: var(--vibe-ink);
+}
+
+html body footer,
+html body .site-footer,
+html body .page-footer {
+  border-top: 1px solid var(--vibe-line);
+  color: #9eb4d4;
+}
+
+html body .profile-tag,
+html body .profile-tags .profile-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 11px;
+  margin: 0 8px 8px 0;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 183, 255, 0.22);
+  background: rgba(59, 130, 246, 0.14);
+  color: #bfdbfe !important;
+  font-size: 12px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+html body .site-footer .footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr repeat(4, minmax(0, 1fr));
+  gap: 28px;
+  padding: 36px 0 18px;
+}
+
+html body .site-footer .footer-brand p {
+  color: var(--vibe-muted);
+  max-width: 42ch;
+}
+
+html body .site-footer .footer-col {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+}
+
+html body .site-footer .footer-col strong {
+  color: #f8fafc;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+html body .site-footer .footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 16px 0 8px;
+  border-top: 1px solid var(--vibe-line);
+  color: #8ea3c4;
+  font-size: 13px;
+}
+
+@media (max-width: 720px) {
+  html body .topbar {
+    flex-wrap: wrap;
+  }
+
+  html body .topbar .nav {
+    width: 100%;
+    flex-wrap: wrap;
+    background: rgba(8, 16, 34, 0.98);
+    border: 1px solid var(--vibe-line);
+    border-radius: 16px;
+    padding: 8px;
+  }
+
+  html body .site-footer .footer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
