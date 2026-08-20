@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="index,follow" />
+    <meta name="google-adsense-account" content="ca-pub-9768509838353886" />
+    <meta
+      name="description"
+      content="Free truck wait time and detention cost calculator. See what dock and residential wait really costs your truck. No signup."
+    />
+    <link rel="canonical" href="https://relocationmanagerusa.com/tools/wait-cost" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Truck Wait Time Cost Calculator | Free Tool" />
+    <meta property="og:description" content="Free truck wait time and detention cost calculator. See what dock and residential wait really costs your truck. No signup." />
+    <meta property="og:url" content="https://relocationmanagerusa.com/tools/wait-cost" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Truck Wait Time Cost Calculator | Free Tool" />
+    <meta name="twitter:description" content="Free truck wait time and detention cost calculator. See what dock and residential wait really costs your truck. No signup." />
+    <title>Truck Wait Time Cost Calculator | Free Tool</title>
+    <link rel="stylesheet" href="/public-site.css?v=20260803-1" />
+    <link rel="stylesheet" href="/site-vibe.css?v=20260812-vibe-3" />
+    <link rel="stylesheet" href="/display-ads.css?v=20260811-ads-1" />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9768509838353886"
+      crossorigin="anonymous"
+    ></script>
+    <script src="/display-ads-config.js?v=20260811-ads-3"></script>
+    <script defer src="/analytics-loader.js"></script>
+    <script defer src="/display-ads.js?v=20260811-ads-2"></script>
+    <script defer src="/public-site.js?v=20260811-tools-nav-1"></script>
+    <style>
+      .calc-grid { display: grid; gap: 22px; align-items: start; }
+      @media (min-width: 960px) { .calc-grid { grid-template-columns: minmax(0, 1fr) 360px; } .calc-results { position: sticky; top: 90px; } }
+      .calc-results { padding: 24px; }
+      .calc-row { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px dashed #e3ebf4; }
+      .calc-row span { color: #607086; font-size: 14px; font-weight: 700; }
+      .calc-row.total strong { font-size: 20px; color: #14335c; }
+      .calc-row.loss strong { color: #b3261e; }
+      .calc-row.profit strong { color: #0c7a43; }
+      .verdict { margin: 0 0 12px; padding: 12px; border-radius: 10px; font-weight: 800; background: #fdf6ec; color: #7a5518; }
+    </style>
+  </head>
+  <body>
+    <header class="site-header"><div class="header-inner"><a class="brand" href="/"><span class="brand-mark">🦅</span><span>Relocation <strong>Manager USA</strong></span></a><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="siteNav" data-nav-toggle>Menu</button><nav class="site-nav" id="siteNav" data-site-nav><a href="/">Home</a><a href="/tools/">Free tools</a><a href="/pricing">Pricing</a><a href="/safety">Safety</a><a class="nav-cta" href="/signin">Member sign in</a></nav></div></header>
+    <main>
+      <section class="page-hero"><div class="container">
+        <div class="breadcrumbs"><a href="/">Home</a><span>›</span><a href="/tools/">Free tools</a><span>›</span><span>Wait cost</span></div>
+        <div class="kicker">Free tool · Protect your time</div>
+        <h1>What is this wait actually costing you?</h1>
+        <p>Dock time and residential wait steal evenings. Enter your truck’s hourly value (or daily fixed cost) and wait hours. See the cost before you accept a thin rate.</p>
+      </div></section>
+
+      <section class="section" style="padding-top:0;padding-bottom:0"><div class="container">
+        <aside class="rm-ad-slot rm-ad-slot--leaderboard" data-rm-ad-slot="wait_cost_top" data-rm-ad-format="horizontal" aria-label="Advertisement"></aside>
+      </div></section>
+
+      <section class="section"><div class="container calc-grid">
+        <form class="card form-card" id="waitForm">
+          <div class="form-grid">
+            <label>Your truck value ($ / hour)
+              <input name="hourlyValue" type="number" min="0" step="0.01" inputmode="decimal" placeholder="65" />
+              <small class="muted">What one hour of this truck is worth to you while waiting.</small>
+            </label>
+            <label>Or daily fixed cost ($ / day)
+              <input name="dailyFixedCost" type="number" min="0" step="1" inputmode="decimal" placeholder="450" />
+              <small class="muted">Payment + insurance + etc. Used only if hourly is blank.</small>
+            </label>
+            <label>Hours you count as a work day
+              <input name="hoursPerWorkDay" type="number" min="1" max="24" step="0.5" value="10" inputmode="decimal" />
+            </label>
+            <label>Wait hours
+              <input name="waitHours" type="number" min="0" step="0.25" inputmode="decimal" placeholder="3" required />
+            </label>
+            <label>Detention pay you receive ($ / hour) — optional
+              <input name="detentionPayPerHour" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0" />
+              <small class="muted">Leave 0 if nobody is paying you to wait.</small>
+            </label>
+          </div>
+          <button class="btn btn-primary btn-block" type="submit">Calculate wait cost</button>
+          <p class="muted" style="margin:10px 0 0;font-size:13px">Planning tool only — not legal advice about detention claims.</p>
+        </form>
+        <aside class="card calc-results" id="results" aria-live="polite">
+          <h2>Your numbers</h2>
+          <p class="verdict" id="verdict">Enter your numbers to see wait cost.</p>
+          <div class="calc-row"><span>Hourly truck value</span><strong id="outHourly">—</strong></div>
+          <div class="calc-row"><span>Wait hours</span><strong id="outHours">—</strong></div>
+          <div class="calc-row"><span>Cost of waiting</span><strong id="outWait">—</strong></div>
+          <div class="calc-row"><span>Detention income</span><strong id="outDet">—</strong></div>
+          <div class="calc-row total loss" id="netRow"><span>Net cost of wait</span><strong id="outNet">—</strong></div>
+          <p class="muted" id="familyNote" style="margin-top:12px;font-size:13px;line-height:1.5"></p>
+          <aside class="rm-ad-slot rm-ad-slot--rectangle" data-rm-ad-slot="wait_cost_sidebar" data-rm-ad-format="rectangle" aria-label="Advertisement"></aside>
+          <div style="display:grid;gap:8px;margin-top:14px">
+            <a class="btn btn-primary" href="/rate-calculator">Add this into trip math</a>
+            <a class="btn btn-light" href="/tools/before-you-call">Before-you-call checklist</a>
+          </div>
+        </aside>
+      </div></section>
+
+      <section class="section" style="padding-top:0"><div class="container">
+        <aside class="rm-ad-slot rm-ad-slot--in-article" data-rm-ad-slot="wait_cost_mid" data-rm-ad-format="auto" aria-label="Advertisement"></aside>
+      </div></section>
+
+      <section class="section"><div class="container content-narrow prose">
+        <article class="card">
+          <h2>Why wait time matters</h2>
+          <p>A “good” load can turn into a bad day after three unpaid hours at a dock. Pricing wait into the rate — or walking away — is how you keep more evenings free.</p>
+        </article>
+        <article class="card">
+          <h2>Common questions about wait cost</h2>
+          <h3>How do I pick an hourly truck value?</h3>
+          <p>Use what one hour of this truck is worth to you while waiting — often your target revenue per hour, or daily fixed cost divided by the hours you count as a work day. The point is honesty: unpaid wait is not free.</p>
+          <h3>What if I get detention pay?</h3>
+          <p>Enter detention dollars per hour if someone will actually pay it. The tool nets detention income against wait cost so you see the real hole (or surplus) in the day.</p>
+          <h3>Is this legal advice about detention claims?</h3>
+          <p>No. It is a planning calculator only. Contract language, facility rules, and state practice decide what you can claim — verify those yourself.</p>
+          <h3>Is the wait-time calculator free?</h3>
+          <p>Yes — no signup. After you know the wait risk, run the free <a href="/rate-calculator">rate calculator</a> so the trip math includes that cost.</p>
+        </article>
+        <article class="card">
+          <h2>Related free tools &amp; guides</h2>
+          <p><a href="/rate-calculator">Rate calculator</a> · <a href="/tools/before-you-call">Before you call</a> · <a href="/tools/cube-fit">Cube fit</a> · <a href="/knowledge/average-freight-rates">Average freight rates</a> · <a href="/knowledge/best-load-boards">Best load boards</a></p>
+        </article>
+      </div></section>
+
+      <section class="section" style="padding-top:0"><div class="container">
+        <aside class="rm-ad-slot rm-ad-slot--footer" data-rm-ad-slot="wait_cost_footer" data-rm-ad-format="horizontal" aria-label="Advertisement"></aside>
+      </div></section>
+    </main>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebApplication",
+          "name": "Truck Wait Time Cost Calculator",
+          "url": "https://relocationmanagerusa.com/tools/wait-cost",
+          "applicationCategory": "BusinessApplication",
+          "operatingSystem": "Any",
+          "description": "Free calculator for dock and residential wait cost. Convert wait hours into dollars using hourly truck value or daily fixed cost. Optional detention pay. No signup.",
+          "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+          "publisher": { "@type": "Organization", "name": "Relocation Manager USA", "url": "https://relocationmanagerusa.com" }
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "How do I pick an hourly truck value?",
+              "acceptedAnswer": { "@type": "Answer", "text": "Use what one hour of this truck is worth to you while waiting — often target revenue per hour, or daily fixed cost divided by work-day hours. Unpaid wait is not free." }
+            },
+            {
+              "@type": "Question",
+              "name": "What if I get detention pay?",
+              "acceptedAnswer": { "@type": "Answer", "text": "Enter detention dollars per hour if someone will actually pay it. The calculator nets detention income against wait cost." }
+            },
+            {
+              "@type": "Question",
+              "name": "Is this legal advice about detention claims?",
+              "acceptedAnswer": { "@type": "Answer", "text": "No. It is a planning calculator only. Contracts and facility rules decide what you can claim." }
+            },
+            {
+              "@type": "Question",
+              "name": "Is the wait-time calculator free?",
+              "acceptedAnswer": { "@type": "Answer", "text": "Yes — no signup, no card. It runs in your browser." }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+    <footer class="site-footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><a class="brand" href="/" style="color:#fff"><span class="brand-mark">🦅</span><span>Relocation <strong>Manager USA</strong></span></a></div><nav class="footer-col"><strong>Tools</strong><a href="/tools/">Free tools</a><a href="/tools/wait-cost">Wait cost</a><a href="/rate-calculator">Rate calculator</a><a href="/tools/cube-fit">Cube fit</a><a href="/tools/before-you-call">Before you call</a></nav><nav class="footer-col"><strong>Marketplace</strong><a href="/pricing">Pricing</a></nav><nav class="footer-col"><strong>Legal</strong><a href="/privacy">Privacy</a><a href="/terms">Terms</a></nav></div><div class="footer-bottom"><span>© <span data-year>2026</span> Relocation Manager USA</span></div></div></footer>
+    <script type="module">
+      import { estimateWaitCost } from "/tools/wait-cost-core.js?v=20260811-1";
+      const money = (n) =>
+        Number.isFinite(n)
+          ? n.toLocaleString(undefined, { style: "currency", currency: "USD" })
+          : "—";
+      document.getElementById("waitForm").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const form = event.target;
+        const result = estimateWaitCost({
+          hourlyValue: form.elements.hourlyValue.value,
+          dailyFixedCost: form.elements.dailyFixedCost.value,
+          hoursPerWorkDay: form.elements.hoursPerWorkDay.value,
+          waitHours: form.elements.waitHours.value,
+          detentionPayPerHour: form.elements.detentionPayPerHour.value,
+        });
+        const verdict = document.getElementById("verdict");
+        if (!result.ok) {
+          verdict.textContent = result.error;
+          return;
+        }
+        verdict.textContent = result.label;
+        document.getElementById("outHourly").textContent = money(result.hourlyValue) + "/hr";
+        document.getElementById("outHours").textContent = result.waitHours + " hr";
+        document.getElementById("outWait").textContent = money(result.waitCost);
+        document.getElementById("outDet").textContent = money(result.detentionIncome);
+        const net = document.getElementById("outNet");
+        net.textContent = money(result.netCost);
+        const row = document.getElementById("netRow");
+        row.classList.toggle("loss", result.netCost > 0);
+        row.classList.toggle("profit", result.netCost <= 0);
+        document.getElementById("familyNote").textContent =
+          [result.familyNote, result.disclaimer].filter(Boolean).join(" ");
+        if (typeof window.rmTrack === "function") window.rmTrack("tool_wait_cost", { waitHours: result.waitHours });
+      });
+    </script>
+  </body>
+</html>

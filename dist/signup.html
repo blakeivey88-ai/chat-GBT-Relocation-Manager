@@ -5,11 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex,nofollow" />
     <meta name="description" content="Create your Relocation Manager USA account and continue to verification and secure checkout." />
-    <link rel="canonical" href="https://relocationmanagerusa.com/signup.html" />
+    <link rel="canonical" href="https://relocationmanagerusa.com/signup" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Create Your Account | Relocation Manager USA" />
+    <meta property="og:description" content="Create your Relocation Manager USA account and continue to verification and secure checkout." />
+    <meta property="og:url" content="https://relocationmanagerusa.com/signup" />
+    <meta name="twitter:card" content="summary" />
     <title>Create Your Account | Relocation Manager USA</title>
     <link rel="stylesheet" href="/public-site.css?v=20260803-1" />
+    <link rel="stylesheet" href="/site-vibe.css?v=20260812-vibe-3" />
     <script defer src="/analytics-loader.js"></script>
-    <script defer src="/public-site.js?v=20260810-auth-nav-1"></script>
+    <script defer src="/public-site.js?v=20260811-tools-nav-1"></script>
     <style>
       .signup-steps { display: grid; gap: 10px; margin: 0 0 22px; padding: 0; list-style: none; counter-reset: step; }
       .signup-steps li { display: flex; gap: 12px; align-items: flex-start; background: #f4f7fb; border: 1px solid #dde6f1; border-radius: 12px; padding: 12px 14px; counter-increment: step; }
@@ -32,16 +38,16 @@
         >
           Menu
         </button>
-        <nav class="site-nav" id="siteNav" aria-label="Main navigation" data-site-nav><a href="/pricing.html">Change plan</a><a class="nav-cta" href="/signin">Already have an account?</a></nav>
+        <nav class="site-nav" id="siteNav" aria-label="Main navigation" data-site-nav><a href="/pricing">Change plan</a><a class="nav-cta" href="/signin">Already have an account?</a></nav>
       </div>
     </header>
     <main>
-      <section class="page-hero" style="padding-bottom: 150px">
+      <section class="page-hero vibe-orbs" style="padding-bottom: 150px">
         <div class="container">
-          <div class="breadcrumbs"><a href="/">Home</a><span>›</span><a href="/pricing.html">Pricing</a><span>›</span><span>Create account</span></div>
+          <div class="breadcrumbs"><a href="/">Home</a><span>›</span><a href="/pricing">Pricing</a><span>›</span><span>Create account</span></div>
           <div class="kicker">Step 1 of 3</div>
           <h1>Create your profile once.</h1>
-          <p>Next comes account verification, then secure checkout. Returning members should sign in instead of creating a second account.</p>
+          <p>Next comes account verification, then secure checkout. Drivers can browse open loads free; a paid plan is for bidding and claiming. Shippers need the $9.99 plan to post. Returning members should sign in instead of creating a second account.</p>
         </div>
       </section>
       <section class="section" style="margin-top:-120px;padding-top:0">
@@ -69,7 +75,7 @@
               <label id="truckCountLabel">Truck count<input name="truck_count" type="number" min="0" step="1" inputmode="numeric" placeholder="0" /></label>
             </div>
             <label class="check"><input type="checkbox" required /><span>I understand Relocation Manager is a marketplace and I will verify freight, identity, insurance, equipment, payment, and user behavior before booking.</span></label>
-            <label class="check"><input type="checkbox" required /><span>I agree to the <a href="/terms.html" target="_blank" rel="noopener">Terms of Use</a> and acknowledge the <a href="/privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.</span></label>
+            <label class="check"><input type="checkbox" required /><span>I agree to the <a href="/terms" target="_blank" rel="noopener">Terms of Service</a> and acknowledge the <a href="/privacy" target="_blank" rel="noopener">Privacy Policy</a>.</span></label>
             <button class="btn btn-primary btn-block" id="submitButton" type="submit">Create profile &amp; verify</button>
             <div class="status" id="statusBox" role="status" aria-live="polite" hidden></div>
             <p style="margin:0;color:#607086">Already have an account? <a href="/signin" style="font-weight:900">Sign in here</a>. You will not be asked to create another company profile.</p>
@@ -246,6 +252,8 @@
             password,
             checkoutPlan: planKey,
             profileView: profile.profileView,
+            termsAccepted: true,
+            termsVersion: "2026-08-11",
             marketingAttribution: window.rmMarketingAttribution ? window.rmMarketingAttribution() : {}
           });
           showStatus(data?.verificationEmailSent ? "Profile created. We emailed you a verification link — opening the verification page…" : "Profile created. Opening verification…", "success");

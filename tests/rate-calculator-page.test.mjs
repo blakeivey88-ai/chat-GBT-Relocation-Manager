@@ -63,3 +63,30 @@ test("middleware allowlists the three new public assets", () => {
     assert.ok(middleware.includes(path), `middleware missing ${path}`);
   }
 });
+
+test("display ad slots are reserved on the rate calculator", () => {
+  assert.match(page, /display-ads\.css/);
+  assert.match(page, /display-ads\.js/);
+  assert.match(page, /display-ads-config\.js/);
+  for (const slot of [
+    'data-rm-ad-slot="rate_calc_top"',
+    'data-rm-ad-slot="rate_calc_sidebar"',
+    'data-rm-ad-slot="rate_calc_mid"',
+    'data-rm-ad-slot="rate_calc_footer"',
+  ]) {
+    assert.ok(page.includes(slot), `missing ${slot}`);
+  }
+});
+
+test("middleware allowlists display ads assets and tools hub", () => {
+  for (const path of [
+    "'/display-ads.js'",
+    "'/display-ads.css'",
+    "'/display-ads-config.js'",
+    "'/ads.txt'",
+    "'/tools'",
+    "pagead2.googlesyndication.com",
+  ]) {
+    assert.ok(middleware.includes(path), `middleware missing ${path}`);
+  }
+});

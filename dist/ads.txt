@@ -1,0 +1,2 @@
+# Google AdSense ads.txt for relocationmanagerusa.com
+google.com, pub-9768509838353886, DIRECT, f08c47fec0942fa0

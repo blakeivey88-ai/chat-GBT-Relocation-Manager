@@ -426,6 +426,18 @@ async function loadLoadCatalog(force = false) {
         loadCatalog = data.loads.map((item, index) =>
           normalizeLoadRecord(item, index),
         );
+        if (data.truckCapacity && typeof data.truckCapacity === "object") {
+          writeJSON(storageKeys.truckCapacity, data.truckCapacity);
+        }
+        // Free-browse responses still unlock the board; bid UI stays locked.
+        if (data.browseMode) {
+          writeJSON("rm_board_browse_mode", {
+            bidRequiresPlan: true,
+            message: data.message || "",
+          });
+        } else {
+          writeJSON("rm_board_browse_mode", null);
+        }
         loadCatalogError = "";
         loadCatalogLoaded = true;
         return loadCatalog;
@@ -433,6 +445,38 @@ async function loadLoadCatalog(force = false) {
       loadCatalogError =
         String(data?.error || "").trim() || "The load board could not be loaded.";
     } catch (error) {
+      const denial = String(error?.data?.reason || error?.data?.error || "");
+      if (/post-only|Shipper plan/i.test(denial)) {
+        loadCatalog = [];
+        loadCatalogError = "";
+        loadCatalogLoaded = true;
+        writeJSON("rm_board_browse_mode", {
+          bidRequiresPlan: true,
+          shipperPostOnly: true,
+          message: error?.data?.error || denial,
+        });
+        return loadCatalog;
+      }
+      // Fallback: explicit public browse endpoint for unsigned / unpaid lookers
+      try {
+        const pub = await apiRequest("/api/loads?scope=public&limit=40", {
+          method: "GET",
+        });
+        if (pub?.ok && Array.isArray(pub.loads)) {
+          loadCatalog = pub.loads.map((item, index) =>
+            normalizeLoadRecord(item, index),
+          );
+          writeJSON("rm_board_browse_mode", {
+            bidRequiresPlan: true,
+            message: pub.message || "Browse is free. Pay to bid.",
+          });
+          loadCatalogError = "";
+          loadCatalogLoaded = true;
+          return loadCatalog;
+        }
+      } catch {
+        /* ignore */
+      }
       loadCatalogError =
         String(error?.data?.error || error?.message || "").trim() ||
         "The load board could not be loaded.";
@@ -4182,6 +4226,7 @@ const storageKeys = {
   savedBulletins: "rm_saved_bulletins",
   plannedTrips: "rm_planned_trips",
   activePickups: "rm_active_pickups",
+  truckCapacity: "rm_truck_capacity",
   loadHistory: "rm_load_history",
   verifiedTransactions: "rm_verified_transactions",
   laneAlerts: "laneAlerts",
@@ -4996,6 +5041,8 @@ function mergeAccountState(data) {
     writeJSON(storageKeys.plannedTrips, data.plannedTrips);
   if (Array.isArray(data.activePickups))
     writeJSON(storageKeys.activePickups, data.activePickups);
+  if (data.truckCapacity && typeof data.truckCapacity === "object")
+    writeJSON(storageKeys.truckCapacity, data.truckCapacity);
   if (Array.isArray(data.loadHistory))
     writeJSON(storageKeys.loadHistory, data.loadHistory);
   if (Array.isArray(data.verifiedTransactions))
@@ -5309,6 +5356,8 @@ async function registerAccount(profile, password = "") {
       password,
       checkoutPlan: readJSON(storageKeys.checkoutPlan, "") || "",
       profileView: workspaceFromProfile(profile),
+      termsAccepted: true,
+      termsVersion: "2026-08-11",
     },
   });
   mergeAccountState(data);
@@ -5630,17 +5679,52 @@ function updateAccessChrome(profile = getProfile()) {
       route("workbench");
     };
   }
+  const emailOk = Boolean(
+    String(
+      profile.emailVerifiedAt || profile.memberAccess?.emailVerifiedAt || "",
+    ).trim() || profile.memberAccess?.emailVerified,
+  );
   const canMember =
     hasProfileIdentity(profile) &&
     isPaidProfile(profile) &&
     isProfileCompleteState(profile) &&
-    Boolean(
-      String(
-        profile.emailVerifiedAt || profile.memberAccess?.emailVerifiedAt || "",
-      ).trim() || profile.memberAccess?.emailVerified,
-    );
+    emailOk;
+  // Free browse: signed-in, verified, complete profile — no paywall to look.
+  // Bid/claim still requires paid carrier plan + verification.
   const shipperOnly = isRequestOnlyAccount(profile);
+  const canBrowseBoard =
+    hasProfileIdentity(profile) &&
+    isProfileCompleteState(profile) &&
+    emailOk &&
+    !shipperOnly;
   document.documentElement.classList.toggle("shipper-workspace", shipperOnly);
+  document.documentElement.classList.toggle(
+    "browse-only",
+    canBrowseBoard && !canMember,
+  );
+  const postLabel = document.querySelector("[data-post-label]");
+  if (postLabel) postLabel.textContent = shipperOnly ? "Need a truck" : "Post";
+  const postTitle = document.getElementById("postTitle");
+  const postLead = document.getElementById("postLead");
+  const postKicker = document.getElementById("postKicker");
+  if (postKicker) {
+    postKicker.textContent = shipperOnly ? "Need a truck?" : "Got freight to move?";
+  }
+  if (postTitle) {
+    postTitle.textContent = shipperOnly
+      ? "Tell us the job. We’ll bring the bids."
+      : "Post a load the right trucks can grab.";
+  }
+  if (postLead) {
+    postLead.textContent = shipperOnly
+      ? "Three short steps: where and when, what you’re moving, then your price or open bids."
+      : "Spell out the lane, equipment, and window so the right truck can bid in one tap.";
+  }
+  const truckSection = document.getElementById("profileSectionTruck");
+  if (truckSection) truckSection.hidden = shipperOnly;
+  document.querySelector('[data-profile-jump="profileSectionTruck"]')?.toggleAttribute("hidden", shipperOnly);
+  const truckMeta = document.getElementById("profileTruckMeta");
+  if (truckMeta) truckMeta.hidden = shipperOnly;
   const memberRoutes = new Set([
     "loads",
     "workbench",
@@ -5666,11 +5750,18 @@ function updateAccessChrome(profile = getProfile()) {
     "request-form",
   ]);
   const carrierOnlyRoutes = new Set(["loads", "requests", "alerts"]);
-  document.documentElement.classList.toggle("access-pending", !canMember);
+  // Browse-only members still see board + profile; post/bid stay gated elsewhere.
+  const browseRoutes = new Set(["loads", "workbench", "profile", "alerts"]);
+  document.documentElement.classList.toggle(
+    "access-pending",
+    !canMember && !canBrowseBoard,
+  );
   $$("[data-route]").forEach((el) => {
     const route = el.dataset.route;
     if (!memberRoutes.has(route)) return;
-    const allowed = canMember && !(shipperOnly && carrierOnlyRoutes.has(route));
+    const allowed =
+      (canMember || (canBrowseBoard && browseRoutes.has(route))) &&
+      !(shipperOnly && carrierOnlyRoutes.has(route));
     el.hidden = !allowed;
     el.style.display = allowed ? "" : "";
   });
@@ -6899,10 +6990,30 @@ function renderCommunicationHub() {
         ? messages
             .slice()
             .reverse()
-            .map(
-              (msg) =>
-                `<article class="message-row ${msg.senderUserId === profile.userId ? "mine" : ""}"><div class="message-meta"><strong>${escapeHtml(msg.senderName || "Member")}</strong><span>${escapeHtml([msg.senderCompany, msg.senderRole].filter(Boolean).join(" · ") || "Member")} · ${msg.createdAt ? new Date(msg.createdAt).toLocaleString() : ""}</span></div><div class="message-body">${communicationMessagePreview(msg)}</div><div class="message-tools"><button class="btn btn-soft" data-communication-reply="${msg.id}" data-communication-reply-text="${escapeHtml([msg.senderName, msg.body].filter(Boolean).join(": "))}">Reply</button><button class="btn btn-soft" data-communication-save="${active.id}" data-message-id="${msg.id}">Save</button><button class="btn btn-soft" data-communication-translate="${active.id}" data-message-id="${msg.id}">Translate</button><button class="btn btn-soft" data-communication-view="original" data-message-id="${msg.id}">Original</button><button class="btn btn-soft" data-communication-view="translated" data-message-id="${msg.id}">Translated</button><button class="btn btn-soft" data-communication-react="${active.id}" data-message-id="${msg.id}" data-emoji="👍">👍</button><button class="btn btn-soft" data-communication-react="${active.id}" data-message-id="${msg.id}" data-emoji="❤️">❤️</button></div></article>`,
-            )
+            .map((msg) => {
+              const mine = msg.senderUserId === profile.userId;
+              const when = msg.createdAt
+                ? new Date(msg.createdAt).toLocaleTimeString([], {
+                    hour: "numeric",
+                    minute: "2-digit",
+                  })
+                : "";
+              return `<article class="message-row ${mine ? "mine" : ""}">
+                <div class="message-meta"><strong>${escapeHtml(
+                  mine ? "You" : msg.senderName || "Member",
+                )}</strong><span>${escapeHtml(when)}</span></div>
+                <div class="message-body">${communicationMessagePreview(msg)}</div>
+                <div class="message-tools">
+                  <button type="button" data-communication-reply="${msg.id}" data-communication-reply-text="${escapeHtml(
+                    [msg.senderName, msg.body].filter(Boolean).join(": "),
+                  )}">Reply</button>
+                  <button type="button" data-communication-react="${active.id}" data-message-id="${msg.id}" data-emoji="👍">👍</button>
+                  <button type="button" data-communication-react="${active.id}" data-message-id="${msg.id}" data-emoji="❤️">❤️</button>
+                  <button type="button" data-communication-react="${active.id}" data-message-id="${msg.id}" data-emoji="🔥">🔥</button>
+                  <button type="button" data-communication-save="${active.id}" data-message-id="${msg.id}">Save</button>
+                </div>
+              </article>`;
+            })
             .join("")
         : '<div class="empty-state"><h4>No messages yet</h4><p>Send the first message to start the thread.</p></div>'
       : '<div class="empty-state"><h4>Select a conversation</h4><p>Choose a DM, company thread, load conversation, or community channel.</p></div>';
@@ -8443,6 +8554,113 @@ function loadPickupTimestamp(load = {}) {
   const time = Date.parse(load.pickupAt || load.pick || "");
   return Number.isFinite(time) ? time : Number.MAX_SAFE_INTEGER;
 }
+function profileTruckTokens(profile = getProfile()) {
+  return [
+    profile.equipmentType,
+    profile.equipment,
+    profile.truckType,
+    profile.vehicleType,
+    profile.truck,
+  ]
+    .map((value) => String(value || "").toLowerCase())
+    .join(" ")
+    .trim();
+}
+function equipmentKindFromText(text) {
+  const raw = String(text || "").toLowerCase();
+  if (/hot\s*shot|gooseneck|deck/.test(raw)) return "hotshot";
+  if (/reefer|refrigerat/.test(raw)) return "reefer";
+  if (/lowboy|rgn|step\s*deck/.test(raw)) return "lowboy";
+  if (/flatbed/.test(raw)) return "flatbed";
+  if (/dry\s*van|53/.test(raw)) return "dryvan";
+  if (/cargo\s*van|sprinter/.test(raw)) return "van";
+  if (/box|bobtail|straight/.test(raw)) return "box";
+  return "";
+}
+const PROFILE_TRUCK_OPTIONS = [
+  "15 ft box truck",
+  "16 ft box truck",
+  "20 ft box truck",
+  "24 ft box truck",
+  "26 ft box truck",
+  "Box truck with liftgate",
+  "Box truck with ramp",
+  "Cargo van",
+  "Truck + trailer",
+  "Hotshot",
+  "Car carrier / auto transport",
+  "Dry van",
+  "Reefer",
+  "Flatbed",
+  "53 ft flatbed",
+  "53 ft Conestoga",
+  "Lowboy trailer",
+];
+function parseProfileEquipment(value) {
+  const raw = String(value || "").trim();
+  const lift = /lift/.test(raw.toLowerCase());
+  const ramp = /ramp/.test(raw.toLowerCase());
+  const base =
+    PROFILE_TRUCK_OPTIONS.find((option) =>
+      raw.toLowerCase().startsWith(option.toLowerCase()),
+    ) ||
+    PROFILE_TRUCK_OPTIONS.find((option) =>
+      raw.toLowerCase().includes(option.toLowerCase()),
+    ) ||
+    "";
+  return { base, lift, ramp, label: raw };
+}
+function composeProfileEquipment(form) {
+  const base = String(form.querySelector('[name="equipmentType"]')?.value || "").trim();
+  if (!base) return "";
+  const lift = Boolean(form.querySelector('[name="hasLiftgate"]')?.checked);
+  const ramp = Boolean(form.querySelector('[name="hasRamp"]')?.checked);
+  const extras = [
+    lift && !/lift/.test(base.toLowerCase()) ? "liftgate" : "",
+    ramp && !/ramp/.test(base.toLowerCase()) ? "ramp" : "",
+  ].filter(Boolean);
+  return extras.length ? `${base} with ${extras.join(" and ")}` : base;
+}
+function fillProfileTruckForm(profile = getProfile()) {
+  const form = $("#profileTruckForm");
+  const parsed = parseProfileEquipment(
+    profile.equipmentType || (profile.equipmentTypes || [])[0] || "",
+  );
+  if (form) {
+    const select = form.querySelector('[name="equipmentType"]');
+    const lift = form.querySelector('[name="hasLiftgate"]');
+    const ramp = form.querySelector('[name="hasRamp"]');
+    if (select) select.value = parsed.base || "";
+    if (lift) lift.checked = parsed.lift;
+    if (ramp) ramp.checked = parsed.ramp;
+  }
+  const label = parsed.label || "Not set — add it so Loads can stamp “This truck fits”";
+  if ($("#profileTruckType")) $("#profileTruckType").textContent = label;
+  if ($("#profileTruckStatus"))
+    $("#profileTruckStatus").textContent = parsed.base ? "Ready for fit stamps" : "Not set";
+}
+function truckFitForLoad(load, profile = getProfile()) {
+  if (isRequestOnlyAccount(profile)) return null;
+  const truck = profileTruckTokens(profile);
+  const need = `${load.eq || ""} ${load.equipment || ""} ${load.kind || ""} ${load.lift ? "liftgate" : ""}`;
+  if (!truck) {
+    return { kind: "unknown", label: "Add your truck on You" };
+  }
+  const truckKind = equipmentKindFromText(truck);
+  const needKind = equipmentKindFromText(need) || String(load.kind || "").toLowerCase();
+  const liftNeed = /lift/.test(need.toLowerCase());
+  const liftHave = /lift/.test(truck);
+  if (needKind && truckKind && needKind === truckKind && (!liftNeed || liftHave)) {
+    return { kind: "fit", label: "This truck fits" };
+  }
+  if (needKind && truckKind && needKind !== truckKind) {
+    return { kind: "no", label: "Different equipment" };
+  }
+  if (liftNeed && !liftHave) {
+    return { kind: "maybe", label: "Needs liftgate — check" };
+  }
+  return { kind: "maybe", label: "Check this truck" };
+}
 function loadCard(
   l,
   locked = false,
@@ -8528,7 +8746,33 @@ function loadCard(
         ? `${money(l.rate)}<small>open for bids · target hint</small>`
         : `Open<small>for bids · no target</small>`)
     : `${money(l.rate)}<small>shipper target · ${rpmValue}</small>`;
-  return `<article class="card load-card"><div class="load-top"><div class="load-media">${media}<div class="load-copy"><div class="route">${escapeHtml(l.from)} → ${escapeHtml(l.to)}</div><p class="muted load-poster-line">${posterIcon}<span>${escapeHtml(l.broker || "Member")} · ${escapeHtml(l.pick || "Pickup time pending")} · ${escapeHtml(l.eq)}</span></p></div></div><div class="rate">${rateHeadline}</div></div>${photoGallery}<p>${summaryParts.join(" · ")}</p><div class="chips">${chips}${autoChip}<span class="chip">${escapeHtml(l.wt || "Weight pending")}</span><span class="chip good">${escapeHtml(l.status || "open")}</span></div><div class="load-detail-grid"><div><span>Last confirmed</span><strong>${escapeHtml(lastConfirmedLabel)}</strong></div><div><span>Expiration</span><strong>${escapeHtml(expirationLabel)}</strong></div><div><span>Payment</span><strong>${escapeHtml(paymentTermsLabel)}</strong></div><div><span>Site readiness</span><strong>${escapeHtml(siteReadinessLabel)}</strong></div><div><span>Verification</span><strong>${escapeHtml(verificationLabel)}</strong></div></div>${bidStatus}<form class="load-bid-form" data-bid-form="${escapeHtml(l.id)}" hidden><label>All-in bid<input name="bid_amount" type="number" min="1" max="1000000" step="1" required value="${l.myBid?.amount || l.rate || ""}" /></label><label>What your price includes<textarea name="bid_note" rows="2" maxlength="400" placeholder="Equipment, loading help, timing, tolls, or conditions">${escapeHtml(l.myBid?.note || "")}</textarea></label><div class="load-bid-actions"><button class="btn btn-primary" type="submit">${l.myBid ? "Update bid" : "Submit bid"}</button><button class="btn btn-soft" type="button" data-cancel-bid="${escapeHtml(l.id)}">Cancel</button></div></form><div class="load-actions"><span class="muted">${escapeHtml(hint)}</span><div class="load-action-buttons"><button class="btn btn-soft" type="button" data-report-load="${escapeHtml(l.id || "")}" title="Report this load to the review team">⚑ Report</button><button class="btn btn-soft favorite-btn ${isFavorite ? "active" : ""}" type="button" data-favorite-load="${escapeHtml(l.id)}" aria-pressed="${isFavorite}">${isFavorite ? "★ Saved" : "☆ Favorite"}</button><button class="${actionClass}" type="button" data-book="${escapeHtml(l.id || "")}" ${locked ? 'disabled aria-disabled="true"' : ""}>${actionLabel}</button></div></div></article>`;
+  const capacitySnap = readJSON(storageKeys.truckCapacity, null);
+  const openSeats = Number(capacitySnap?.openSeats);
+  const occupied = Number(capacitySnap?.occupiedSeats);
+  const planLimit = Number(capacitySnap?.planLimit);
+  let capacityChip = "";
+  if (capacitySnap && planLimit > 0) {
+    const freeSeat = openSeats > 0;
+    const partialSeat = (capacitySnap.seats || []).some(
+      (seat) => String(seat.status || "") === "partial",
+    );
+    const chipClass = freeSeat
+      ? "load-capacity-chip is-open"
+      : partialSeat
+        ? "load-capacity-chip is-tight"
+        : "load-capacity-chip is-tight";
+    const chipText = freeSeat
+      ? `${openSeats} open seat${openSeats === 1 ? "" : "s"} on your plan`
+      : partialSeat
+        ? "Room left for a partial on an active seat"
+        : `Seats full (${occupied}/${planLimit}) — free capacity or upgrade`;
+    capacityChip = `<div class="${chipClass}">${escapeHtml(chipText)}</div>`;
+  }
+  const fit = truckFitForLoad(l);
+  const fitStamp = fit
+    ? `<span class="truck-fit-stamp is-${fit.kind}">${escapeHtml(fit.label)}</span>`
+    : "";
+  return `<article class="card load-card ${fit ? `fit-${fit.kind}` : ""}"><div class="load-top"><div class="load-media">${media}<div class="load-copy"><div class="route">${escapeHtml(l.from)} → ${escapeHtml(l.to)}</div>${fitStamp}<p class="muted load-poster-line">${posterIcon}<span>${escapeHtml(l.broker || "Member")} · ${escapeHtml(l.pick || "Pickup time pending")} · ${escapeHtml(l.eq)}</span></p>${capacityChip}</div></div><div class="rate">${rateHeadline}</div></div>${photoGallery}<p>${summaryParts.join(" · ")}</p><div class="chips">${chips}${autoChip}<span class="chip">${escapeHtml(l.wt || "Weight pending")}</span><span class="chip good">${escapeHtml(l.status || "open")}</span></div><div class="load-detail-grid"><div><span>Last confirmed</span><strong>${escapeHtml(lastConfirmedLabel)}</strong></div><div><span>Expiration</span><strong>${escapeHtml(expirationLabel)}</strong></div><div><span>Payment</span><strong>${escapeHtml(paymentTermsLabel)}</strong></div><div><span>Site readiness</span><strong>${escapeHtml(siteReadinessLabel)}</strong></div><div><span>Verification</span><strong>${escapeHtml(verificationLabel)}</strong></div></div>${bidStatus}<form class="load-bid-form" data-bid-form="${escapeHtml(l.id)}" hidden><label>All-in bid<input name="bid_amount" type="number" min="1" max="1000000" step="1" required value="${l.myBid?.amount || l.rate || ""}" /></label><label>What your price includes<textarea name="bid_note" rows="2" maxlength="400" placeholder="Equipment, loading help, timing, tolls, or conditions">${escapeHtml(l.myBid?.note || "")}</textarea></label><div class="load-bid-actions"><button class="btn btn-primary" type="submit">${l.myBid ? "Update bid" : "Submit bid"}</button><button class="btn btn-soft" type="button" data-cancel-bid="${escapeHtml(l.id)}">Cancel</button></div></form><div class="load-actions"><span class="muted">${escapeHtml(hint)}</span><div class="load-action-buttons"><button class="btn btn-soft" type="button" data-report-load="${escapeHtml(l.id || "")}" title="Report this load to the review team">⚑ Report</button><button class="btn btn-soft favorite-btn ${isFavorite ? "active" : ""}" type="button" data-favorite-load="${escapeHtml(l.id)}" aria-pressed="${isFavorite}">${isFavorite ? "★ Saved" : "☆ Favorite"}</button><button class="${actionClass}" type="button" data-book="${escapeHtml(l.id || "")}" ${locked ? 'disabled aria-disabled="true"' : ""}>${actionLabel}</button></div></div></article>`;
 }
 function renderLoads() {
   const profile = getProfile();
@@ -8537,8 +8781,8 @@ function renderLoads() {
   if (isRequestOnlyAccount(profile)) {
     if (box)
       box.innerHTML =
-        '<div class="card"><h3>Shipper plans do not include load bidding</h3><p class="muted">Use Post a load on the $9.99 plan. Eligible drivers, carriers, fleets, and brokers can then bid on it.</p><button class="btn btn-primary" type="button" data-route="post">Post a load</button></div>';
-    if (count) count.textContent = "Posting access only";
+        '<div class="card empty-state shipper-loads-handoff"><h3>Need a truck? Post the job.</h3><p>This board is for drivers. Your $9.99 desk posts a pickup and lets trucks bid. Tap below and we’ll walk you through it.</p><button class="btn btn-primary" type="button" data-route="post">Need a truck</button></div>';
+    if (count) count.textContent = "Your jobs start with a post";
     return;
   }
   if (!loadCatalogLoaded) {
@@ -8565,12 +8809,20 @@ function renderLoads() {
   const delivery = filters.delivery.toLowerCase();
   const status = pickupStatus();
   const verificationReady = bookingVerificationReady(profile);
-  const locked = status.mode === "blocked" || !verificationReady;
-  const hint = !verificationReady
-    ? bookingVerificationReason(profile)
-    : status.mode === "full"
-      ? `You may bid now, but free a truck slot before the shipper accepts (${status.active}/${status.limit} active).`
-      : "Send the shipper your all-in price and what it includes.";
+  const browseMode = readJSON("rm_board_browse_mode", null);
+  const paidCarrier = isPaidProfile(profile) && !isRequestOnlyAccount(profile);
+  const locked =
+    status.mode === "blocked" ||
+    !verificationReady ||
+    !paidCarrier ||
+    Boolean(browseMode?.bidRequiresPlan && !paidCarrier);
+  const hint = !paidCarrier
+    ? "Browse is free. Activate a $29.99+ carrier plan to bid or claim."
+    : !verificationReady
+      ? bookingVerificationReason(profile)
+      : status.mode === "full"
+        ? `You may bid now, but free a truck slot before the shipper accepts (${status.active}/${status.limit} active).`
+        : "Send the shipper your all-in price and what it includes.";
   const catalog = loadCatalogItems();
   let list = catalog.filter((l) => {
     const haystack = [
@@ -8601,10 +8853,24 @@ function renderLoads() {
   else if (filters.sort === "rate") list.sort((a, b) => b.rate - a.rate);
   else if (filters.sort === "soonest")
     list.sort((a, b) => loadPickupTimestamp(a) - loadPickupTimestamp(b));
-  if (box)
+  const fitRank = (load) => {
+    const kind = truckFitForLoad(load)?.kind;
+    if (kind === "fit") return 0;
+    if (kind === "maybe") return 1;
+    if (kind === "unknown") return 2;
+    return 3;
+  };
+  list.sort((a, b) => fitRank(a) - fitRank(b));
+  if (box) {
+    const banner =
+      locked && !paidCarrier
+        ? `<div class="card notice" style="margin-bottom:12px"><strong>Browse free · pay to bid.</strong> Open loads are visible now. Bidding unlocks on a $29.99+ carrier plan with verification. <a href="/pricing">View plans</a></div>`
+        : "";
     box.innerHTML =
-      list.map((l) => loadCard(l, locked, hint)).join("") ||
-      '<div class="card empty-state"><h3>No open loads match yet</h3><p>Save this search or create a lane alert. New real postings will appear here without demo freight mixed in. While you wait, run your numbers with the <a href="/rate-calculator.html" target="_blank" rel="noopener">free rate calculator</a> so you can quote fast when a load lands.</p></div>';
+      banner +
+      (list.map((l) => loadCard(l, locked, hint)).join("") ||
+        '<div class="card empty-state"><h3>No open loads match yet</h3><p>Save this search or create a lane alert. New real postings will appear here without demo freight mixed in. While you wait, run your numbers with the <a href="/rate-calculator" target="_blank" rel="noopener">free rate calculator</a> so you can quote fast when a load lands.</p></div>');
+  }
   if (count) count.textContent = `Open loads (${list.length})`;
   $$("[data-favorite-load]").forEach((button) => {
     button.onclick = () => {
@@ -8725,6 +8991,444 @@ function memberWorkbenchTrustValue(value, fallback = "Not provided") {
   return clean || fallback;
 }
 
+/** Skool-style engagement grades — productive + social, not pay-to-win. */
+const ROAD_POINT_LEVELS = [
+  { id: "rookie", label: "Rookie", min: 0, emoji: "🛻" },
+  { id: "road-ready", label: "Road Ready", min: 200, emoji: "🛣️" },
+  { id: "reliable", label: "Reliable", min: 500, emoji: "⭐" },
+  { id: "pro", label: "Road Pro", min: 1000, emoji: "🏆" },
+  { id: "elite", label: "Elite", min: 2000, emoji: "💎" },
+  { id: "legend", label: "Legend", min: 4000, emoji: "👑" },
+];
+
+function computeRoadPoints(profile = getProfile()) {
+  const history = readJSON(storageKeys.loadHistory, []);
+  const pickups = readJSON(storageKeys.activePickups, []);
+  const messages = readJSON(storageKeys.messages, []);
+  const trust = americanTruckersTrustScore(profile);
+  const verifiedLoads = history.filter((item) =>
+    /accepted|delivered|completed|capacity_released/i.test(
+      String(item?.eventType || item?.status || ""),
+    ),
+  ).length;
+  const posted = history.filter((item) => item?.eventType === "posted").length;
+  const completedPickups = pickups.filter((item) =>
+    /completed|delivered|empty/i.test(String(item?.status || "")),
+  ).length;
+  const livePickups = pickups.filter(
+    (item) =>
+      item?.serverAuthorized === true &&
+      !/completed|delivered|empty|cancelled|canceled/i.test(String(item?.status || "")),
+  ).length;
+  const profileDone = isProfileCompleteState(profile) ? 1 : 0;
+  const emailOk = Boolean(
+    String(profile.emailVerifiedAt || profile.memberAccess?.emailVerifiedAt || "").trim() ||
+      profile.memberAccess?.emailVerified,
+  )
+    ? 1
+    : 0;
+  const trustScore = Number(trust?.score) || 0;
+  const points = Math.round(
+    trustScore * 1.2 +
+      verifiedLoads * 40 +
+      posted * 15 +
+      completedPickups * 35 +
+      livePickups * 5 +
+      Math.min(messages.length, 40) * 3 +
+      profileDone * 80 +
+      emailOk * 40,
+  );
+  let level = ROAD_POINT_LEVELS[0];
+  for (const row of ROAD_POINT_LEVELS) {
+    if (points >= row.min) level = row;
+  }
+  const next =
+    ROAD_POINT_LEVELS.find((row) => row.min > level.min) ||
+    ROAD_POINT_LEVELS[ROAD_POINT_LEVELS.length - 1];
+  const span = Math.max(1, next.min - level.min);
+  const progress =
+    next.min <= level.min
+      ? 100
+      : Math.max(4, Math.min(100, Math.round(((points - level.min) / span) * 100)));
+  return {
+    points,
+    level,
+    next,
+    progress,
+    chips: [
+      `Trust ${trustScore}`,
+      `${verifiedLoads} verified events`,
+      `${posted} posts`,
+      `${completedPickups} finished loads`,
+      emailOk ? "Email verified" : "Verify email",
+      profileDone ? "Profile complete" : "Finish profile",
+    ],
+  };
+}
+
+function renderRoadPointsCard(profile) {
+  const card = $("#profileRoadPoints");
+  if (!card) return;
+  const road = computeRoadPoints(profile);
+  const value = $("#profileRoadPointsValue");
+  const level = $("#profileRoadLevel");
+  const headline = $("#profileRoadHeadline");
+  const blurb = $("#profileRoadBlurb");
+  const fill = $("#profileRoadFill");
+  const next = $("#profileRoadNext");
+  const chips = $("#profileRoadChips");
+  if (value) value.textContent = String(road.points.toLocaleString());
+  if (level) level.textContent = `${road.level.emoji} ${road.level.label}`;
+  if (headline) {
+    headline.textContent =
+      road.level.id === "legend"
+        ? "Legend status — keep setting the standard."
+        : `You're ${road.level.label}. Keep the momentum.`;
+  }
+  if (blurb) {
+    blurb.textContent =
+      "Road Points reward real work: verified loads, clear posts, messages, and finishing jobs so seats free up for the next haul. Productive first — still fun to climb.";
+  }
+  if (fill) fill.style.width = `${road.progress}%`;
+  if (next) {
+    next.textContent =
+      road.next.min <= road.level.min
+        ? "Max grade unlocked — stay consistent."
+        : `${(road.next.min - road.points).toLocaleString()} points to ${road.next.label}`;
+  }
+  if (chips) {
+    chips.innerHTML = road.chips
+      .map((text) => `<span>${escapeHtml(text)}</span>`)
+      .join("");
+  }
+}
+
+function renderProfileCapacityMount(profile) {
+  const mount = $("#profileCapacityMount");
+  if (!mount) return;
+  if (isRequestOnlyAccount(profile)) {
+    mount.innerHTML = "";
+    mount.hidden = true;
+    return;
+  }
+  mount.hidden = false;
+  // Reuse the workbench capacity renderer into a temporary host if needed.
+  const capacity = readJSON(storageKeys.truckCapacity, null);
+  if (!capacity || !Array.isArray(capacity.seats)) {
+    mount.innerHTML = `<section class="capacity-panel"><div class="capacity-panel__hero"><div><div class="capacity-panel__eyebrow">Truck seats</div><h2 class="capacity-panel__title">Capacity appears after live work</h2><p class="capacity-panel__lead">Claim or accept a load to see remaining feet and payload on your truck seats.</p></div></div></section>`;
+    return;
+  }
+  // Clone structure from workbench by temporarily rendering into workbench host if present.
+  const seatsHostId = "profileCapacitySeats";
+  mount.innerHTML = `<section class="capacity-panel" aria-label="Profile truck capacity">
+    <div class="capacity-panel__hero">
+      <div>
+        <div class="capacity-panel__eyebrow">Truck seats · live</div>
+        <h2 class="capacity-panel__title">Capacity on your profile</h2>
+        <p class="capacity-panel__lead">${escapeHtml(capacity.summary || "Your truck seats and remaining space.")}</p>
+      </div>
+      <div class="capacity-panel__stat"><span>Seats in use</span><strong>${escapeHtml(
+        String(capacity.occupiedSeats || 0),
+      )} / ${escapeHtml(String(capacity.planLimit || 1))}</strong></div>
+    </div>
+    <div class="capacity-panel__grid" id="${seatsHostId}"></div>
+    <p class="capacity-panel__foot">Same rules as Workbench — partials stack, full seats block until you mark delivered or empty.</p>
+  </section>`;
+  // Reuse bar rendering by calling panel renderer against workbench IDs briefly if available;
+  // otherwise inline a compact version via the same functions.
+  const seatsHost = document.getElementById(seatsHostId);
+  if (!seatsHost) return;
+  seatsHost.innerHTML = (capacity.seats || [])
+    .map((seat) => {
+      const usableL = Number(seat.usableLengthFt || 26) || 26;
+      const usableW = Number(seat.maxPayloadLb || 10000) || 10000;
+      const usedL = Number(seat.used?.lengthFt || 0) || 0;
+      const usedW = Number(seat.used?.weightLb || 0) || 0;
+      const pctL = capacityPct(usedL, usableL);
+      const pctW = capacityPct(usedW, usableW);
+      return `<article class="capacity-seat">
+        <div class="capacity-seat__head">
+          <div>
+            <h3>${escapeHtml(seat.label || "Truck seat")}</h3>
+            <p>Remaining ~${escapeHtml(String(Math.round(Number(seat.remaining?.lengthFt ?? usableL - usedL) || 0)))} ft</p>
+          </div>
+          <span class="${capacityPillClass(seat.status)}">${escapeHtml(String(seat.status || "empty"))}</span>
+        </div>
+        <div class="capacity-bars">
+          <div class="capacity-bar">
+            <div class="capacity-bar__meta"><span>Length</span><span>${pctL}%</span></div>
+            <div class="capacity-bar__track"><div class="capacity-bar__fill ${capacityBarClass(pctL)}" style="width:${pctL}%"></div></div>
+          </div>
+          <div class="capacity-bar">
+            <div class="capacity-bar__meta"><span>Payload</span><span>${pctW}%</span></div>
+            <div class="capacity-bar__track"><div class="capacity-bar__fill ${capacityBarClass(pctW)}" style="width:${pctW}%"></div></div>
+          </div>
+        </div>
+      </article>`;
+    })
+    .join("");
+}
+
+function capacityPct(used, total) {
+  const u = Number(used) || 0;
+  const t = Number(total) || 0;
+  if (!(t > 0)) return 0;
+  return Math.max(0, Math.min(100, Math.round((u / t) * 100)));
+}
+
+function capacityBarClass(pct) {
+  if (pct >= 90) return "is-hot";
+  if (pct <= 35) return "is-ok";
+  return "";
+}
+
+function capacityPillClass(status) {
+  const s = String(status || "empty").toLowerCase();
+  if (s === "full") return "capacity-pill capacity-pill--full";
+  if (s === "partial") return "capacity-pill capacity-pill--partial";
+  return "capacity-pill capacity-pill--empty";
+}
+
+async function freeTruckCapacity(loadId, action) {
+  const id = String(loadId || "").trim();
+  if (!id) return;
+  const buttons = Array.from(document.querySelectorAll("[data-capacity-load]")).filter(
+    (btn) => String(btn.getAttribute("data-capacity-load") || "") === id,
+  );
+  buttons.forEach((btn) => {
+    btn.disabled = true;
+  });
+  try {
+    const data = await apiRequest("/api/loads", {
+      method: "POST",
+      body: { action, loadId: id },
+    });
+    if (!data?.ok) {
+      window.alert(data?.error || "Could not free truck capacity. Try again.");
+      return;
+    }
+    if (data.truckCapacity) writeJSON(storageKeys.truckCapacity, data.truckCapacity);
+    // Locally mark matching pickups completed so the UI updates immediately.
+    const pickups = readJSON(storageKeys.activePickups, []).map((item) => {
+      const itemId = String(item.loadId || item.id || "");
+      if (itemId !== id) return item;
+      return {
+        ...item,
+        status: action === "mark_empty" ? "Empty" : action === "mark_delivered" ? "Delivered" : "Completed",
+        lengthFtUsed: 0,
+        weightLbUsed: 0,
+        cubeCuFtUsed: 0,
+        capacityReleased: true,
+      };
+    });
+    writeJSON(storageKeys.activePickups, pickups);
+    await loadAccountState({ refreshLoads: false }).catch(() => null);
+    renderMemberWorkbench();
+    if (document.getElementById("profile")?.classList.contains("active")) {
+      renderLiveLoadMap();
+    }
+  } catch (error) {
+    window.alert(error?.message || "Could not free truck capacity. Try again.");
+  } finally {
+    buttons.forEach((btn) => {
+      btn.disabled = false;
+    });
+  }
+}
+
+function renderTruckCapacityPanel(profile, shipperOnly) {
+  const panel = $("#workbenchCapacityPanel");
+  const seatsHost = $("#workbenchCapacitySeats");
+  const summaryEl = $("#workbenchCapacitySummary");
+  const seatStat = $("#workbenchCapacitySeatStat");
+  const foot = $("#workbenchCapacityFoot");
+  if (!panel || !seatsHost) return;
+
+  if (shipperOnly) {
+    panel.hidden = true;
+    return;
+  }
+
+  const capacity = readJSON(storageKeys.truckCapacity, null);
+  const activePickups = readJSON(storageKeys.activePickups, []).filter(
+    (item) => item && item.serverAuthorized === true,
+  );
+  // Prefer live API report; synthesize a light fallback from active pickups if missing.
+  const report =
+    capacity && Array.isArray(capacity.seats)
+      ? capacity
+      : {
+          planLimit: 1,
+          occupiedSeats: activePickups.filter(
+            (item) =>
+              !/completed|delivered|empty|cancelled|canceled/i.test(String(item.status || "")),
+          ).length
+            ? 1
+            : 0,
+          openSeats: 0,
+          summary:
+            "Capacity updates after you claim or accept a load. Mark delivered or empty when the truck is free.",
+          seats: [
+            {
+              seatId: "seat_1",
+              label: profile.equipmentType || "Primary truck",
+              status: activePickups.length ? "partial" : "empty",
+              usableLengthFt: 26,
+              maxPayloadLb: 10000,
+              used: { lengthFt: 0, weightLb: 0, cubeCuFt: 0 },
+              remaining: { lengthFt: 26, weightLb: 10000, cubeCuFt: 0 },
+              activeLoads: activePickups
+                .filter(
+                  (item) =>
+                    !/completed|delivered|empty|cancelled|canceled/i.test(
+                      String(item.status || ""),
+                    ),
+                )
+                .map((item) => ({
+                  loadId: item.loadId || item.id,
+                  title: item.title || `${item.origin || ""} → ${item.destination || ""}`,
+                  status: item.status || "Active",
+                })),
+            },
+          ],
+        };
+
+  panel.hidden = false;
+  if (summaryEl) summaryEl.textContent = report.summary || "Your truck seats and remaining space.";
+  if (seatStat) {
+    seatStat.textContent = `${Number(report.occupiedSeats) || 0} / ${Number(report.planLimit) || 1}`;
+  }
+  if (foot) {
+    const limit = Number(report.planLimit) || 1;
+    foot.innerHTML =
+      limit <= 1
+        ? `$29.99 covers <strong>1 truck seat</strong>. Stack partials until full. When the job is done, mark <strong>delivered</strong> or <strong>empty</strong> to free the seat. Need more trucks? <a href="#pricing" data-route="pricing">Upgrade plan</a>.`
+        : `Your plan includes <strong>${limit} truck seats</strong>. Partials can share a seat until length/weight/cube is full. Mark delivered or empty to free capacity.`;
+  }
+
+  const seats = Array.isArray(report.seats) ? report.seats : [];
+  if (!seats.length) {
+    seatsHost.innerHTML =
+      '<div class="capacity-empty">No truck seats on this plan. Carrier plans include seats for claiming freight.</div>';
+    return;
+  }
+
+  seatsHost.innerHTML = seats
+    .map((seat) => {
+      const usableL = Number(seat.usableLengthFt || seat.remaining?.usableLengthFt || 26) || 26;
+      const usableW = Number(seat.maxPayloadLb || seat.remaining?.maxPayloadLb || 10000) || 10000;
+      const usedL = Number(seat.used?.lengthFt || 0) || 0;
+      const usedW = Number(seat.used?.weightLb || 0) || 0;
+      const pctL = capacityPct(usedL, usableL);
+      const pctW = capacityPct(usedW, usableW);
+      const status = String(seat.status || "empty");
+      const loads = Array.isArray(seat.activeLoads) ? seat.activeLoads : [];
+      const loadsHtml = loads.length
+        ? `<div class="capacity-loads">${loads
+            .map((load) => {
+              const loadId = escapeHtml(String(load.loadId || ""));
+              return `<article class="capacity-load">
+                <div>
+                  <strong>${escapeHtml(load.title || load.loadId || "Active load")}</strong>
+                  <span>${escapeHtml(load.status || "In progress")}${
+                    load.lengthFtUsed
+                      ? ` · ~${escapeHtml(String(load.lengthFtUsed))} ft used`
+                      : ""
+                  }</span>
+                </div>
+                <div class="capacity-load__actions">
+                  <button type="button" data-capacity-load="${loadId}" data-capacity-action="mark_delivered">Mark delivered</button>
+                  <button type="button" class="is-soft" data-capacity-load="${loadId}" data-capacity-action="mark_empty">Mark empty</button>
+                </div>
+              </article>`;
+            })
+            .join("")}</div>`
+        : `<div class="capacity-empty">Seat free — ready for the next load or partial.</div>`;
+
+      return `<article class="capacity-seat">
+        <div class="capacity-seat__head">
+          <div>
+            <h3>${escapeHtml(seat.label || seat.seatId || "Truck seat")}</h3>
+            <p>${escapeHtml(seat.presetId || "equipment")} · remaining ~${escapeHtml(
+              String(Math.round(Number(seat.remaining?.lengthFt ?? usableL - usedL) || 0)),
+            )} ft / ${escapeHtml(
+              String(Math.round(Number(seat.remaining?.weightLb ?? usableW - usedW) || 0)),
+            )} lb</p>
+          </div>
+          <span class="${capacityPillClass(status)}">${escapeHtml(status)}</span>
+        </div>
+        <div class="capacity-bars">
+          <div class="capacity-bar">
+            <div class="capacity-bar__meta"><span>Box length</span><span>${escapeHtml(
+              String(Math.round(usedL * 10) / 10),
+            )} / ${escapeHtml(String(usableL))} ft (${pctL}%)</span></div>
+            <div class="capacity-bar__track"><div class="capacity-bar__fill ${capacityBarClass(
+              pctL,
+            )}" style="width:${pctL}%"></div></div>
+          </div>
+          <div class="capacity-bar">
+            <div class="capacity-bar__meta"><span>Payload</span><span>${escapeHtml(
+              String(Math.round(usedW)),
+            )} / ${escapeHtml(String(usableW))} lb (${pctW}%)</span></div>
+            <div class="capacity-bar__track"><div class="capacity-bar__fill ${capacityBarClass(
+              pctW,
+            )}" style="width:${pctW}%"></div></div>
+          </div>
+        </div>
+        ${loadsHtml}
+      </article>`;
+    })
+    .join("");
+
+  seatsHost.querySelectorAll("[data-capacity-action]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const loadId = btn.getAttribute("data-capacity-load");
+      const action = btn.getAttribute("data-capacity-action") || "complete_pickup";
+      void freeTruckCapacity(loadId, action);
+    });
+  });
+}
+
+let emptyPingBound = false;
+function bindEmptyPingOnce() {
+  if (emptyPingBound) return;
+  const go = $("#emptyPingGo");
+  const city = $("#emptyPingCity");
+  const days = $$("[data-empty-day]");
+  if (!go || !city) return;
+  emptyPingBound = true;
+  days.forEach((button) => {
+    button.addEventListener("click", () => {
+      days.forEach((item) => item.classList.toggle("active", item === button));
+    });
+  });
+  go.addEventListener("click", () => {
+    const origin = String(city.value || "Dallas, TX").trim() || "Dallas, TX";
+    const when =
+      document.querySelector("[data-empty-day].active")?.getAttribute("data-empty-day") ||
+      "Friday";
+    const alert = {
+      origin,
+      destination: "Anywhere",
+      equipment: profileTruckTokens(getProfile()) || "Box",
+      availableDates: when,
+      preferredLanes: `${origin} empty ${when}`,
+      maxDeadheadMiles: 75,
+      notificationPreferences: typeof laneAlertNotificationChannels === "function"
+        ? laneAlertNotificationChannels()
+        : ["in-app"],
+      updatedAt: new Date().toISOString(),
+      emptyPing: true,
+    };
+    const saved = readJSON(storageKeys.laneAlerts, []);
+    saved.unshift(alert);
+    writeJSON(storageKeys.laneAlerts, saved.slice(0, 8));
+    scheduleAccountSync();
+    toast(`You're marked empty in ${origin} ${when}. We'll watch for jobs that fit.`);
+    renderMemberWorkbench();
+    route("loads");
+  });
+}
 function renderMemberWorkbench() {
   const profile = getProfile();
   const shipperOnly = isRequestOnlyAccount(profile);
@@ -8738,6 +9442,9 @@ function renderMemberWorkbench() {
   carrierPanel.hidden = shipperOnly;
   shipperActions.hidden = !shipperOnly;
   shipperPanel.hidden = !shipperOnly;
+  const emptyPing = $("#emptyPingCard");
+  if (emptyPing) emptyPing.hidden = shipperOnly;
+  bindEmptyPingOnce();
 
   const planLabel = shipperOnly
     ? "Shipper $9.99 — Post pickups only"
@@ -8749,14 +9456,14 @@ function renderMemberWorkbench() {
   $("#workbenchPlanBadge").textContent = planLabel;
   $("#workbenchAccountName").textContent = accountName;
   $("#workbenchKicker").textContent = shipperOnly
-    ? "Shipper pickup workbench"
-    : "Carrier opportunity workbench";
+    ? "Your pickup desk"
+    : "Your truck desk";
   $("#workbenchTitle").textContent = shipperOnly
-    ? "Post clearly. Compare responses. Schedule with confidence."
-    : "Find the right freight. Protect your margin. Keep moving.";
+    ? "Need it moved? Post it. Watch the bids roll in."
+    : "Find a load that fits this truck — then bid and go.";
   $("#workbenchCopy").textContent = shipperOnly
-    ? "Manage posted pickups, carrier bids, messages, and trust details without being sent into the carrier load-bidding workflow."
-    : "Review real open postings, saved lanes, active pickups, and trust details from one mobile-ready home.";
+    ? "This is not a driver board. Post a pickup, compare all-in bids, pick a truck, and talk it through."
+    : "Open jobs first. Lane, money, equipment, and window on every card. Bid with one price and what’s included.";
 
   const activePickups = readJSON(storageKeys.activePickups, []);
   const laneAlerts = readJSON(storageKeys.laneAlerts, []);
@@ -8769,12 +9476,27 @@ function renderMemberWorkbench() {
   $("#workbenchMetricOneLabel").textContent = shipperOnly
     ? "Posted pickups"
     : "Active pickups";
+  const livePickupCount = activePickups.filter(
+    (item) =>
+      item &&
+      item.serverAuthorized === true &&
+      !/completed|delivered|empty|cancelled|canceled|not[\s_-]?selected/i.test(
+        String(item.status || ""),
+      ),
+  ).length;
+  const capacitySnap = readJSON(storageKeys.truckCapacity, null);
   $("#workbenchMetricOne").textContent = shipperOnly
     ? String(postedHistory.length + recentRequests.length)
-    : String(activePickups.length);
+    : String(
+        capacitySnap?.occupiedSeats != null
+          ? capacitySnap.occupiedSeats
+          : livePickupCount,
+      );
   $("#workbenchMetricOneHelp").textContent = shipperOnly
     ? "Your posting history"
-    : "Requested or accepted work";
+    : capacitySnap?.planLimit
+      ? `Truck seats in use (of ${capacitySnap.planLimit})`
+      : "Requested or accepted work";
   $("#workbenchMetricTwoLabel").textContent = shipperOnly
     ? "Carrier responses"
     : "Saved lanes";
@@ -8821,9 +9543,17 @@ function renderMemberWorkbench() {
   $("#workbenchProfileTrust").textContent = profileComplete ? "Complete" : "Incomplete";
 
   const activeWork = $("#workbenchActiveWork");
+  const liveActivePickups = activePickups.filter(
+    (item) =>
+      item &&
+      item.serverAuthorized === true &&
+      !/completed|delivered|empty|cancelled|canceled|not[\s_-]?selected/i.test(
+        String(item.status || ""),
+      ),
+  );
   const currentItems = shipperOnly
     ? [...recentRequests, ...postedHistory].slice(0, 4)
-    : activePickups.slice(0, 4);
+    : liveActivePickups.slice(0, 6);
   activeWork.innerHTML = currentItems.length
     ? currentItems
         .map((item) => {
@@ -8831,15 +9561,41 @@ function renderMemberWorkbench() {
             item.title ||
             [item.origin, item.destination].filter(Boolean).join(" → ") ||
             "Load activity";
+          const detailBits = [
+            item.equipment,
+            item.status,
+            item.seatLabel ? `Seat: ${item.seatLabel}` : item.seatId ? `Seat ${item.seatId}` : "",
+            item.lengthFtUsed ? `~${item.lengthFtUsed} ft used` : "",
+          ].filter(Boolean);
           const detail =
+            detailBits.join(" · ") ||
             item.detail ||
-            [item.equipment, item.status].filter(Boolean).join(" · ") ||
             "Details are still being completed.";
           const when = item.savedAt || item.occurredAt || item.createdAt || "";
-          return `<article class="workbench-row"><div><strong>${escapeHtml(title)}</strong><span>${escapeHtml(detail)}</span></div><small>${escapeHtml(memberWorkbenchDate(when))}</small></article>`;
+          const loadId = String(item.loadId || item.id || "");
+          const actions =
+            !shipperOnly && loadId
+              ? `<div class="capacity-load__actions">
+                  <button type="button" data-capacity-load="${escapeHtml(loadId)}" data-capacity-action="mark_delivered">Mark delivered</button>
+                  <button type="button" class="is-soft" data-capacity-load="${escapeHtml(loadId)}" data-capacity-action="mark_empty">Mark empty</button>
+                </div>`
+              : "";
+          return `<article class="workbench-row capacity-active-row"><div><strong>${escapeHtml(title)}</strong><span>${escapeHtml(detail)}</span></div><small>${escapeHtml(memberWorkbenchDate(when))}</small>${actions}</article>`;
         })
         .join("")
     : `<div class="empty-state"><h4>No active work yet</h4><p>${shipperOnly ? "Post a pickup to begin receiving carrier responses." : "Request a load or save a lane to start your worklist."}</p></div>`;
+  if (!shipperOnly) {
+    activeWork.querySelectorAll("[data-capacity-action]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        void freeTruckCapacity(
+          btn.getAttribute("data-capacity-load"),
+          btn.getAttribute("data-capacity-action") || "complete_pickup",
+        );
+      });
+    });
+  }
+
+  renderTruckCapacityPanel(profile, shipperOnly);
 
   const carrierLoads = $("#workbenchCarrierLoads");
   const catalog = loadCatalogItems().slice(0, 3);
@@ -9424,6 +10180,608 @@ function profileDisplayDate(value, includeTime = false) {
     return includeTime ? "Time unavailable" : "No timestamp";
   return includeTime ? parsed.toLocaleString() : parsed.toLocaleDateString();
 }
+/* ---------- Live US load map (profile) ---------- */
+const US_CITY_COORDS = {
+  atlanta: [33.75, -84.39],
+  austin: [30.27, -97.74],
+  baltimore: [39.29, -76.61],
+  birmingham: [33.52, -86.8],
+  boston: [42.36, -71.06],
+  buffalo: [42.89, -78.88],
+  charlotte: [35.23, -80.84],
+  chicago: [41.88, -87.63],
+  cincinnati: [39.1, -84.51],
+  cleveland: [41.5, -81.69],
+  columbus: [39.96, -82.99],
+  dallas: [32.78, -96.8],
+  denver: [39.74, -104.99],
+  detroit: [42.33, -83.05],
+  "el paso": [31.76, -106.49],
+  "fort worth": [32.76, -97.33],
+  houston: [29.76, -95.37],
+  indianapolis: [39.77, -86.16],
+  "kansas city": [39.1, -94.58],
+  "las vegas": [36.17, -115.14],
+  "los angeles": [34.05, -118.24],
+  louisville: [38.25, -85.76],
+  memphis: [35.15, -90.05],
+  miami: [25.76, -80.19],
+  milwaukee: [43.04, -87.91],
+  minneapolis: [44.98, -93.27],
+  nashville: [36.16, -86.78],
+  "new orleans": [29.95, -90.07],
+  "new york": [40.71, -74.01],
+  "oklahoma city": [35.47, -97.52],
+  omaha: [41.26, -95.94],
+  orlando: [28.54, -81.38],
+  philadelphia: [39.95, -75.17],
+  phoenix: [33.45, -112.07],
+  pittsburgh: [40.44, -79.99],
+  portland: [45.52, -122.68],
+  raleigh: [35.78, -78.64],
+  "salt lake city": [40.76, -111.89],
+  "san antonio": [29.42, -98.49],
+  "san diego": [32.72, -117.16],
+  "san francisco": [37.77, -122.42],
+  seattle: [47.61, -122.33],
+  "st louis": [38.63, -90.2],
+  tampa: [27.95, -82.46],
+  tucson: [32.22, -110.97],
+  tulsa: [36.15, -95.99],
+  washington: [38.91, -77.04],
+};
+const US_STATE_COORDS = {
+  al: [32.8, -86.8],
+  ak: [64.2, -149.5],
+  az: [34.0, -111.9],
+  ar: [34.8, -92.2],
+  ca: [36.8, -119.4],
+  co: [39.0, -105.5],
+  ct: [41.6, -72.7],
+  de: [39.0, -75.5],
+  fl: [27.8, -81.7],
+  ga: [32.7, -83.5],
+  hi: [20.5, -156.4],
+  id: [44.1, -114.7],
+  il: [40.0, -89.4],
+  in: [39.9, -86.3],
+  ia: [42.0, -93.5],
+  ks: [38.5, -98.3],
+  ky: [37.5, -85.3],
+  la: [31.0, -92.0],
+  me: [45.3, -69.2],
+  md: [39.0, -76.8],
+  ma: [42.2, -71.5],
+  mi: [43.3, -84.5],
+  mn: [46.0, -94.6],
+  ms: [32.7, -89.7],
+  mo: [38.4, -92.5],
+  mt: [47.0, -109.6],
+  ne: [41.5, -99.9],
+  nv: [39.3, -116.6],
+  nh: [43.7, -71.6],
+  nj: [40.1, -74.5],
+  nm: [34.4, -106.0],
+  ny: [42.9, -75.5],
+  nc: [35.6, -79.8],
+  nd: [47.5, -100.5],
+  oh: [40.4, -82.8],
+  ok: [35.6, -97.5],
+  or: [43.9, -120.6],
+  pa: [40.9, -77.8],
+  ri: [41.7, -71.5],
+  sc: [33.9, -80.9],
+  sd: [44.4, -100.2],
+  tn: [35.7, -86.6],
+  tx: [31.5, -99.3],
+  ut: [39.3, -111.7],
+  vt: [44.0, -72.7],
+  va: [37.5, -78.7],
+  wa: [47.4, -120.5],
+  wv: [38.6, -80.6],
+  wi: [44.5, -89.6],
+  wy: [43.0, -107.6],
+  dc: [38.91, -77.04],
+};
+let profileLiveMapSelectedId = "";
+let profileLiveMapTimer = 0;
+
+function projectUsLatLon(lat, lon) {
+  // Simple equirectangular framed to continental US (viewBox 0 0 1000 560)
+  const x = ((Number(lon) + 125.2) / (125.2 - 66.5)) * 900 + 50;
+  const y = ((49.4 - Number(lat)) / (49.4 - 24.5)) * 480 + 36;
+  return {
+    x: Math.max(20, Math.min(980, x)),
+    y: Math.max(20, Math.min(540, y)),
+  };
+}
+
+const US_STATE_NAMES = {
+  alabama: "al",
+  alaska: "ak",
+  arizona: "az",
+  arkansas: "ar",
+  california: "ca",
+  colorado: "co",
+  connecticut: "ct",
+  delaware: "de",
+  florida: "fl",
+  georgia: "ga",
+  hawaii: "hi",
+  idaho: "id",
+  illinois: "il",
+  indiana: "in",
+  iowa: "ia",
+  kansas: "ks",
+  kentucky: "ky",
+  louisiana: "la",
+  maine: "me",
+  maryland: "md",
+  massachusetts: "ma",
+  michigan: "mi",
+  minnesota: "mn",
+  mississippi: "ms",
+  missouri: "mo",
+  montana: "mt",
+  nebraska: "ne",
+  nevada: "nv",
+  "new hampshire": "nh",
+  "new jersey": "nj",
+  "new mexico": "nm",
+  "new york": "ny",
+  "north carolina": "nc",
+  "north dakota": "nd",
+  ohio: "oh",
+  oklahoma: "ok",
+  oregon: "or",
+  pennsylvania: "pa",
+  "rhode island": "ri",
+  "south carolina": "sc",
+  "south dakota": "sd",
+  tennessee: "tn",
+  texas: "tx",
+  utah: "ut",
+  vermont: "vt",
+  virginia: "va",
+  washington: "wa",
+  "west virginia": "wv",
+  wisconsin: "wi",
+  wyoming: "wy",
+  "district of columbia": "dc",
+};
+
+function geocodePlaceText(text = "") {
+  const raw = String(text || "").trim();
+  if (!raw) return null;
+  const lower = raw
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .replace(/\bst\.\b/g, "st")
+    .replace(/\bfort\b/g, "fort");
+  // Prefer longer city names first so "fort worth" wins over "worth"
+  const cities = Object.keys(US_CITY_COORDS).sort((a, b) => b.length - a.length);
+  for (const city of cities) {
+    if (lower.includes(city)) {
+      const coords = US_CITY_COORDS[city];
+      return {
+        lat: coords[0],
+        lon: coords[1],
+        label: city.replace(/\b\w/g, (c) => c.toUpperCase()),
+      };
+    }
+  }
+  // "City, ST" / "City ST" / "City ST 12345"
+  const st =
+    lower.match(/,\s*([a-z]{2})\b/) ||
+    lower.match(/\b([a-z]{2})\s+\d{5}\b/) ||
+    lower.match(/\s([a-z]{2})$/);
+  if (st && US_STATE_COORDS[st[1]]) {
+    const c = US_STATE_COORDS[st[1]];
+    return { lat: c[0], lon: c[1], label: st[1].toUpperCase() };
+  }
+  // Full state name fallback
+  for (const [name, code] of Object.entries(US_STATE_NAMES)) {
+    if (lower.includes(name) && US_STATE_COORDS[code]) {
+      const c = US_STATE_COORDS[code];
+      return { lat: c[0], lon: c[1], label: code.toUpperCase() };
+    }
+  }
+  return null;
+}
+
+function routeProgressFromStatus(status = "", history = []) {
+  const s = String(status || "").toLowerCase();
+  if (/deliver|completed|empty/.test(s)) return 1;
+  if (/arriv.*deliver|unloading/.test(s)) return 0.88;
+  if (/in.?transit|en route|rolling/.test(s)) return 0.58;
+  if (/picked|loading complete|loaded/.test(s)) return 0.32;
+  if (/arriv.*pick|loading started/.test(s)) return 0.18;
+  if (/confirm|accepted|booked/.test(s)) return 0.08;
+  // Fall back to last statusHistory step
+  const steps = Array.isArray(history) ? history : [];
+  if (steps.length) {
+    return routeProgressFromStatus(steps[steps.length - 1]?.status || "", []);
+  }
+  return 0.05;
+}
+
+function checkpointState(progress, threshold) {
+  if (progress >= threshold + 0.02) return "is-done";
+  if (progress >= threshold - 0.08) return "is-active";
+  return "";
+}
+
+function collectLiveMapRoutes() {
+  const byId = new Map();
+  const push = (route) => {
+    if (!route?.id) return;
+    if (!route.origin || !route.destination) return;
+    const origin = geocodePlaceText(route.origin);
+    const dest = geocodePlaceText(route.destination);
+    if (!origin || !dest) return;
+    const existing = byId.get(route.id);
+    if (existing && existing.progress >= route.progress) return;
+    byId.set(route.id, {
+      ...route,
+      originGeo: origin,
+      destGeo: dest,
+      originPt: projectUsLatLon(origin.lat, origin.lon),
+      destPt: projectUsLatLon(dest.lat, dest.lon),
+    });
+  };
+
+  // Carrier active pickups (booked work)
+  for (const item of readJSON(storageKeys.activePickups, [])) {
+    if (!item) continue;
+    const status = String(item.status || "Confirmed");
+    const title =
+      item.title ||
+      [item.origin, item.destination].filter(Boolean).join(" → ") ||
+      "Booked load";
+    push({
+      id: String(item.loadId || item.id || title),
+      title,
+      origin: item.origin || "",
+      destination: item.destination || "",
+      status,
+      progress: routeProgressFromStatus(status, item.statusHistory),
+      role: "carrier",
+      history: item.statusHistory || [],
+      rate: item.rate || item.agreedRate || 0,
+    });
+  }
+
+  // Shipper / shared history with lanes
+  for (const item of profileHistoryEntries()) {
+    const type = String(item.eventType || "").toLowerCase();
+    if (
+      !["accepted", "picked_up", "in_transit", "completed", "posted"].includes(
+        type,
+      )
+    )
+      continue;
+    if (!item.origin && !item.destination) continue;
+    // Skip ancient completed unless no actives later
+    const age =
+      Date.now() - (Date.parse(item.occurredAt || 0) || Date.now());
+    if (type === "completed" && age > 14 * 24 * 3600 * 1000) continue;
+    if (type === "posted" && age > 7 * 24 * 3600 * 1000) continue;
+    push({
+      id: String(item.loadId || item.id || `${item.origin}-${item.destination}`),
+      title:
+        item.title ||
+        [item.origin, item.destination].filter(Boolean).join(" → ") ||
+        "Load",
+      origin: item.origin || "",
+      destination: item.destination || "",
+      status: item.status || type,
+      progress: routeProgressFromStatus(item.status || type, []),
+      role: "history",
+      history: [],
+      rate: item.rate || 0,
+    });
+  }
+
+  // Local marketplace cache if present (shipper, carrier, broker, dispatcher)
+  const cachedLoads = readJSON("rm_cached_loads", []);
+  if (Array.isArray(cachedLoads)) {
+    const profile = getProfile();
+    const uid = String(profile.userId || "");
+    for (const load of cachedLoads) {
+      const mine =
+        String(load.postedByUserId || "") === uid ||
+        String(load.acceptedByUserId || "") === uid ||
+        String(load.claimedByUserId || "") === uid ||
+        String(load.carrierUserId || "") === uid;
+      if (!mine) continue;
+      const status = String(load.status || "");
+      // Show active + open posts so shippers/brokers see lanes waiting for trucks
+      if (
+        !/accepted|deliver|transit|complet|picked|open|posted|booked|claim/i.test(
+          status,
+        )
+      )
+        continue;
+      const origin = load.from || load.origin || "";
+      const destination = load.to || load.destination || "";
+      push({
+        id: String(load.id || load.loadId),
+        title: [origin, destination].filter(Boolean).join(" → ") || "Load",
+        origin,
+        destination,
+        status: status || "accepted",
+        progress: routeProgressFromStatus(status || "", []),
+        role:
+          String(load.postedByUserId || "") === uid ? "shipper" : "carrier",
+        history: [],
+        rate: load.agreedRate || load.rate || 0,
+      });
+    }
+  }
+
+  return [...byId.values()].sort((a, b) => b.progress - a.progress);
+}
+
+function curvePath(a, b) {
+  const mx = (a.x + b.x) / 2;
+  const my = (a.y + b.y) / 2 - Math.min(80, Math.hypot(b.x - a.x, b.y - a.y) * 0.18);
+  return `M ${a.x.toFixed(1)} ${a.y.toFixed(1)} Q ${mx.toFixed(1)} ${my.toFixed(1)} ${b.x.toFixed(1)} ${b.y.toFixed(1)}`;
+}
+
+function pointOnCurve(a, b, t) {
+  const mx = (a.x + b.x) / 2;
+  const my = (a.y + b.y) / 2 - Math.min(80, Math.hypot(b.x - a.x, b.y - a.y) * 0.18);
+  const u = 1 - t;
+  return {
+    x: u * u * a.x + 2 * u * t * mx + t * t * b.x,
+    y: u * u * a.y + 2 * u * t * my + t * t * b.y,
+  };
+}
+
+function usMapBaseSvg() {
+  // Full US map: 50 states + DC with state lines. CONUS uses projectUsLatLon;
+  // AK/HI use insets (paths pre-projected in us-states-map.js).
+  const states = Array.isArray(globalThis.US_STATE_PATHS)
+    ? globalThis.US_STATE_PATHS
+    : typeof US_STATE_PATHS !== "undefined"
+      ? US_STATE_PATHS
+      : [];
+  const hideLabels = new Set([
+    "DC",
+    "RI",
+    "DE",
+    "CT",
+    "NJ",
+    "MD",
+    "MA",
+    "VT",
+    "NH",
+    "WV",
+  ]);
+  const statePaths = states
+    .map(
+      (s) =>
+        `<path class="us-state" data-state="${escapeHtml(s.abbr || "")}" data-name="${escapeHtml(s.name || "")}" d="${s.d}"/>`,
+    )
+    .join("");
+  const stateLabels = states
+    .filter(
+      (s) =>
+        s.abbr &&
+        s.region === "conus" &&
+        !hideLabels.has(s.abbr) &&
+        Number.isFinite(s.cx) &&
+        Number.isFinite(s.cy),
+    )
+    .map(
+      (s) =>
+        `<text class="state-label" x="${s.cx}" y="${s.cy}" text-anchor="middle" dominant-baseline="middle">${escapeHtml(s.abbr)}</text>`,
+    )
+    .join("");
+  // AK / HI labels on insets
+  const insetLabels = states
+    .filter((s) => s.region === "ak" || s.region === "hi")
+    .map(
+      (s) =>
+        `<text class="state-label state-label--inset" x="${s.cx}" y="${s.cy}" text-anchor="middle">${escapeHtml(s.abbr || s.name || "")}</text>`,
+    )
+    .join("");
+  // Fallback single silhouette if state data failed to load
+  const fallback =
+    states.length > 0
+      ? ""
+      : `<path class="us-land" d="M57.7,55.3 L68.4,97.7 L62.3,159.4 L65.3,207.6 L83.7,255.8 L174.2,359.9 L476.2,487.1 L730.7,502.5 L942.3,124.7 L57.7,55.3 Z"/>`;
+  return `<rect class="map-ocean" width="1000" height="560" fill="url(#mapOcean)"/>
+  <defs>
+    <linearGradient id="mapOcean" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#071628"/>
+      <stop offset="55%" stop-color="#0a1f3c"/>
+      <stop offset="100%" stop-color="#06101f"/>
+    </linearGradient>
+    <linearGradient id="mapLand" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1c5288"/>
+      <stop offset="100%" stop-color="#143a66"/>
+    </linearGradient>
+  </defs>
+  <g class="us-grid" opacity="0.35">
+    ${[120, 240, 360, 480, 600, 720, 840].map((x) => `<line x1="${x}" y1="28" x2="${x}" y2="530"/>`).join("")}
+    ${[100, 200, 300, 400, 500].map((y) => `<line x1="40" y1="${y}" x2="960" y2="${y}"/>`).join("")}
+  </g>
+  <g class="us-states" fill="url(#mapLand)">${statePaths}${fallback}</g>
+  <g class="us-state-labels">${stateLabels}${insetLabels}</g>
+  <text class="map-caption" x="50" y="548">United States · all states · your load lanes</text>`;
+}
+
+function renderLiveLoadMap(forceId = "") {
+  const stage = $("#profileLiveMapStage");
+  const list = $("#profileLiveMapList");
+  const cps = $("#profileLiveMapCheckpoints");
+  const lead = $("#profileLiveMapLead");
+  const tag = $("#profileLiveMapTag");
+  if (!stage || !list) return;
+
+  const routes = collectLiveMapRoutes();
+  if (forceId) profileLiveMapSelectedId = forceId;
+  if (
+    !profileLiveMapSelectedId ||
+    !routes.some((r) => r.id === profileLiveMapSelectedId)
+  ) {
+    profileLiveMapSelectedId = routes[0]?.id || "";
+  }
+  const selected =
+    routes.find((r) => r.id === profileLiveMapSelectedId) || routes[0] || null;
+
+  if (tag) {
+    tag.textContent = routes.length
+      ? `${routes.length} live lane${routes.length === 1 ? "" : "s"}`
+      : "Preview";
+  }
+  if (lead) {
+    lead.textContent = routes.length
+      ? "Your lanes on a United States map. Progress updates when loads hit booked, pickup, transit, and delivery checkpoints. Shippers, carriers, brokers, and dispatchers see their own routes here."
+      : "Post, bid, or accept a load and your lane draws on this United States map — origin, destination, and checkpoint progress. Preview shows Dallas → Houston until you have live work.";
+  }
+
+  // Build SVG
+  let routeLayers = "";
+  const drawRoutes = routes.length
+    ? routes
+    : [
+        {
+          id: "preview",
+          originPt: projectUsLatLon(32.78, -96.8),
+          destPt: projectUsLatLon(29.76, -95.37),
+          progress: 0.45,
+          origin: "Dallas, TX",
+          destination: "Houston, TX",
+          originGeo: { label: "Dallas" },
+          destGeo: { label: "Houston" },
+          status: "In transit (preview)",
+        },
+      ];
+
+  const focus = selected || drawRoutes[0];
+  for (const r of drawRoutes) {
+    const isFocus = r.id === focus.id;
+    const d = curvePath(r.originPt, r.destPt);
+    const truck = pointOnCurve(r.originPt, r.destPt, r.progress);
+    const done = r.progress >= 0.98;
+    if (!isFocus && routes.length > 1) {
+      routeLayers += `<path d="${d}" class="route-glow" opacity="0.35"/><path d="${d}" class="route-road" opacity="0.35"/>`;
+      continue;
+    }
+    // progress path: approximate by short segments
+    const segs = [];
+    const steps = 24;
+    const endStep = Math.max(1, Math.round(r.progress * steps));
+    for (let i = 0; i <= endStep; i++) {
+      const p = pointOnCurve(r.originPt, r.destPt, i / steps);
+      segs.push(`${i === 0 ? "M" : "L"} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`);
+    }
+    routeLayers += `
+      <path d="${d}" class="route-glow"/>
+      <path d="${d}" class="route-road ${done ? "is-done" : ""}"/>
+      <path d="${segs.join(" ")}" class="route-progress"/>
+      <g class="pin-origin">
+        <circle cx="${r.originPt.x}" cy="${r.originPt.y}" r="7" fill="#22d3ee" stroke="#0b1d3a" stroke-width="2"/>
+        <text class="city-label" x="${r.originPt.x + 10}" y="${r.originPt.y - 8}">${escapeHtml(r.originGeo?.label || "Pickup")}</text>
+      </g>
+      <g class="pin-dest">
+        <circle cx="${r.destPt.x}" cy="${r.destPt.y}" r="8" fill="#fbbf24" stroke="#0b1d3a" stroke-width="2"/>
+        <text class="city-label" x="${r.destPt.x + 10}" y="${r.destPt.y - 8}">${escapeHtml(r.destGeo?.label || "Delivery")}</text>
+      </g>
+      <g class="truck-marker" transform="translate(${truck.x - 10}, ${truck.y - 12})">
+        <circle cx="10" cy="10" r="11" fill="#1d4ed8" stroke="#93c5fd" stroke-width="2"/>
+        <text x="10" y="14" text-anchor="middle" font-size="12">🚚</text>
+      </g>`;
+  }
+
+  stage.innerHTML = `<svg viewBox="0 0 1000 560" role="img" aria-label="United States load routes">${usMapBaseSvg()}${routeLayers}</svg>`;
+
+  // Checkpoints for selected
+  if (cps) {
+    const p = focus?.progress || 0;
+    const items = [
+      ["Booked", 0.08],
+      ["Pickup", 0.25],
+      ["In transit", 0.55],
+      ["Near delivery", 0.85],
+      ["Delivered", 0.99],
+    ];
+    cps.innerHTML = items
+      .map(
+        ([label, th]) =>
+          `<span class="cp ${checkpointState(p, th)}"><span class="cp-dot"></span>${escapeHtml(label)}</span>`,
+      )
+      .join("");
+  }
+
+  if (!routes.length) {
+    list.innerHTML = `<div class="live-map-empty">No active booked loads yet. Accept a bid or claim a load — lanes light up here for shippers and carriers.</div>`;
+    return;
+  }
+
+  list.innerHTML = routes
+    .map((r) => {
+      const pct = Math.round(r.progress * 100);
+      return `<button type="button" class="live-route-row ${r.id === focus.id ? "is-selected" : ""}" data-live-route="${escapeHtml(r.id)}">
+        <div>
+          <strong>${escapeHtml(r.title)}</strong>
+          <span>${escapeHtml(r.status)} · ${escapeHtml(r.origin)} → ${escapeHtml(r.destination)}</span>
+        </div>
+        <div class="pct">${pct}%</div>
+      </button>`;
+    })
+    .join("");
+
+  list.querySelectorAll("[data-live-route]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      renderLiveLoadMap(btn.getAttribute("data-live-route") || "");
+    });
+  });
+}
+
+async function refreshLiveMapFromServer() {
+  try {
+    const profile = getProfile();
+    if (!hasProfileIdentity(profile)) return;
+    // Pull posted + accepted/claimed work so shippers, carriers, brokers, dispatchers all map
+    const [posted, openMine] = await Promise.all([
+      apiRequest("/api/loads?scope=posted&limit=40", { method: "GET" }).catch(
+        () => null,
+      ),
+      apiRequest("/api/loads?limit=40", { method: "GET" }).catch(() => null),
+    ]);
+    const loads = [
+      ...(Array.isArray(posted?.loads) ? posted.loads : []),
+      ...(Array.isArray(openMine?.loads) ? openMine.loads : []),
+    ];
+    if (loads.length) {
+      const prev = readJSON("rm_cached_loads", []);
+      const byId = new Map(
+        (Array.isArray(prev) ? prev : []).map((item) => [item.id, item]),
+      );
+      const uid = String(profile.userId || "");
+      for (const load of loads) {
+        if (!load?.id) continue;
+        // Only keep lanes this account is on (post, accept, claim)
+        const mine =
+          String(load.postedByUserId || "") === uid ||
+          String(load.acceptedByUserId || "") === uid ||
+          String(load.claimedByUserId || "") === uid ||
+          String(load.carrierUserId || "") === uid;
+        if (mine || String(load.postedByUserId || "") === uid) {
+          byId.set(load.id, load);
+        }
+      }
+      writeJSON("rm_cached_loads", [...byId.values()].slice(0, 100));
+    }
+  } catch {
+    // optional enrichment
+  }
+  renderLiveLoadMap();
+}
+
 function renderProfile() {
   const profile = getProfile();
   updateAccessChrome(profile);
@@ -9438,6 +10796,8 @@ function renderProfile() {
       ? humanPaymentStatus(profile.subscriptionStatus)
       : "Not paid yet";
   const tags = Array.isArray(profile.tags) ? profile.tags : [];
+  renderRoadPointsCard(profile);
+  renderProfileCapacityMount(profile);
   $("#profileName").textContent = profile.name || "Guest";
   const profileBrandIcon = $("#profileBrandIcon");
   if (profileBrandIcon) {
@@ -9477,6 +10837,7 @@ function renderProfile() {
           : profile.verification || paymentLabel || "Not verified";
   $("#profileType").textContent = profileTypeLabel(profile.type);
   $("#profileEmail").textContent = profile.email || "Not set";
+  fillProfileTruckForm(profile);
   const preferredLanguageLabel = bulletinLanguageLabel(
     profile.preferredLanguage || "en",
   );
@@ -9626,6 +10987,12 @@ function renderProfile() {
   renderDisputeList();
   renderFraudDashboard();
   renderProfileHistory();
+  renderLiveLoadMap();
+  // Enrich map with posted/accepted loads from server (shipper + carrier).
+  if (profileLiveMapTimer) window.clearTimeout(profileLiveMapTimer);
+  profileLiveMapTimer = window.setTimeout(() => {
+    refreshLiveMapFromServer().catch(() => null);
+  }, 120);
   renderCancellationControl(profile);
   const fraudBox = $("#fraudWarning");
   const fraud = fraudRiskSummary(profile, leaderboardPeers);
@@ -10471,7 +11838,7 @@ function initForms() {
               loadLoadCatalog(true).catch(() => {}),
               loadPostedLoadCatalog(true).catch(() => {}),
             ]);
-            toast("Pickup live. Opening bid room for offers…");
+            toast("You're live. Trucks can bid now — we'll open the bid room.");
             openBidRoom(data.id);
             return;
           } else if (id === "ratingForm") {
@@ -10611,6 +11978,33 @@ function initForms() {
         toast("Community logo and post color saved.");
       } catch (err) {
         toast(err?.data?.error || "Logo and color could not be saved.");
+      }
+    });
+  const profileTruckForm = $("#profileTruckForm");
+  if (profileTruckForm)
+    profileTruckForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const composed = composeProfileEquipment(profileTruckForm);
+      if (!composed) {
+        toast("Choose your truck type first.");
+        return;
+      }
+      try {
+        const data = await apiRequest("/api/account", {
+          method: "POST",
+          body: {
+            action: "save",
+            profile: {
+              equipmentType: composed,
+              equipmentTypes: [composed],
+            },
+          },
+        });
+        mergeAccountState(data);
+        renderProfile();
+        toast("Truck saved. Load cards can now stamp This truck fits.");
+      } catch (err) {
+        toast(err?.data?.error || "Truck could not be saved.");
       }
     });
   const profileCredentialsForm = $("#profileCredentialsForm");

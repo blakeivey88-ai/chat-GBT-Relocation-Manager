@@ -50,6 +50,10 @@ import { recordAuditEvent, recordAuthAuditEvent } from '../lib/audit.js';
 import { readLoadHistory, summarizeLoadHistory } from '../lib/load-history.js';
 import { makePasswordResetUrl, sendPasswordResetEmail } from '../lib/email.js';
 import { normalizeMarketingAttribution } from '../lib/marketing-attribution.js';
+import {
+  buildCapacityReport,
+  ensureTruckSeats,
+} from '../lib/truck-seats.js';
 
 export async function onRequestGet(context) {
   try {
@@ -68,26 +72,32 @@ export async function onRequestGet(context) {
     }
 
     const account = ensureAccountShape(current.account);
+    const withSeats = {
+      ...account,
+      truckSeats: ensureTruckSeats(account),
+    };
     const payload = {
       ok: true,
       session: {
-        userId: account.userId,
-        email: account.email,
+        userId: withSeats.userId,
+        email: withSeats.email,
         authenticated: true,
       },
-      profile: publicProfile(account),
-      memberAccess: memberAccessPayload(account),
-      profileView: account.profileView || 'driver',
-      dashboardRoute: dashboardRoute(account),
-      accessRoute: accessRoute(account),
-      redirectPath: authRedirectPath(account),
+      profile: publicProfile(withSeats),
+      memberAccess: memberAccessPayload(withSeats),
+      truckCapacity: buildCapacityReport(withSeats),
+      profileView: withSeats.profileView || 'driver',
+      dashboardRoute: dashboardRoute(withSeats),
+      accessRoute: accessRoute(withSeats),
+      redirectPath: authRedirectPath(withSeats),
       csrfToken: csrf.token,
     };
 
-    if (isEntitled(account)) {
-      Object.assign(payload, safeAccountResponse(account));
-      payload.loadHistory = await readLoadHistory(env, account.userId, 150);
+    if (isEntitled(withSeats)) {
+      Object.assign(payload, safeAccountResponse(withSeats));
+      payload.loadHistory = await readLoadHistory(env, withSeats.userId, 150);
       payload.reputationActivity = summarizeLoadHistory(payload.loadHistory);
+      payload.truckCapacity = buildCapacityReport(withSeats);
     }
 
     return json(payload);
@@ -229,7 +239,12 @@ async function handleMutation(context) {
         targetType: 'account',
         targetId: saved.userId,
         after: { profile: publicProfile(saved), memberAccess: memberAccessPayload(saved) },
-        meta: { source: 'api/account' },
+        meta: {
+          source: 'api/account',
+          termsAccepted: body.termsAccepted === true,
+          termsVersion: cleanString(body.termsVersion || '', 40),
+          acceptedAt: body.termsAccepted === true ? now : '',
+        },
       });
 
       if (wantsHtml(request)) {

@@ -1246,6 +1246,7 @@ const ACCOUNT_DB_COLUMNS = [
   "messages",
   "planned_trips",
   "active_pickups",
+  "truck_seats",
   "lane_alerts",
   "customer_ratings",
   "trust_disputes",
@@ -1341,6 +1342,7 @@ function rowToAccount(row) {
       messages: safeJsonParse(row.messages) || [],
       plannedTrips: safeJsonParse(row.planned_trips) || [],
       activePickups: safeJsonParse(row.active_pickups) || [],
+      truckSeats: safeJsonParse(row.truck_seats) || [],
       laneAlerts: safeJsonParse(row.lane_alerts) || [],
       customerRatings: safeJsonParse(row.customer_ratings) || [],
       trustDisputes: safeJsonParse(row.trust_disputes) || [],
@@ -1428,6 +1430,7 @@ function accountToDbRow(account) {
     messages: safeDbJson(next.messages, []),
     planned_trips: safeDbJson(next.plannedTrips, []),
     active_pickups: safeDbJson(next.activePickups, []),
+    truck_seats: safeDbJson(next.truckSeats, []),
     lane_alerts: safeDbJson(next.laneAlerts, []),
     customer_ratings: safeDbJson(next.customerRatings, []),
     trust_disputes: safeDbJson(next.trustDisputes, []),
@@ -2331,6 +2334,7 @@ export function safeAccountResponse(account) {
     activePickups: Array.isArray(account?.activePickups)
       ? account.activePickups
       : [],
+    truckSeats: Array.isArray(account?.truckSeats) ? account.truckSeats : [],
     laneAlerts: Array.isArray(account?.laneAlerts) ? account.laneAlerts : [],
     customerRatings: Array.isArray(account?.customerRatings)
       ? account.customerRatings
@@ -2697,6 +2701,11 @@ export function ensureAccountShape(input, fallback = {}) {
       ? current.activePickups
       : Array.isArray(fallback.activePickups)
         ? fallback.activePickups
+        : [],
+    truckSeats: Array.isArray(current.truckSeats)
+      ? current.truckSeats
+      : Array.isArray(fallback.truckSeats)
+        ? fallback.truckSeats
         : [],
     laneAlerts: Array.isArray(current.laneAlerts)
       ? current.laneAlerts

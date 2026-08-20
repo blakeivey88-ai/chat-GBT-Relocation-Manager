@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="index,follow" />
+    <meta name="google-adsense-account" content="ca-pub-9768509838353886" />
+    <meta
+      name="description"
+      content="Free before-you-call load board checklist and phone script for truckers. Catch ghost loads and incomplete rates before you deadhead. No signup."
+    />
+    <link rel="canonical" href="https://relocationmanagerusa.com/tools/before-you-call" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Before You Call Load Checklist | Free Trucking Tool" />
+    <meta property="og:description" content="Free before-you-call load board checklist and phone script for truckers. Catch ghost loads and incomplete rates before you deadhead. No signup." />
+    <meta property="og:url" content="https://relocationmanagerusa.com/tools/before-you-call" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Before You Call Load Checklist | Free Trucking Tool" />
+    <meta name="twitter:description" content="Free before-you-call load board checklist and phone script for truckers. Catch ghost loads and incomplete rates before you deadhead. No signup." />
+    <title>Before You Call Load Checklist | Free Trucking Tool</title>
+    <link rel="stylesheet" href="/public-site.css?v=20260803-1" />
+    <link rel="stylesheet" href="/site-vibe.css?v=20260812-vibe-3" />
+    <link rel="stylesheet" href="/display-ads.css?v=20260811-ads-1" />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9768509838353886"
+      crossorigin="anonymous"
+    ></script>
+    <script src="/display-ads-config.js?v=20260811-ads-3"></script>
+    <script defer src="/analytics-loader.js"></script>
+    <script defer src="/display-ads.js?v=20260811-ads-2"></script>
+    <script defer src="/public-site.js?v=20260811-tools-nav-1"></script>
+    <style>
+      .check-list { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+      .check-list label {
+        display: flex; gap: 12px; align-items: flex-start;
+        padding: 12px 14px; border: 1px solid #e3ebf4; border-radius: 12px;
+        background: #fff; cursor: pointer; line-height: 1.45;
+      }
+      .check-list label.is-done { background: #e8f7ef; border-color: #b7e4c7; }
+      .check-list input { margin-top: 3px; width: 18px; height: 18px; flex: 0 0 auto; }
+      .script-box {
+        white-space: pre-wrap; font-family: "IBM Plex Mono", ui-monospace, monospace;
+        font-size: 14px; line-height: 1.55; background: #0a1020; color: #e8eef8;
+        padding: 16px; border-radius: 12px;
+      }
+      .progress { font-weight: 800; color: #14335c; margin: 0 0 12px; }
+    </style>
+  </head>
+  <body>
+    <header class="site-header"><div class="header-inner"><a class="brand" href="/"><span class="brand-mark">🦅</span><span>Relocation <strong>Manager USA</strong></span></a><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="siteNav" data-nav-toggle>Menu</button><nav class="site-nav" id="siteNav" data-site-nav><a href="/">Home</a><a href="/tools/">Free tools</a><a href="/pricing">Pricing</a><a href="/safety">Safety</a><a class="nav-cta" href="/signin">Member sign in</a></nav></div></header>
+    <main>
+      <section class="page-hero"><div class="container">
+        <div class="breadcrumbs"><a href="/">Home</a><span>›</span><a href="/tools/">Free tools</a><span>›</span><span>Before you call</span></div>
+        <div class="kicker">Free tool · Fewer wasted calls</div>
+        <h1>Check the load before you burn a phone call.</h1>
+        <p>Ghost posts and incomplete rates waste evenings. Run this checklist, then use the short script. Save your time for real freight — and for home.</p>
+      </div></section>
+
+      <section class="section" style="padding-top:0;padding-bottom:0"><div class="container">
+        <aside class="rm-ad-slot rm-ad-slot--leaderboard" data-rm-ad-slot="before_call_top" data-rm-ad-format="horizontal" aria-label="Advertisement"></aside>
+      </div></section>
+
+      <section class="section"><div class="container" style="display:grid;gap:22px;max-width:860px">
+        <article class="card">
+          <p class="progress" id="progress">0 of 8 checked</p>
+          <ul class="check-list" id="checklist">
+            <li><label><input type="checkbox" data-key="equip" /> Equipment, weight, and dimensions match my truck (not “probably”).</label></li>
+            <li><label><input type="checkbox" data-key="window" /> Pickup window / appointment is specific — not “ASAP sometime.”</label></li>
+            <li><label><input type="checkbox" data-key="rate" /> Rate is all-in or I know what is excluded (fuel, tolls, lumper, wait).</label></li>
+            <li><label><input type="checkbox" data-key="deadhead" /> I know empty miles to pickup and have run true all-in math.</label></li>
+            <li><label><input type="checkbox" data-key="loadhelp" /> Loading help and site conditions are clear (dock, forklift, residential).</label></li>
+            <li><label><input type="checkbox" data-key="broker" /> I checked broker/carrier identity (MC/DOT, reviews, days-to-pay habit).</label></li>
+            <li><label><input type="checkbox" data-key="pressure" /> No pressure to roll without a rate confirmation in writing.</label></li>
+            <li><label><input type="checkbox" data-key="home" /> If this is thin money and long hours, walking away is allowed.</label></li>
+          </ul>
+          <p class="muted" style="margin:12px 0 0;font-size:13px">Checks stay on this device only (saved in your browser). Nothing is uploaded.</p>
+          <button class="btn btn-light" type="button" id="resetChecks" style="margin-top:12px">Clear checklist</button>
+        </article>
+
+        <article class="card">
+          <h2>Phone script (copy &amp; paste)</h2>
+          <div class="script-box" id="scriptBox">Hi — I'm available with [equipment] near [city].
+
+Please confirm: pickup window, weight, dimensions, loading help, site conditions, and all-in rate.
+
+I need a rate confirmation in writing before I head that way. Thanks.</div>
+          <button class="btn btn-primary" type="button" id="copyScript" style="margin-top:12px">Copy script</button>
+          <p class="muted" id="copyStatus" style="margin:8px 0 0;font-size:13px"></p>
+        </article>
+
+        <aside class="rm-ad-slot rm-ad-slot--in-article" data-rm-ad-slot="before_call_mid" data-rm-ad-format="auto" aria-label="Advertisement"></aside>
+
+        <article class="card">
+          <h2>Common questions</h2>
+          <h3>Why check before I call?</h3>
+          <p>Ghost posts, missing dimensions, and “rate TBD” waste drive time and family time. A two-minute checklist filters junk so you only dial loads that can actually work for your truck.</p>
+          <h3>Do my checks get uploaded?</h3>
+          <p>No. Checklist state stays in your browser (local storage on this device only). Nothing is sent to our servers when you tick boxes.</p>
+          <h3>What should I confirm on the phone?</h3>
+          <p>Pickup window, weight, dimensions, loading help, site conditions, and all-in rate — then a rate confirmation in writing before you deadhead. The script on this page is a starting template.</p>
+          <h3>Is this checklist free?</h3>
+          <p>Yes — no signup. Pair it with the free <a href="/rate-calculator">rate calculator</a> and <a href="/knowledge/how-to-verify-dot-number">DOT verification guide</a> before you roll.</p>
+        </article>
+        <article class="card">
+          <h2>Next free tools</h2>
+          <p><a href="/rate-calculator">Rate calculator</a> — true cost with deadhead<br />
+          <a href="/tools/cube-fit">Cube fit</a> — will the partials fit?<br />
+          <a href="/tools/wait-cost">Wait cost</a> — price the dock time<br />
+          <a href="/knowledge/best-load-boards">Best load boards guide</a> · <a href="/safety">Safety Center</a></p>
+          <a class="btn btn-primary" href="/signup.html?plan=driver">Create a free profile when you’re ready</a>
+        </article>
+      </div></section>
+
+      <section class="section" style="padding-top:0"><div class="container">
+        <aside class="rm-ad-slot rm-ad-slot--footer" data-rm-ad-slot="before_call_footer" data-rm-ad-format="horizontal" aria-label="Advertisement"></aside>
+      </div></section>
+    </main>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebApplication",
+          "name": "Before You Call Load Checklist",
+          "url": "https://relocationmanagerusa.com/tools/before-you-call",
+          "applicationCategory": "BusinessApplication",
+          "operatingSystem": "Any",
+          "description": "Free before-you-call load board checklist and phone script for truckers. Catch ghost loads and incomplete rates before you deadhead. No signup.",
+          "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+          "publisher": { "@type": "Organization", "name": "Relocation Manager USA", "url": "https://relocationmanagerusa.com" }
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Why check a load before I call?",
+              "acceptedAnswer": { "@type": "Answer", "text": "Ghost posts, missing dimensions, and incomplete rates waste phone and drive time. A short checklist filters junk so you only dial loads that can work for your truck." }
+            },
+            {
+              "@type": "Question",
+              "name": "Do my checklist answers get uploaded?",
+              "acceptedAnswer": { "@type": "Answer", "text": "No. Checklist state stays in your browser on this device only. Nothing is uploaded when you tick boxes." }
+            },
+            {
+              "@type": "Question",
+              "name": "What should I confirm on the phone?",
+              "acceptedAnswer": { "@type": "Answer", "text": "Pickup window, weight, dimensions, loading help, site conditions, and all-in rate — then get a rate confirmation in writing before you deadhead." }
+            },
+            {
+              "@type": "Question",
+              "name": "Is the before-you-call checklist free?",
+              "acceptedAnswer": { "@type": "Answer", "text": "Yes — no signup, no card. Use it with the free rate calculator and Safety Center before you roll." }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+    <footer class="site-footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><a class="brand" href="/" style="color:#fff"><span class="brand-mark">🦅</span><span>Relocation <strong>Manager USA</strong></span></a></div><nav class="footer-col"><strong>Tools</strong><a href="/tools/">Free tools</a><a href="/tools/before-you-call">Before you call</a><a href="/rate-calculator">Rate calculator</a><a href="/tools/cube-fit">Cube fit</a><a href="/tools/wait-cost">Wait cost</a></nav><nav class="footer-col"><strong>Legal</strong><a href="/privacy">Privacy</a><a href="/terms">Terms</a></nav></div><div class="footer-bottom"><span>© <span data-year>2026</span> Relocation Manager USA</span></div></div></footer>
+    <script>
+      (function () {
+        const KEY = "rm-before-you-call-v1";
+        const boxes = Array.from(document.querySelectorAll("#checklist input[type=checkbox]"));
+        const progress = document.getElementById("progress");
+        let saved = {};
+        try { saved = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { saved = {}; }
+
+        function paint() {
+          let done = 0;
+          boxes.forEach(function (box) {
+            const on = Boolean(saved[box.getAttribute("data-key")]);
+            box.checked = on;
+            box.closest("label").classList.toggle("is-done", on);
+            if (on) done += 1;
+          });
+          progress.textContent = done + " of " + boxes.length + " checked";
+        }
+
+        boxes.forEach(function (box) {
+          box.addEventListener("change", function () {
+            saved[box.getAttribute("data-key")] = box.checked;
+            try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) { /* private mode */ }
+            paint();
+            if (typeof window.rmTrack === "function") window.rmTrack("tool_before_call_check", { done: Object.values(saved).filter(Boolean).length });
+          });
+        });
+
+        document.getElementById("resetChecks").addEventListener("click", function () {
+          saved = {};
+          try { localStorage.removeItem(KEY); } catch (e) { /* noop */ }
+          paint();
+        });
+
+        document.getElementById("copyScript").addEventListener("click", async function () {
+          const text = document.getElementById("scriptBox").textContent;
+          const status = document.getElementById("copyStatus");
+          try {
+            await navigator.clipboard.writeText(text);
+            status.textContent = "Copied — paste into notes before you dial.";
+          } catch (e) {
+            status.textContent = "Select the script text and copy manually (browser blocked clipboard).";
+          }
+        });
+
+        paint();
+      })();
+    </script>
+  </body>
+</html>

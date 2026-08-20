@@ -46,9 +46,12 @@
       Relocation Manager USA — Trucking Marketplace, Moving Resources &amp; Free
       Answers
     </title>
-    <link rel="stylesheet" href="styles.css?v=20260811-bid-room-mvp-1" />
+    <link rel="stylesheet" href="styles.css?v=20260813-mobile-homes-2" />
     <link rel="stylesheet" href="/profile-edit-password-fix-20260810.css" />
     <link rel="stylesheet" href="/member-dark-foundation-20260810.css?v=6" />
+    <link rel="stylesheet" href="/truck-capacity-panel.css?v=20260811-1" />
+    <link rel="stylesheet" href="/member-engagement.css?v=20260811-live-map-3" />
+    <link rel="stylesheet" href="/site-vibe.css?v=20260812-vibe-3" />
     <script>
       document.documentElement.classList.add("access-pending");
     </script>
@@ -168,11 +171,11 @@
       >
     </header>
     <nav class="member-bottom-nav" aria-label="Member shortcuts">
-      <a href="#workbench" data-route="workbench"><span>⌂</span>Workbench</a>
+      <a href="#workbench" data-route="workbench"><span>⌂</span>Home</a>
       <a href="#loads" data-route="loads"><span>▤</span>Loads</a>
-      <a class="member-bottom-post" href="#post" data-route="post"><span>＋</span>Post</a>
-      <a href="#dashboard" data-route="dashboard"><span>◌</span>Community</a>
-      <a href="#profile" data-route="profile"><span>●</span>Profile</a>
+      <a class="member-bottom-post" href="#post" data-route="post" data-shipper-label="Need a truck"><span>＋</span><em data-post-label>Post</em></a>
+      <a href="#communication" data-route="communication"><span>✉</span>Messages</a>
+      <a href="#profile" data-route="profile"><span>●</span>You</a>
     </nav>
 
     <main>
@@ -697,9 +700,23 @@
             <button class="btn btn-light" type="button" data-route="post">Post a load</button>
             <button class="btn btn-light" type="button" data-route="alerts">Set a lane alert</button>
           </div>
+          <article class="card empty-ping" id="emptyPingCard">
+            <div class="eyebrow dark">One tap</div>
+            <h3>I’m empty</h3>
+            <p class="muted">Tell the board where you can pick up. Start with DFW if that’s home this week.</p>
+            <div class="empty-ping-row">
+              <label>City<input id="emptyPingCity" placeholder="Dallas, TX" value="Dallas, TX" /></label>
+              <div class="empty-ping-days" role="group" aria-label="When you are empty">
+                <button type="button" data-empty-day="Today">Today</button>
+                <button type="button" data-empty-day="Tomorrow">Tomorrow</button>
+                <button type="button" class="active" data-empty-day="Friday">Friday</button>
+              </div>
+            </div>
+            <button class="btn btn-primary" id="emptyPingGo" type="button">I’m empty here</button>
+          </article>
           <div class="workbench-action-group" id="workbenchShipperActions" hidden>
             <button class="btn btn-primary" type="button" data-route="post">Post a pickup</button>
-            <button class="btn btn-light" type="button" data-route="profile">My posted loads</button>
+            <button class="btn btn-light" type="button" data-route="workbench">My posted jobs</button>
             <button class="btn btn-light" type="button" data-route="communication">Carrier responses</button>
           </div>
 
@@ -724,6 +741,26 @@
               <strong id="workbenchTrustStatus">Review</strong>
               <small id="workbenchTrustHelp">Verification state</small>
             </article>
+          </section>
+
+          <section class="capacity-panel" id="workbenchCapacityPanel" hidden aria-label="Truck seats and remaining capacity">
+            <div class="capacity-panel__hero">
+              <div>
+                <div class="capacity-panel__eyebrow">Truck seats · anti-fraud capacity</div>
+                <h2 class="capacity-panel__title">Your trucks &amp; remaining space</h2>
+                <p class="capacity-panel__lead" id="workbenchCapacitySummary">
+                  Plan seats, partial fill, and free capacity when a job is done.
+                </p>
+              </div>
+              <div class="capacity-panel__stat">
+                <span>Seats in use</span>
+                <strong id="workbenchCapacitySeatStat">0 / 1</strong>
+              </div>
+            </div>
+            <div class="capacity-panel__grid" id="workbenchCapacitySeats"></div>
+            <p class="capacity-panel__foot" id="workbenchCapacityFoot">
+              $29.99 covers one truck seat. Stack partials until the box is full. Mark delivered or empty to free the seat.
+            </p>
           </section>
 
           <div class="workbench-layout">
@@ -1874,11 +1911,12 @@
         <div class="container section-pad post-composer-wrap">
           <div class="page-head post-composer-head">
             <div>
-              <div class="eyebrow dark">Broker / shipper flow</div>
-              <h1>Post a load</h1>
-              <p class="muted">
-                Complete details get faster, better-fit responses — and protect
-                you and the driver when something goes wrong.
+              <div class="eyebrow dark" id="postKicker">Need a truck?</div>
+              <h1 id="postTitle">Tell us the job. We’ll bring the bids.</h1>
+              <p class="muted" id="postLead">
+                Three short steps: where and when, what you’re moving, then
+                your price or open bids. Drivers see a clean card — no
+                scavenger hunt.
               </p>
             </div>
             <div class="post-composer-badges">
@@ -2967,10 +3005,47 @@
       
           <div class="profile-tags" id="profileTags"></div>
           <div id="fraudWarning" class="notice" hidden></div>
+
+          <section class="road-points" id="profileRoadPoints" aria-label="Road Points">
+            <div class="road-points__ring" aria-hidden="true">
+              <div class="road-points__ring-inner">
+                <strong id="profileRoadPointsValue">0</strong>
+                <span>Road Points</span>
+              </div>
+            </div>
+            <div class="road-points__copy">
+              <span class="road-points__level" id="profileRoadLevel">Getting started</span>
+              <h2 id="profileRoadHeadline">Keep the momentum.</h2>
+              <p id="profileRoadBlurb">Road Points reward real work: verified loads, clear posts, messages, and finishing jobs.</p>
+              <div class="road-points__track" aria-hidden="true">
+                <div class="road-points__fill" id="profileRoadFill" style="width: 8%"></div>
+              </div>
+              <div class="road-points__meta">
+                <span id="profileRoadNext">Post or finish a load to climb.</span>
+              </div>
+              <div class="road-points__chips" id="profileRoadChips"></div>
+            </div>
+          </section>
+
+          <section class="live-map-card" aria-label="Live load map">
+            <div class="profile-block-head">
+              <h2>Live load map</h2>
+              <span class="tag" id="profileLiveMapTag">United States</span>
+            </div>
+            <p class="live-map-lead muted" id="profileLiveMapLead">
+              Post, bid, or accept a load and your lane draws here.
+            </p>
+            <div class="live-map-stage" id="profileLiveMapStage"></div>
+            <div class="live-map-checkpoints" id="profileLiveMapCheckpoints"></div>
+            <div class="live-map-list" id="profileLiveMapList"></div>
+          </section>
+
+          <div id="profileCapacityMount"></div>
       
           <!-- ============ JUMP BAR ============ -->
           <nav class="profile-jump" aria-label="Profile sections">
             <button type="button" data-profile-jump="profileSectionAccount">Account</button>
+            <button type="button" data-profile-jump="profileSectionTruck">Your truck</button>
             <button type="button" data-profile-jump="profileSectionCredentials">Credentials</button>
             <button type="button" data-profile-jump="profileSectionActivity">Activity</button>
             <button type="button" data-profile-jump="profileSectionSettings">Settings</button>
@@ -2991,7 +3066,50 @@
                 <div><span>DOT / MC</span><strong id="profileDotMc">Not added</strong></div>
                 <div><span>Insurance</span><strong id="profileInsuranceStatus">Not submitted</strong></div>
                 <div><span>Language</span><strong id="profileLanguage">English</strong></div>
+                <div id="profileTruckMeta"><span>Your truck</span><strong id="profileTruckType">Not set — add it so Loads can stamp “This truck fits”</strong></div>
               </div>
+            </article>
+          </section>
+
+          <section class="profile-block" id="profileSectionTruck">
+            <div class="profile-block-head">
+              <h2>Your truck</h2>
+              <span class="tag" id="profileTruckStatus">Not set</span>
+            </div>
+            <article class="card">
+              <p class="muted">
+                Drivers: set this once. Load cards will stamp <strong>This truck fits</strong>
+                when the job matches. Customers do not need this.
+              </p>
+              <form class="profile-truck-form" id="profileTruckForm">
+                <label>Truck type
+                  <select name="equipmentType" id="profileTruckSelect" required>
+                    <option value="">Choose your truck</option>
+                    <option>15 ft box truck</option>
+                    <option>16 ft box truck</option>
+                    <option>20 ft box truck</option>
+                    <option>24 ft box truck</option>
+                    <option>26 ft box truck</option>
+                    <option>Box truck with liftgate</option>
+                    <option>Box truck with ramp</option>
+                    <option>Cargo van</option>
+                    <option>Truck + trailer</option>
+                    <option>Hotshot</option>
+                    <option>Car carrier / auto transport</option>
+                    <option>Dry van</option>
+                    <option>Reefer</option>
+                    <option>Flatbed</option>
+                    <option>53 ft flatbed</option>
+                    <option>53 ft Conestoga</option>
+                    <option>Lowboy trailer</option>
+                  </select>
+                </label>
+                <div class="profile-truck-extras">
+                  <label class="check"><input type="checkbox" name="hasLiftgate" /> Liftgate</label>
+                  <label class="check"><input type="checkbox" name="hasRamp" /> Ramp</label>
+                </div>
+                <button class="btn btn-primary full" type="submit">Save truck</button>
+              </form>
             </article>
           </section>
       
@@ -3865,7 +3983,8 @@
       booking.
     </footer>
     <script type="module" src="leaderboard-paging.js?v=20260806-perf"></script>
-    <script data-source="app.js" src="app.js?v=20260811-bid-room-mvp-1"></script>
+    <script src="/us-states-map.js?v=20260811-live-map-3"></script>
+    <script data-source="app.js" src="app.js?v=20260813-mobile-homes-2"></script>
 <script>
   fetch("/api/account", { credentials: "include" }).then(r => r.ok ? r.json() : null).then(account => {
     if (!account || !account.profile) return;

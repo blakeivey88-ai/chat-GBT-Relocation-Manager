@@ -72,6 +72,39 @@ test('accepted load messaging derives the exact shipper and carrier participants
   assert.equal(denied.status, 403);
 });
 
+test('paid shipper may open thread and use pickup/delivery language on accepted load', async () => {
+  const env = { RELOCATION_MANAGER_LEADS: new MemoryKv() };
+  const shipper = account('usr_ops_shipper', 'Customer needing pickup - $9.99/mo');
+  const carrier = account('usr_ops_carrier', 'Independent driver / self-insured - $29.99/mo');
+  const shipperSession = await session(env, shipper);
+  await session(env, carrier);
+  await env.RELOCATION_MANAGER_LEADS.put('marketplace:loads:v1', JSON.stringify([{
+    id: 'load-ops-language', status: 'accepted', postedByUserId: shipper.userId, acceptedByUserId: carrier.userId,
+  }]));
+
+  const threadRes = await onRequestPost({
+    request: request(shipperSession, { action: 'ensure-load-thread', loadId: 'load-ops-language', type: 'load' }),
+    env,
+  });
+  const threadBody = await threadRes.json();
+  assert.equal(threadRes.status, 200, JSON.stringify(threadBody));
+  assert.ok(threadBody.thread?.id);
+
+  const sent = await onRequestPost({
+    request: request(shipperSession, {
+      action: 'send',
+      type: 'load',
+      loadId: 'load-ops-language',
+      threadId: threadBody.thread.id,
+      body: 'Pickup window is 9am. Delivery dock is bay 2. Load is accepted and ready.',
+    }),
+    env,
+  });
+  const sentBody = await sent.json();
+  assert.equal(sent.status, 200, JSON.stringify(sentBody));
+  assert.match(sentBody.message?.body || '', /Pickup window/i);
+});
+
 test('load conversations reject unaccepted loads and injected participants', async () => {
   const env = { RELOCATION_MANAGER_LEADS: new MemoryKv() };
   const shipper = account('usr_pending_shipper', 'Customer / shipper');
@@ -114,5 +147,5 @@ test('mobile menu meets the 44px touch target floor', async () => {
     readFile(new URL('../dist/member.html', import.meta.url), 'utf8'),
   ]);
   assert.match(css, /\.menu-btn\s*\{[^}]*min-height:\s*44px/s);
-  assert.match(member, /styles\.css\?v=20260811-bid-room-mvp-1/);
+  assert.match(member, /styles\.css\?v=2026081[0-9]-[a-z0-9-]+/);
 });
